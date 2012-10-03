@@ -203,7 +203,7 @@ void TextFrame::findPrev(int offset)
 			}
 			txt->EnsureCaretVisible();
 		}
-	}	
+	}
 }
 
 void TextFrame::onFastFindLine(wxCommandEvent& event)
@@ -213,6 +213,7 @@ void TextFrame::onFastFindLine(wxCommandEvent& event)
 	{
 		int pos = txt->GetLineIndentPosition(_fastFindLine->GetValue()-1);
 		txt->SetSelection(pos, pos);
+		txt->EnsureCaretVisible();
 		txt->SetFocus();
 	}
 }

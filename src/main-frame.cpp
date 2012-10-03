@@ -167,6 +167,21 @@ TextDocument* MainFrame::getCurrentDocument()
 }
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_UPDATE_UI(wxID_SAVE, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_SAVEAS, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(XRCID("Save all"), MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_CLOSE, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(XRCID("Close all"), MainFrame::onUpdateHasOpenDocument)
+
+	EVT_UPDATE_UI(wxID_UNDO, MainFrame::onUpdateCanUndo)
+	EVT_UPDATE_UI(wxID_REDO, MainFrame::onUpdateCanRedo)
+	EVT_UPDATE_UI(wxID_DELETE, MainFrame::onUpdateHasOpenDocument)
+
+	EVT_UPDATE_UI(wxID_CUT, MainFrame::onUpdateHasSelection)
+	EVT_UPDATE_UI(wxID_COPY, MainFrame::onUpdateHasSelection)
+	EVT_UPDATE_UI(wxID_PASTE, MainFrame::onUpdateCanPaste)
+
+
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, MainFrame::onNewDocument)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, MainFrame::onOpenDocument)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_REVERT_TO_SAVED, MainFrame::onRevertDocument)
@@ -273,7 +288,7 @@ void MainFrame::onRedo(wxRibbonButtonBarEvent& event)
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
 	{
-		txt->Undo();
+		txt->Redo();
 	}
 }
 
@@ -347,5 +362,64 @@ void MainFrame::onGoToLine(wxRibbonButtonBarEvent& event)
 	{
 		frame->showFastFindGoToLine();
 	}
+}
+
+void MainFrame::onUpdateHasOpenDocument(wxUpdateUIEvent& event)
+{
+	event.Enable(getCurrentDocument()!=NULL);
+}
+
+void MainFrame::onUpdateCanUndo(wxUpdateUIEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt!=NULL)
+	{
+		event.Enable(txt->CanUndo());
+	}
+	else
+	{
+		event.Enable(false);
+	}
+}
+
+void MainFrame::onUpdateCanRedo(wxUpdateUIEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt!=NULL)
+	{
+		event.Enable(txt->CanRedo());
+	}
+	else
+	{
+		event.Enable(false);
+	}
+}
+
+void MainFrame::onUpdateCanPaste(wxUpdateUIEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt!=NULL)
+	{
+		event.Enable(txt->CanPaste());
+	}
+	else
+	{
+		event.Enable(false);
+	}
+}
+
+void MainFrame::onUpdateHasSelection(wxUpdateUIEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt!=NULL)
+	{
+		int begin, end;
+		txt->GetSelection(&begin, &end);
+		event.Enable(end > begin);
+	}
+	else
+	{
+		event.Enable(false);
+	}	
 }
 

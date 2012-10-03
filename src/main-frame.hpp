@@ -75,6 +75,12 @@ private:
 	void onFindNext(wxRibbonButtonBarEvent& event);
 	void onFindPrev(wxRibbonButtonBarEvent& event);
 	void onGoToLine(wxRibbonButtonBarEvent& event);
+
+	void onUpdateHasOpenDocument(wxUpdateUIEvent& event);
+	void onUpdateCanUndo(wxUpdateUIEvent& event);
+	void onUpdateCanRedo(wxUpdateUIEvent& event);
+	void onUpdateCanPaste(wxUpdateUIEvent& event);
+	void onUpdateHasSelection(wxUpdateUIEvent& event);
 };
 
 #endif // _MAIN_FRAME_HPP_
