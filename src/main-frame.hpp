@@ -42,6 +42,8 @@ public:
 	TextFrame* getCurrentTextFrame();
 	TextDocument* getCurrentDocument();
 
+	virtual bool Destroy();
+	
 protected:
 	void CommonInit();
 	void InitRibbon();
@@ -54,10 +56,13 @@ private:
 	wxRibbonBar*   _ribbon;
 	wxAuiNotebook* _notebook;
 
+	wxMenu*        _recentFileMenu;
+
 	void onPageClosing(wxAuiNotebookEvent& event);
 	
 	void onNewDocument(wxRibbonButtonBarEvent& event);
 	void onOpenDocument(wxRibbonButtonBarEvent& event);
+	void onRecentDocumentMenu(wxRibbonButtonBarEvent& event);
 	void onRevertDocument(wxRibbonButtonBarEvent& event);
 	void onSaveDocument(wxRibbonButtonBarEvent& event);
 	void onSaveDocumentAs(wxRibbonButtonBarEvent& event);

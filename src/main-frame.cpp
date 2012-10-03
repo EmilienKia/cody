@@ -27,6 +27,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/xrc/xmlres.h>
 
 #include "main-frame.hpp"
+#include "cody-app.hpp"
 #include "text-frame.hpp"
 #include "text-document.hpp"
 
@@ -36,6 +37,10 @@ MainFrame::MainFrame():
 wxFrame(NULL, wxID_ANY, "Cody")
 {
 	CommonInit();
+
+	_recentFileMenu = new wxMenu;
+	wxGetApp().getFileHistory().UseMenu(_recentFileMenu);
+	wxGetApp().getFileHistory().AddFilesToMenu(_recentFileMenu);
 }
 
 void MainFrame::CommonInit()
@@ -61,7 +66,6 @@ void MainFrame::CommonInit()
 	_manager.Update();
 	
 	Layout();
-
 }
 
 void MainFrame::InitRibbon()
@@ -138,6 +142,18 @@ void MainFrame::InitRibbon()
 	_ribbon->Realise();
 }
 
+bool MainFrame::Destroy()
+{
+	if(!wxFrame::Destroy())
+		return false;
+
+	wxGetApp().getFileHistory().RemoveMenu(_recentFileMenu);
+	delete _recentFileMenu;
+
+	return true;
+}
+
+
 wxStyledTextCtrl* MainFrame::getCurrentTextCtrl()
 {
 	TextFrame* frame = getCurrentTextFrame();
@@ -184,6 +200,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, MainFrame::onNewDocument)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, MainFrame::onOpenDocument)
+	EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_OPEN, MainFrame::onRecentDocumentMenu)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_REVERT_TO_SAVED, MainFrame::onRevertDocument)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, MainFrame::onSaveDocument)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVEAS, MainFrame::onSaveDocumentAs)
@@ -214,6 +231,11 @@ void MainFrame::onNewDocument(wxRibbonButtonBarEvent& WXUNUSED(event))
 void MainFrame::onOpenDocument(wxRibbonButtonBarEvent& event)
 {
 	wxGetApp().queryLoadFile(this);
+}
+
+void MainFrame::onRecentDocumentMenu(wxRibbonButtonBarEvent& event)
+{
+	event.PopupMenu(_recentFileMenu);
 }
 
 void MainFrame::onRevertDocument(wxRibbonButtonBarEvent& event)

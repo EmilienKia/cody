@@ -22,6 +22,9 @@ cody is free software: you can redistribute it and/or modify it
 
 #include <set>
 
+#include <wx/filehistory.h>
+#include <wx/config.h>
+
 class MainFrame;
 class TextDocument;
 
@@ -31,7 +34,9 @@ class CodyApp : public wxApp
 {
 	DECLARE_EVENT_TABLE();
 public:
+	
     virtual bool OnInit();
+	virtual int OnExit();
 
 	TextDocument* createEmptyDocument(MainFrame* mainFrame = NULL);
 	TextDocument* loadDocument(const wxString& path, MainFrame* mainFrame = NULL);
@@ -42,11 +47,17 @@ public:
 
 	void closeDocument(TextDocument* doc);
 	void closeAllFrameDocuments(MainFrame* mainFrame = NULL);
-	
+
+	wxConfig* getConfig();
+	wxFileHistory& getFileHistory();
+		
 protected:
 	MainFrame* _frame;
 
 	std::set<TextDocument*> _documents;
+
+	wxFileHistory _fileHistory;
+	wxConfig* _config;
 
 private:
 	void onAbout(wxRibbonButtonBarEvent& event);

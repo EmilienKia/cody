@@ -38,14 +38,26 @@ BEGIN_EVENT_TABLE(CodyApp, wxApp)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_EXIT, CodyApp::onExit)
 END_EVENT_TABLE()
 
+
 bool CodyApp::OnInit()
 {
+	_config = new wxConfig("Cody");
+	_fileHistory.Load(*_config);
+	
 	_frame = new MainFrame();
 	_frame->Show(TRUE);
 
 	createEmptyDocument(_frame);
 	
 	return TRUE;
+}
+
+int CodyApp::OnExit()
+{
+	delete _config;
+	_config = NULL;
+	
+	return wxApp::OnExit();
 }
 
 TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
@@ -64,7 +76,12 @@ TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
 TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 {
 	TextDocument* doc = createEmptyDocument(mainFrame);
-	doc->loadFile(path);
+	// TODO absolutize file path and verify existance
+	if(doc->loadFile(path))
+	{
+		_fileHistory.AddFileToHistory(path);
+		_fileHistory.Save(*_config);
+	}
 	return doc;
 }
 
@@ -150,4 +167,9 @@ void CodyApp::onAbout(wxRibbonButtonBarEvent& event)
 void CodyApp::onExit(wxRibbonButtonBarEvent& event)
 {
 	_frame->Close();
+}
+
+wxFileHistory& CodyApp::getFileHistory()
+{
+	return _fileHistory;
 }
