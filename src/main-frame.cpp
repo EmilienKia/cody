@@ -59,12 +59,12 @@ void MainFrame::CommonInit()
 	gsz->Add(_ribbon, 0, wxEXPAND);
 	gsz->Add(_panel, 1, wxEXPAND);
 	SetSizer(gsz);
-	
+
 	_notebook = new wxAuiNotebook(_panel, wxID_ANY);
 	_manager.AddPane(_notebook, wxAuiPaneInfo().CenterPane().PaneBorder(false));
 	
 	_manager.Update();
-	
+
 	Layout();
 }
 
@@ -149,6 +149,8 @@ bool MainFrame::Destroy()
 
 	wxGetApp().getFileHistory().RemoveMenu(_recentFileMenu);
 	delete _recentFileMenu;
+
+	_manager.UnInit();
 
 	return true;
 }
