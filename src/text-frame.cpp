@@ -38,6 +38,8 @@ BEGIN_EVENT_TABLE(TextFrame, wxPanel)
 	EVT_TEXT_ENTER(XRCID("FAST_FIND_TEXT"), TextFrame::onFastFindNext)
 	EVT_TEXT_ENTER(XRCID("FAST_FIND_LINE"), TextFrame::onFastFindLine)
 	EVT_TEXT_ENTER(XRCID("FAST_FIND_LINE_BTN"), TextFrame::onFastFindLine)
+
+	EVT_STC_MODIFIED(wxID_ANY, TextFrame::OnTextModified)
 END_EVENT_TABLE()
 
 TextFrame::TextFrame(wxWindow* parent, TextDocument* doc):
@@ -51,6 +53,9 @@ _fastFindShown(false)
 void TextFrame::CommonInit()
 {
 	_mainText = new wxStyledTextCtrl(this, wxID_ANY);
+	InitTextCtrl(_mainText);
+	
+	updateLineNbMargin();
 
 	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
 	gsz->Add(_mainText, 1, wxEXPAND);
@@ -73,6 +78,46 @@ void TextFrame::CommonInit()
 	SetSizer(gsz);
 
 	gsz->Hide(_fastFindSizer, true);
+}
+
+void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
+{
+	
+}
+
+void TextFrame::showLineNumbers(bool show)
+{
+	_lineNrMarginShown = show;
+	updateLineNbMargin();
+
+}
+
+void TextFrame::updateLineNbMargin()
+{
+	wxStyledTextCtrl* txt = getMainTextCtrl();
+	if(txt)
+	{
+		if(_lineNrMarginShown)
+		{
+			int c = txt->GetLineCount();
+			int sz = 0;
+			if(c<=999)
+				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999"));
+			else if(c<=9999)
+				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_9999"));
+			else if(c<=99999)
+				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
+			else if(c<=99999)
+				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
+			else
+				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999999"));
+			txt->SetMarginWidth(LineNrID, sz);
+		}
+		else
+		{
+			txt->SetMarginWidth(LineNrID, 0);
+		}
+	}
 }
 
 void TextFrame::setTitle(const wxString& title)
@@ -216,5 +261,17 @@ void TextFrame::onFastFindLine(wxCommandEvent& event)
 		txt->EnsureCaretVisible();
 		txt->SetFocus();
 	}
+}
+
+void TextFrame::OnTextModified(wxStyledTextEvent& event)
+{
+	if(event.GetLinesAdded()!=0)
+	{ // Add or remove lines
+		updateLineNbMargin();
+		_fastFindLine->SetRange(1, getCurrentTextCtrl()->GetLineCount());
+	}
+
+	
+	event.Skip();
 }
 

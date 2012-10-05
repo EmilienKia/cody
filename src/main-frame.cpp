@@ -139,6 +139,14 @@ void MainFrame::InitRibbon()
 			bar->AddButton(wxID_DOWN, "Next", wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_BUTTON, wxSize(24, 24)));
 		}
 	}
+	{// View page
+		wxRibbonPage* page = new wxRibbonPage(_ribbon, wxID_ANY, "View");
+		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_GOTO_LAST, wxART_BUTTON, wxSize(24, 24)));
+		}
+	}
 	_ribbon->Realise();
 }
 

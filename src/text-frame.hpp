@@ -29,7 +29,7 @@ class wxSearchCtrl;
 class wxSpinCtrl;
 
 
-class TextFrame: public wxPanel 
+class TextFrame: public wxPanel
 {
 	DECLARE_EVENT_TABLE()
 public:
@@ -51,11 +51,21 @@ public:
 	void findPrev(int offset = -1);
 
 	void setTitle(const wxString& title);
+
+	void showLineNumbers(bool show = true);
 	
 protected:
 	void CommonInit();
+	void InitTextCtrl(wxStyledTextCtrl* txt);
 
 	wxAuiNotebook* getNotebook();
+
+	enum {
+		LineNrID,
+		DividerID,
+		FoldingID
+	};
+
 	
 private:
 	TextDocument* _document;
@@ -67,11 +77,19 @@ private:
 	wxSpinCtrl*   _fastFindLine;
 	wxBitmapButton* _fastFindClose;
 
+	// margin variables
+	bool _lineNrMarginShown;
+	int _foldingMargin;
+
+	void updateLineNbMargin();
+	
 	void onCloseFastFind(wxCommandEvent& event);
 	void onFastFindText(wxCommandEvent& event);
 	void onFastFindNext(wxCommandEvent& event);
 	void onFastFindPrev(wxCommandEvent& event);
 	void onFastFindLine(wxCommandEvent& event);
+
+	void OnTextModified(wxStyledTextEvent& event);
 };
 
 #endif // _TEXT_FRAME_HPP_
