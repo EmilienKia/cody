@@ -47,7 +47,7 @@ wxFrame(NULL, wxID_ANY, "Cody")
 void MainFrame::CommonInit()
 {
 	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
-	_ribbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxSize(640, 480), wxRIBBON_BAR_FLOW_HORIZONTAL
+	_ribbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxSize(800, 600), wxRIBBON_BAR_FLOW_HORIZONTAL
                                 | wxRIBBON_BAR_SHOW_PAGE_LABELS
                                 | wxRIBBON_BAR_SHOW_PANEL_EXT_BUTTONS
                                 | wxRIBBON_BAR_SHOW_TOGGLE_BUTTON
@@ -70,6 +70,8 @@ void MainFrame::CommonInit()
 	_manager.Update();
 
 	Layout();
+
+	SetSize(800, 600);
 }
 
 void MainFrame::InitRibbon()
