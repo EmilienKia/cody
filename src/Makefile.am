@@ -23,7 +23,9 @@ cody_SOURCES = \
 	text-frame.cpp \
 	text-frame.hpp \
 	cody-app.cpp \
-	cody-app.hpp
+	cody-app.hpp \
+	bookmark.cpp \
+	bookmark.hpp
 
 cody_LDFLAGS = 
 

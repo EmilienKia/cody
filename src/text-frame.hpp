@@ -23,11 +23,11 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/stc/stc.h>
 
 class TextDocument;
+class MainFrame;
 
 class wxAuiNotebook;
 class wxSearchCtrl;
 class wxSpinCtrl;
-
 
 class TextFrame: public wxPanel
 {
@@ -37,9 +37,13 @@ public:
 
 	TextDocument* getDocument(){return _document;}
 	void setDocument(TextDocument* doc){_document = doc;}
-
+	
+	void initAfterLoading();
+		
 	wxStyledTextCtrl* getMainTextCtrl(){return _mainText;}
 	wxStyledTextCtrl* getCurrentTextCtrl(){return _mainText;}
+
+	MainFrame* getMainFrame();
 
 	void showFastFind(bool shown=true);
 	bool fastFindShown()const{return _fastFindShown;}
@@ -53,6 +57,19 @@ public:
 	void setTitle(const wxString& title);
 
 	void showLineNumbers(bool show = true);
+
+	void toggleBookmark();
+	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));
+	void remBookmark(int line=wxNOT_FOUND);
+	void clearBookmarks();
+	void addBookmarksFromProvider();
+	void gotoPrevBookmark();
+	void gotoNextBookmark();
+	void gotoLine(int line);
+
+	void setFocusToTextCtrl();
+
+	
 	
 protected:
 	void CommonInit();
@@ -66,6 +83,7 @@ protected:
 		FoldingID
 	};
 
+	void UpdateBookmarkPanel();
 	
 private:
 	TextDocument* _document;

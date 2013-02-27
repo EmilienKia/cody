@@ -28,6 +28,7 @@ class TextFrame;
 class TextDocument;
 class wxRibbonButtonBarEvent;
 class wxStyledTextCtrl;
+class BookmarkPanel;
 
 
 class MainFrame: public wxFrame 
@@ -41,24 +42,29 @@ public:
 	wxStyledTextCtrl* getCurrentTextCtrl();
 	TextFrame* getCurrentTextFrame();
 	TextDocument* getCurrentDocument();
-
+	BookmarkPanel* getBookmarkPanel(){return _bookmark;}
+	
 	virtual bool Destroy();
+
+	void toggleBookmarkPanel();
 	
 protected:
 	void CommonInit();
 	void InitRibbon();
 
 	wxAuiNotebook* getNotebook(){return _notebook;}
-	
+
 private:
 	wxPanel*	   _panel;
 	wxAuiManager   _manager;
 	wxRibbonBar*   _ribbon;
 	wxAuiNotebook* _notebook;
+	BookmarkPanel* _bookmark;
 
 	wxMenu*        _recentFileMenu;
 
 	void onPageClosing(wxAuiNotebookEvent& event);
+	void onPageChanged(wxAuiNotebookEvent& event);
 	
 	void onNewDocument(wxRibbonButtonBarEvent& event);
 	void onOpenDocument(wxRibbonButtonBarEvent& event);
@@ -86,6 +92,11 @@ private:
 	void onUpdateCanRedo(wxUpdateUIEvent& event);
 	void onUpdateCanPaste(wxUpdateUIEvent& event);
 	void onUpdateHasSelection(wxUpdateUIEvent& event);
+
+	void onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& event);
+	void onToggleBookmark(wxRibbonButtonBarEvent& event);
+	void onPreviousBookmark(wxRibbonButtonBarEvent& event);
+	void onNextBookmark(wxRibbonButtonBarEvent& event);
 };
 
 #endif // _MAIN_FRAME_HPP_

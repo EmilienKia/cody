@@ -30,8 +30,9 @@ cody is free software: you can redistribute it and/or modify it
 #include "cody-app.hpp"
 #include "text-frame.hpp"
 #include "text-document.hpp"
-
+#include "bookmark.hpp"
 #include "cody-app.hpp"
+
 
 MainFrame::MainFrame():
 wxFrame(NULL, wxID_ANY, "Cody")
@@ -62,6 +63,9 @@ void MainFrame::CommonInit()
 
 	_notebook = new wxAuiNotebook(_panel, wxID_ANY);
 	_manager.AddPane(_notebook, wxAuiPaneInfo().CenterPane().PaneBorder(false));
+
+	_bookmark = new BookmarkPanel(_panel, wxID_ANY);
+	_manager.AddPane(_bookmark, wxAuiPaneInfo().Left().Caption("Bookmarks").MinSize(48, 48).Hide());
 	
 	_manager.Update();
 
@@ -192,6 +196,13 @@ TextDocument* MainFrame::getCurrentDocument()
 	return NULL;
 }
 
+void MainFrame::toggleBookmarkPanel()
+{
+	wxAuiPaneInfo& paneinfo = _manager.GetPane(_bookmark);
+	paneinfo.Show(!paneinfo.IsShown());
+	_manager.Update();
+}
+
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(wxID_SAVE, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(wxID_SAVEAS, MainFrame::onUpdateHasOpenDocument)
@@ -229,8 +240,13 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_FORWARD, MainFrame::onFindNext)
 	EVT_RIBBONBUTTONBAR_CLICKED(XRCID("Go to line"), MainFrame::onGoToLine)
 
+	EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Bookmark panel"), MainFrame::onBookmarkRibbonBarExtActivated)
+	EVT_RIBBONBUTTONBAR_CLICKED(XRCID("Toggle bookmark"), MainFrame::onToggleBookmark)
+	EVT_RIBBONBUTTONBAR_CLICKED(wxID_UP, MainFrame::onPreviousBookmark)
+	EVT_RIBBONBUTTONBAR_CLICKED(wxID_DOWN, MainFrame::onNextBookmark)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
+	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
 END_EVENT_TABLE()
 
 void MainFrame::onNewDocument(wxRibbonButtonBarEvent& WXUNUSED(event))
@@ -303,6 +319,14 @@ void MainFrame::onPageClosing(wxAuiNotebookEvent& event)
 	{
 		wxGetApp().closeDocument(doc);
 		event.Veto();
+	}
+}
+
+void MainFrame::onPageChanged(wxAuiNotebookEvent& event)
+{
+	if(getBookmarkPanel())
+	{
+		getBookmarkPanel()->setView(getCurrentTextFrame());
 	}
 }
 
@@ -453,5 +477,37 @@ void MainFrame::onUpdateHasSelection(wxUpdateUIEvent& event)
 	{
 		event.Enable(false);
 	}	
+}
+
+void MainFrame::onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& event)
+{
+	toggleBookmarkPanel();
+}
+
+void MainFrame::onToggleBookmark(wxRibbonButtonBarEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->toggleBookmark();
+	}
+}
+
+void MainFrame::onPreviousBookmark(wxRibbonButtonBarEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->gotoPrevBookmark();
+	}
+}
+
+void MainFrame::onNextBookmark(wxRibbonButtonBarEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->gotoNextBookmark();
+	}
 }
 

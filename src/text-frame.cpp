@@ -28,7 +28,14 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "text-frame.hpp"
 
+#include "bookmark.hpp"
+#include "main-frame.hpp"
 #include "text-document.hpp"
+
+enum TEXT_MARKERS
+{
+	TEXT_MARKER_BOOKMARK = 0
+};
 
 BEGIN_EVENT_TABLE(TextFrame, wxPanel)
 	EVT_BUTTON(XRCID("FAST_FIND_CLOSE"), TextFrame::onCloseFastFind)
@@ -82,7 +89,28 @@ void TextFrame::CommonInit()
 
 void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 {
-	
+	if(!txt)
+		return;
+
+	txt->MarkerDefine(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 192), wxColour(0, 0, 255));
+}
+
+void TextFrame::initAfterLoading()
+{
+	addBookmarksFromProvider();
+}
+
+MainFrame* TextFrame::getMainFrame()
+{
+	wxWindow* win = this;
+	while(win!=NULL)
+	{
+		MainFrame* frame = dynamic_cast<MainFrame*>(win);
+		if(frame!=NULL)
+			return frame;
+		win = win->GetParent();
+	}
+	return NULL;
 }
 
 void TextFrame::showLineNumbers(bool show)
@@ -265,13 +293,181 @@ void TextFrame::onFastFindLine(wxCommandEvent& event)
 
 void TextFrame::OnTextModified(wxStyledTextEvent& event)
 {
-	if(event.GetLinesAdded()!=0)
-	{ // Add or remove lines
-		updateLineNbMargin();
-		_fastFindLine->SetRange(1, getCurrentTextCtrl()->GetLineCount());
-	}
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		int line  = txt->LineFromPosition(event.GetPosition()),
+			lines = event.GetLinesAdded();
 
+		if(lines!=0)
+		{
+			// Add or remove lines
+			updateLineNbMargin();
+			_fastFindLine->SetRange(1, getCurrentTextCtrl()->GetLineCount());
+		
+			// Bookmarks
+			if(getDocument()->getBookmarks().addLines(line, lines))
+				UpdateBookmarkPanel();
+		}
+	}
 	
 	event.Skip();
+}
+
+void TextFrame::toggleBookmark()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		int line = txt->GetCurrentLine();
+		BookmarkList& list = getDocument()->getBookmarks();
+		if(list.has(line))
+			remBookmark(line);
+		else
+			addBookmark(line);
+	}
+}
+
+void TextFrame::addBookmark(int line, wxString name)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		// Define bookmark line
+		if(line==wxNOT_FOUND)
+			line = txt->GetCurrentLine();
+
+		// Define bookmark name
+		if(name.IsEmpty())
+		{
+			name = txt->GetCurLine(NULL);
+			name.Trim();
+			if(name.IsEmpty())
+				name = wxGetTextFromUser(_("Name of the new bookmark"), _("New bookmark"), name);
+		}
+	
+		if(!name.IsEmpty())
+		{
+			// Set bookmark for bookmark panel
+			BookmarkList& list = getDocument()->getBookmarks();
+			Bookmark bm = {line, name};
+			list.insert(bm);
+			UpdateBookmarkPanel();
+
+			// Add Bookmark marker (Scintilla)
+			txt->MarkerAdd(line, TEXT_MARKER_BOOKMARK);
+		}
+	}
+}
+
+void TextFrame::remBookmark(int line)
+{
+	getDocument()->getBookmarks().remove(line);
+	UpdateBookmarkPanel();
+
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		// Rem Bookmark marker (Scintilla)
+		txt->MarkerDelete(line, TEXT_MARKER_BOOKMARK);
+	}	
+}
+
+void TextFrame::clearBookmarks()
+{
+	getDocument()->getBookmarks().clear();
+	UpdateBookmarkPanel();	
+
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		// Rem Bookmark markers (Scintilla)
+		txt->MarkerDeleteAll(TEXT_MARKER_BOOKMARK);
+	}
+}
+
+void TextFrame::UpdateBookmarkPanel()
+{
+	MainFrame* frame = getMainFrame();
+	if(frame)
+	{
+		BookmarkPanel* panel = frame->getBookmarkPanel();
+		if(panel)
+		{
+			panel->update();
+		}
+	}
+}
+
+void TextFrame::addBookmarksFromProvider()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		BookmarkList& list = getDocument()->getBookmarks();
+
+		// Remove existing markers (Scintilla) then add from provider
+		txt->MarkerDeleteAll(TEXT_MARKER_BOOKMARK);
+		for(BookmarkList::iterator it=list.begin(); it!=list.end(); ++it)
+		{
+			txt->MarkerAdd(it->line, TEXT_MARKER_BOOKMARK);			
+		}
+
+		// Update Bookmark panel
+		UpdateBookmarkPanel();
+	}
+}
+
+void TextFrame::gotoPrevBookmark()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		BookmarkList& list = getDocument()->getBookmarks();
+		int line = list.getPrev(txt->GetCurrentLine()-1);
+		if(line!=wxNOT_FOUND)
+			gotoLine(line);
+		else
+		{
+			line = list.getPrev(txt->GetLineCount());
+			if(line!=wxNOT_FOUND)
+				gotoLine(line);
+		}
+	}
+}
+
+void TextFrame::gotoNextBookmark()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		BookmarkList& list = getDocument()->getBookmarks();
+		int line = list.getNext(txt->GetCurrentLine()+1);
+		if(line!=wxNOT_FOUND)
+			gotoLine(line);
+		else
+		{
+			line = list.getNext(-1);
+			if(line!=wxNOT_FOUND)
+				gotoLine(line);			
+		}
+	}
+}
+
+void TextFrame::gotoLine(int line)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+	{
+		int pos = txt->PositionFromLine(line);
+		txt->SetSelection(pos, pos);
+	}
+}
+
+void TextFrame::setFocusToTextCtrl()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	if(txt)
+		txt->SetFocus();
 }
 

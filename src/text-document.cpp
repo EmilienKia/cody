@@ -27,6 +27,7 @@ cody is free software: you can redistribute it and/or modify it
 #include "text-document.hpp"
 
 #include "text-frame.hpp"
+#include "bookmark.hpp"
 
 TextDocument::TextDocument(const wxString& title):
 _title(title),
@@ -80,6 +81,7 @@ bool TextDocument::loadFile(const wxString& file)
 		txt->ClearSelections();
 		_file = file;
 		setTitleFromFile(_file);
+		getFrame()->initAfterLoading();
 		return true;
 	}
 	return false;
@@ -93,6 +95,7 @@ bool TextDocument::reloadFile()
 		txt->ClearAll();
 		txt->LoadFile(_file);
 		txt->ClearSelections();
+		getFrame()->initAfterLoading();
 		return true;
 	}
 	return false;	
@@ -113,3 +116,9 @@ bool TextDocument::saveFileAs(const wxString& file)
 	_file = file;
 	return saveFile();
 }
+
+BookmarkList& TextDocument::getBookmarks()
+{
+	return BookmarkProvider::get(getFile());
+}
+

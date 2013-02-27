@@ -21,6 +21,8 @@ cody is free software: you can redistribute it and/or modify it
 #define _TEXT_DOCUMENT_HPP_
 
 class TextFrame;
+class BookmarkList;
+
 class wxAuiNotebook;
 class wxStyledTextCtrl;
 
@@ -51,6 +53,8 @@ public:
 	TextFrame* createFrame(wxAuiNotebook* parent);
 
 	wxStyledTextCtrl* getMainCtrl();
+
+	BookmarkList& getBookmarks();
 	
 protected:
 	wxString _title, _file;
