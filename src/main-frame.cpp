@@ -54,6 +54,8 @@ void MainFrame::CommonInit()
                                 //| wxRIBBON_BAR_SHOW_HELP_BUTTON
                                 );
 	InitRibbon();
+	InitAcceleratorTable();
+	
 	_panel = new wxPanel(this, wxID_ANY);
 	_manager.SetManagedWindow(_panel);
 	
@@ -156,6 +158,41 @@ void MainFrame::InitRibbon()
 	_ribbon->Realise();
 }
 
+void MainFrame::InitAcceleratorTable()
+{
+	static const size_t number = 17;
+	wxAcceleratorEntry entries[number];
+	
+	// File/Load
+	entries[0].Set(wxACCEL_CTRL, (int) 'N', wxID_NEW);
+	entries[1].Set(wxACCEL_CTRL, (int) 'O', wxID_OPEN);
+	entries[2].Set(wxACCEL_CTRL, (int) 'R', wxID_REVERT_TO_SAVED);
+	// File/Save
+	entries[3].Set(wxACCEL_CTRL, (int) 'S', wxID_SAVE);
+	entries[4].Set(wxACCEL_CTRL|wxACCEL_SHIFT, (int) 'S', XRCID("Save all"));
+	// File/Close
+	entries[5].Set(wxACCEL_CTRL, (int) 'W', wxID_CLOSE);
+	entries[6].Set(wxACCEL_CTRL|wxACCEL_SHIFT, (int) 'W', XRCID("Close all"));
+	// File/Help
+	entries[7].Set(wxACCEL_NORMAL, WXK_F1, wxID_HELP);
+	entries[8].Set(wxACCEL_SHIFT, WXK_F1, wxID_ABOUT);
+	// File / ""
+	entries[9].Set(wxACCEL_CTRL, (int) 'Q', wxID_EXIT);
+
+	// Navigate / Search
+	entries[10].Set(wxACCEL_CTRL, (int) 'F', wxID_FIND);
+	entries[11].Set(wxACCEL_NORMAL, WXK_F3, wxID_FORWARD);
+	entries[12].Set(wxACCEL_SHIFT, WXK_F3, wxID_BACKWARD);
+	entries[13].Set(wxACCEL_CTRL, (int) 'G', XRCID("Go to line"));
+	// Navigate / Bookmarks
+	entries[14].Set(wxACCEL_CTRL, WXK_F2, XRCID("Toggle bookmark"));
+	entries[15].Set(wxACCEL_NORMAL, WXK_F2, wxID_DOWN);
+	entries[16].Set(wxACCEL_SHIFT, WXK_F2, wxID_UP);
+	
+	wxAcceleratorTable accel(number, entries);
+	SetAcceleratorTable(accel);
+}
+
 bool MainFrame::Destroy()
 {
 	if(!wxFrame::Destroy())
@@ -205,7 +242,22 @@ void MainFrame::toggleBookmarkPanel()
 	_manager.Update();
 }
 
+
+void MainFrame::onRibbonButtonClicked(wxEvent/*wxRibbonButtonBarEvent*/& event)
+{
+	// Process an equivalent wxEVT_COMMAND_MENU_SELECTED event for simulating menu events.
+	// Used to unify RibbonButton click and accelerator entries.
+	
+	wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, event.GetId());
+	ProcessEvent(evt);
+
+	event.Skip();
+	
+}
+
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_CUSTOM(wxEVT_COMMAND_RIBBONBUTTON_CLICKED, wxID_ANY, MainFrame::onRibbonButtonClicked)
+
 	EVT_UPDATE_UI(wxID_SAVE, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(wxID_SAVEAS, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(XRCID("Save all"), MainFrame::onUpdateHasOpenDocument)
@@ -221,43 +273,43 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(wxID_PASTE, MainFrame::onUpdateCanPaste)
 
 
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, MainFrame::onNewDocument)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, MainFrame::onOpenDocument)
+	EVT_MENU(wxID_NEW, MainFrame::onNewDocument)
+	EVT_MENU(wxID_OPEN, MainFrame::onOpenDocument)
 	EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_OPEN, MainFrame::onRecentDocumentMenu)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_REVERT_TO_SAVED, MainFrame::onRevertDocument)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, MainFrame::onSaveDocument)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVEAS, MainFrame::onSaveDocumentAs)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_CLOSE, MainFrame::onCloseDocument)
-	EVT_RIBBONBUTTONBAR_CLICKED(XRCID("Close all"), MainFrame::onCloseAllDocuments)
+	EVT_MENU(wxID_REVERT_TO_SAVED, MainFrame::onRevertDocument)
+	EVT_MENU(wxID_SAVE, MainFrame::onSaveDocument)
+	EVT_MENU(wxID_SAVEAS, MainFrame::onSaveDocumentAs)
+	EVT_MENU(wxID_CLOSE, MainFrame::onCloseDocument)
+	EVT_MENU(XRCID("Close all"), MainFrame::onCloseAllDocuments)
 
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_UNDO, MainFrame::onUndo)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_REDO, MainFrame::onRedo)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_DELETE, MainFrame::onDelete)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_CUT, MainFrame::onCut)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_COPY, MainFrame::onCopy)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_PASTE, MainFrame::onPaste)
+	EVT_MENU(wxID_UNDO, MainFrame::onUndo)
+	EVT_MENU(wxID_REDO, MainFrame::onRedo)
+	EVT_MENU(wxID_DELETE, MainFrame::onDelete)
+	EVT_MENU(wxID_CUT, MainFrame::onCut)
+	EVT_MENU(wxID_COPY, MainFrame::onCopy)
+	EVT_MENU(wxID_PASTE, MainFrame::onPaste)
 
 	EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_FIND, MainFrame::onFind)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_BACKWARD, MainFrame::onFindPrev)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_FORWARD, MainFrame::onFindNext)
-	EVT_RIBBONBUTTONBAR_CLICKED(XRCID("Go to line"), MainFrame::onGoToLine)
+	EVT_MENU(wxID_FIND, MainFrame::onFind)
+	EVT_MENU(wxID_BACKWARD, MainFrame::onFindPrev)
+	EVT_MENU(wxID_FORWARD, MainFrame::onFindNext)
+	EVT_MENU(XRCID("Go to line"), MainFrame::onGoToLine)
 
 	EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Bookmark panel"), MainFrame::onBookmarkRibbonBarExtActivated)
-	EVT_RIBBONBUTTONBAR_CLICKED(XRCID("Toggle bookmark"), MainFrame::onToggleBookmark)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_UP, MainFrame::onPreviousBookmark)
-	EVT_RIBBONBUTTONBAR_CLICKED(wxID_DOWN, MainFrame::onNextBookmark)
+	EVT_MENU(XRCID("Toggle bookmark"), MainFrame::onToggleBookmark)
+	EVT_MENU(wxID_UP, MainFrame::onPreviousBookmark)
+	EVT_MENU(wxID_DOWN, MainFrame::onNextBookmark)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
 END_EVENT_TABLE()
 
-void MainFrame::onNewDocument(wxRibbonButtonBarEvent& WXUNUSED(event))
+void MainFrame::onNewDocument(wxCommandEvent& WXUNUSED(event))
 {
 	wxGetApp().createEmptyDocument(this);
 }
 
-void MainFrame::onOpenDocument(wxRibbonButtonBarEvent& event)
+void MainFrame::onOpenDocument(wxCommandEvent& event)
 {
 	wxGetApp().queryLoadFile(this);
 }
@@ -267,7 +319,7 @@ void MainFrame::onRecentDocumentMenu(wxRibbonButtonBarEvent& event)
 	event.PopupMenu(_recentFileMenu);
 }
 
-void MainFrame::onRevertDocument(wxRibbonButtonBarEvent& event)
+void MainFrame::onRevertDocument(wxCommandEvent& event)
 {
 	TextDocument* doc = getCurrentDocument();
 	if(doc)
@@ -277,7 +329,7 @@ void MainFrame::onRevertDocument(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onSaveDocument(wxRibbonButtonBarEvent& event)
+void MainFrame::onSaveDocument(wxCommandEvent& event)
 {
 	TextDocument* doc = getCurrentDocument();
 	if(doc)
@@ -291,7 +343,7 @@ void MainFrame::onSaveDocument(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onSaveDocumentAs(wxRibbonButtonBarEvent& event)
+void MainFrame::onSaveDocumentAs(wxCommandEvent& event)
 {
 	TextDocument* doc = getCurrentDocument();
 	if(doc)
@@ -300,7 +352,7 @@ void MainFrame::onSaveDocumentAs(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onCloseDocument(wxRibbonButtonBarEvent& event)
+void MainFrame::onCloseDocument(wxCommandEvent& event)
 {
 	TextDocument* doc = getCurrentDocument();
 	if(doc)
@@ -309,7 +361,7 @@ void MainFrame::onCloseDocument(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onCloseAllDocuments(wxRibbonButtonBarEvent& event)
+void MainFrame::onCloseAllDocuments(wxCommandEvent& event)
 {
 	wxGetApp().closeAllFrameDocuments(this);
 }
@@ -333,7 +385,7 @@ void MainFrame::onPageChanged(wxAuiNotebookEvent& event)
 	}
 }
 
-void MainFrame::onUndo(wxRibbonButtonBarEvent& event)
+void MainFrame::onUndo(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -342,7 +394,7 @@ void MainFrame::onUndo(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onRedo(wxRibbonButtonBarEvent& event)
+void MainFrame::onRedo(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -351,7 +403,7 @@ void MainFrame::onRedo(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onDelete(wxRibbonButtonBarEvent& event)
+void MainFrame::onDelete(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -360,7 +412,7 @@ void MainFrame::onDelete(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onCut(wxRibbonButtonBarEvent& event)
+void MainFrame::onCut(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -369,7 +421,7 @@ void MainFrame::onCut(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onCopy(wxRibbonButtonBarEvent& event)
+void MainFrame::onCopy(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -378,7 +430,7 @@ void MainFrame::onCopy(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onPaste(wxRibbonButtonBarEvent& event)
+void MainFrame::onPaste(wxCommandEvent& event)
 {
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	if(txt)
@@ -396,7 +448,7 @@ void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& event)
 	}
 }
 
-void MainFrame::onFind(wxRibbonButtonBarEvent& event)
+void MainFrame::onFind(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -405,7 +457,7 @@ void MainFrame::onFind(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onFindNext(wxRibbonButtonBarEvent& event)
+void MainFrame::onFindNext(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -414,7 +466,7 @@ void MainFrame::onFindNext(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onFindPrev(wxRibbonButtonBarEvent& event)
+void MainFrame::onFindPrev(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -423,7 +475,7 @@ void MainFrame::onFindPrev(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onGoToLine(wxRibbonButtonBarEvent& event)
+void MainFrame::onGoToLine(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -496,7 +548,7 @@ void MainFrame::onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& event)
 	toggleBookmarkPanel();
 }
 
-void MainFrame::onToggleBookmark(wxRibbonButtonBarEvent& event)
+void MainFrame::onToggleBookmark(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -505,7 +557,7 @@ void MainFrame::onToggleBookmark(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onPreviousBookmark(wxRibbonButtonBarEvent& event)
+void MainFrame::onPreviousBookmark(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
@@ -514,7 +566,7 @@ void MainFrame::onPreviousBookmark(wxRibbonButtonBarEvent& event)
 	}
 }
 
-void MainFrame::onNextBookmark(wxRibbonButtonBarEvent& event)
+void MainFrame::onNextBookmark(wxCommandEvent& event)
 {
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)

@@ -51,6 +51,7 @@ public:
 protected:
 	void CommonInit();
 	void InitRibbon();
+	void InitAcceleratorTable();
 
 	wxAuiNotebook* getNotebook(){return _notebook;}
 
@@ -63,30 +64,32 @@ private:
 
 	wxMenu*        _recentFileMenu;
 
+	void onRibbonButtonClicked(wxEvent& event);
+	
 	void onPageClosing(wxAuiNotebookEvent& event);
 	void onPageChanged(wxAuiNotebookEvent& event);
 	
-	void onNewDocument(wxRibbonButtonBarEvent& event);
-	void onOpenDocument(wxRibbonButtonBarEvent& event);
+	void onNewDocument(wxCommandEvent& event);
+	void onOpenDocument(wxCommandEvent& event);
 	void onRecentDocumentMenu(wxRibbonButtonBarEvent& event);
-	void onRevertDocument(wxRibbonButtonBarEvent& event);
-	void onSaveDocument(wxRibbonButtonBarEvent& event);
-	void onSaveDocumentAs(wxRibbonButtonBarEvent& event);
-	void onCloseDocument(wxRibbonButtonBarEvent& event);
-	void onCloseAllDocuments(wxRibbonButtonBarEvent& event);
+	void onRevertDocument(wxCommandEvent& event);
+	void onSaveDocument(wxCommandEvent& event);
+	void onSaveDocumentAs(wxCommandEvent& event);
+	void onCloseDocument(wxCommandEvent& event);
+	void onCloseAllDocuments(wxCommandEvent& event);
 
-	void onUndo(wxRibbonButtonBarEvent& event);
-	void onRedo(wxRibbonButtonBarEvent& event);
-	void onDelete(wxRibbonButtonBarEvent& event);
-	void onCut(wxRibbonButtonBarEvent& event);
-	void onCopy(wxRibbonButtonBarEvent& event);
-	void onPaste(wxRibbonButtonBarEvent& event);
+	void onUndo(wxCommandEvent& event);
+	void onRedo(wxCommandEvent& event);
+	void onDelete(wxCommandEvent& event);
+	void onCut(wxCommandEvent& event);
+	void onCopy(wxCommandEvent& event);
+	void onPaste(wxCommandEvent& event);
 
 	void onFindRibbonBarExtActivated(wxRibbonPanelEvent& event);	
-	void onFind(wxRibbonButtonBarEvent& event);
-	void onFindNext(wxRibbonButtonBarEvent& event);
-	void onFindPrev(wxRibbonButtonBarEvent& event);
-	void onGoToLine(wxRibbonButtonBarEvent& event);
+	void onFind(wxCommandEvent& event);
+	void onFindNext(wxCommandEvent& event);
+	void onFindPrev(wxCommandEvent& event);
+	void onGoToLine(wxCommandEvent& event);
 
 	void onUpdateHasOpenDocument(wxUpdateUIEvent& event);
 	void onUpdateCanUndo(wxUpdateUIEvent& event);
@@ -95,9 +98,9 @@ private:
 	void onUpdateHasSelection(wxUpdateUIEvent& event);
 
 	void onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& event);
-	void onToggleBookmark(wxRibbonButtonBarEvent& event);
-	void onPreviousBookmark(wxRibbonButtonBarEvent& event);
-	void onNextBookmark(wxRibbonButtonBarEvent& event);
+	void onToggleBookmark(wxCommandEvent& event);
+	void onPreviousBookmark(wxCommandEvent& event);
+	void onNextBookmark(wxCommandEvent& event);
 };
 
 #endif // _MAIN_FRAME_HPP_
