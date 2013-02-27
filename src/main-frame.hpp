@@ -68,10 +68,11 @@ private:
 	
 	void onPageClosing(wxAuiNotebookEvent& event);
 	void onPageChanged(wxAuiNotebookEvent& event);
-	
+
 	void onNewDocument(wxCommandEvent& event);
 	void onOpenDocument(wxCommandEvent& event);
 	void onRecentDocumentMenu(wxRibbonButtonBarEvent& event);
+	void onRecentDocument(wxCommandEvent& event);	
 	void onRevertDocument(wxCommandEvent& event);
 	void onSaveDocument(wxCommandEvent& event);
 	void onSaveDocumentAs(wxCommandEvent& event);

@@ -272,10 +272,10 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(wxID_COPY, MainFrame::onUpdateHasSelection)
 	EVT_UPDATE_UI(wxID_PASTE, MainFrame::onUpdateCanPaste)
 
-
 	EVT_MENU(wxID_NEW, MainFrame::onNewDocument)
 	EVT_MENU(wxID_OPEN, MainFrame::onOpenDocument)
 	EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_OPEN, MainFrame::onRecentDocumentMenu)
+	EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, MainFrame::onRecentDocument)
 	EVT_MENU(wxID_REVERT_TO_SAVED, MainFrame::onRevertDocument)
 	EVT_MENU(wxID_SAVE, MainFrame::onSaveDocument)
 	EVT_MENU(wxID_SAVEAS, MainFrame::onSaveDocumentAs)
@@ -317,6 +317,19 @@ void MainFrame::onOpenDocument(wxCommandEvent& event)
 void MainFrame::onRecentDocumentMenu(wxRibbonButtonBarEvent& event)
 {
 	event.PopupMenu(_recentFileMenu);
+}
+
+void MainFrame::onRecentDocument(wxCommandEvent& event)
+{
+	int id = event.GetId() - wxID_FILE1;
+	if(id>=0 && id<wxGetApp().getFileHistory().GetCount())
+	{
+		wxString name = wxGetApp().getFileHistory().GetHistoryFile(id);
+		if(!name.IsEmpty())
+		{
+			wxGetApp().loadDocument(name, this);
+		}
+	}
 }
 
 void MainFrame::onRevertDocument(wxCommandEvent& event)
