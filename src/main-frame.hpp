@@ -82,6 +82,7 @@ private:
 	void onCopy(wxRibbonButtonBarEvent& event);
 	void onPaste(wxRibbonButtonBarEvent& event);
 
+	void onFindRibbonBarExtActivated(wxRibbonPanelEvent& event);	
 	void onFind(wxRibbonButtonBarEvent& event);
 	void onFindNext(wxRibbonButtonBarEvent& event);
 	void onFindPrev(wxRibbonButtonBarEvent& event);

@@ -130,7 +130,7 @@ void MainFrame::InitRibbon()
 	{// Navigate page
 		wxRibbonPage* page = new wxRibbonPage(_ribbon, wxID_ANY, "Navigate");
 		{
-			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Search");
+			wxRibbonPanel* panel = new wxRibbonPanel(page, XRCID("Search panel"), "Search", wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_DEFAULT_STYLE|wxRIBBON_PANEL_EXT_BUTTON);
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddButton(wxID_FIND, "Find", wxArtProvider::GetBitmap(wxART_FIND, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddButton(wxID_BACKWARD, "Find previous", wxArtProvider::GetBitmap(wxART_GO_BACK, wxART_BUTTON, wxSize(24, 24)));
@@ -237,6 +237,7 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_COPY, MainFrame::onCopy)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_PASTE, MainFrame::onPaste)
 
+	EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_FIND, MainFrame::onFind)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_BACKWARD, MainFrame::onFindPrev)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_FORWARD, MainFrame::onFindNext)
@@ -383,6 +384,15 @@ void MainFrame::onPaste(wxRibbonButtonBarEvent& event)
 	if(txt)
 	{
 		txt->Paste();
+	}
+}
+
+void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showFastFind(!frame->fastFindShown());
 	}
 }
 
