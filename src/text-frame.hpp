@@ -108,6 +108,9 @@ private:
 	void onFastFindLine(wxCommandEvent& event);
 
 	void OnTextModified(wxStyledTextEvent& event);
+	void onUpdateUI(wxStyledTextEvent& event);
+
+	void onSelectionChanged();
 };
 
 #endif // _TEXT_FRAME_HPP_

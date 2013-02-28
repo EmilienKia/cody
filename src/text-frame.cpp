@@ -34,7 +34,13 @@ cody is free software: you can redistribute it and/or modify it
 
 enum TEXT_MARKERS
 {
-	TEXT_MARKER_BOOKMARK = 0
+	TEXT_MARKER_BOOKMARK = 0,
+	TEXT_MARKER_FIND
+};
+
+enum TEXT_INDICATORS
+{
+	TEXT_INDICATOR_SEARCH = wxSTC_INDIC_CONTAINER
 };
 
 BEGIN_EVENT_TABLE(TextFrame, wxPanel)
@@ -47,7 +53,9 @@ BEGIN_EVENT_TABLE(TextFrame, wxPanel)
 	EVT_TEXT_ENTER(XRCID("FAST_FIND_LINE_BTN"), TextFrame::onFastFindLine)
 
 	EVT_STC_MODIFIED(wxID_ANY, TextFrame::OnTextModified)
+	EVT_STC_UPDATEUI(wxID_ANY, TextFrame::onUpdateUI)
 END_EVENT_TABLE()
+
 
 TextFrame::TextFrame(wxWindow* parent, TextDocument* doc):
 wxPanel(parent, wxID_ANY),
@@ -92,7 +100,12 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	if(!txt)
 		return;
 
-	txt->MarkerDefine(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 192), wxColour(0, 0, 255));
+	txt->MarkerDefine(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 156), wxColour(0, 0, 192));
+	txt->MarkerDefine(TEXT_MARKER_FIND, wxSTC_MARK_ARROW, wxColour(0, 156, 0), wxColour(0, 192, 0));
+
+	txt->IndicatorSetStyle(TEXT_INDICATOR_SEARCH, wxSTC_INDIC_STRAIGHTBOX);
+	txt->IndicatorSetForeground(TEXT_INDICATOR_SEARCH, wxColour(0, 156, 0));
+	txt->IndicatorSetUnder(TEXT_INDICATOR_SEARCH, true);
 }
 
 void TextFrame::initAfterLoading()
@@ -470,4 +483,46 @@ void TextFrame::setFocusToTextCtrl()
 	if(txt)
 		txt->SetFocus();
 }
+
+void TextFrame::onUpdateUI(wxStyledTextEvent& event)
+{
+	if(event.GetUpdated()==wxSTC_UPDATE_SELECTION)
+	{
+		onSelectionChanged();
+	}
+}
+
+void TextFrame::onSelectionChanged()
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	int len = txt->GetLength();
+
+	// Rem Bookmark markers (Scintilla)
+	txt->MarkerDeleteAll(TEXT_MARKER_FIND);
+
+	// Rem indicators (Scintilla)
+	txt->SetIndicatorCurrent(TEXT_INDICATOR_SEARCH);
+	txt->IndicatorClearRange(0, len);
+	
+	int start = txt->GetSelectionStart();
+	int end = txt->GetSelectionEnd();
+
+	wxString sel = txt->GetSelectedText();
+	int sellen = sel.Length(); 
+	if(sellen>0)
+	{
+		int pos = -1;
+		while(pos = txt->FindText(pos+1, len, sel), pos>=0 && pos<len )
+		{
+			// Add markers and indicators
+			txt->MarkerAdd(txt->LineFromPosition(pos), TEXT_MARKER_FIND);
+			txt->IndicatorFillRange(pos, sellen);
+		}
+	}
+	
+}
+
+
+
+
 
