@@ -30,13 +30,8 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "bookmark.hpp"
 #include "main-frame.hpp"
+#include "markbar.hpp"
 #include "text-document.hpp"
-
-enum TEXT_MARKERS
-{
-	TEXT_MARKER_BOOKMARK = 0,
-	TEXT_MARKER_FIND
-};
 
 enum TEXT_INDICATORS
 {
@@ -54,6 +49,8 @@ BEGIN_EVENT_TABLE(TextFrame, wxPanel)
 
 	EVT_STC_MODIFIED(wxID_ANY, TextFrame::OnTextModified)
 	EVT_STC_UPDATEUI(wxID_ANY, TextFrame::onUpdateUI)
+
+	MARKBAR_CLICK(wxID_ANY, TextFrame::onMarkerActivated)
 END_EVENT_TABLE()
 
 
@@ -68,12 +65,15 @@ _fastFindShown(false)
 void TextFrame::CommonInit()
 {
 	_mainText = new wxStyledTextCtrl(this, wxID_ANY);
+	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
+	
 	InitTextCtrl(_mainText);
 	
 	updateLineNbMargin();
 
-	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
-	gsz->Add(_mainText, 1, wxEXPAND);
+	wxSizer* gsz = new wxBoxSizer(wxHORIZONTAL);
+	wxSizer* vsz = new wxBoxSizer(wxVERTICAL);
+	vsz->Add(_mainText, 1, wxEXPAND);
 
 	// Fast find
 	_fastFindLine  = new wxSpinCtrl(this, XRCID("FAST_FIND_LINE"), "", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS|wxTE_PROCESS_ENTER);
@@ -88,11 +88,18 @@ void TextFrame::CommonInit()
 	_fastFindSizer->Add(new wxBitmapButton(this, wxID_FORWARD, wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_BUTTON, wxSize(16, 16))), 0, wxEXPAND|wxALL, 2);
 	_fastFindSizer->AddSpacer(8);
 	_fastFindSizer->Add(_fastFindClose, 0, wxEXPAND|wxALL, 2);
-	gsz->Add(_fastFindSizer, 0, wxEXPAND);
+	vsz->Add(_fastFindSizer, 0, wxEXPAND);
+
+	gsz->Add(vsz, 1, wxEXPAND);
+	gsz->Add(_markbar, 0, wxEXPAND);
 	
 	SetSizer(gsz);
 
 	gsz->Hide(_fastFindSizer, true);
+
+	// Initialize markers (Scintilla and MarkBar)
+	setMarkerStyle(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 156), wxColour(0, 0, 192));
+	setMarkerStyle(TEXT_MARKER_SEARCH,   wxSTC_MARK_ARROW,  wxColour(0, 156, 0), wxColour(0, 192, 0));
 }
 
 void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
@@ -100,9 +107,7 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	if(!txt)
 		return;
 
-	txt->MarkerDefine(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 156), wxColour(0, 0, 192));
-	txt->MarkerDefine(TEXT_MARKER_FIND, wxSTC_MARK_ARROW, wxColour(0, 156, 0), wxColour(0, 192, 0));
-
+	// Initialize indicators
 	txt->IndicatorSetStyle(TEXT_INDICATOR_SEARCH, wxSTC_INDIC_STRAIGHTBOX);
 	txt->IndicatorSetForeground(TEXT_INDICATOR_SEARCH, wxColour(0, 156, 0));
 	txt->IndicatorSetUnder(TEXT_INDICATOR_SEARCH, true);
@@ -310,17 +315,23 @@ void TextFrame::OnTextModified(wxStyledTextEvent& event)
 	if(txt)
 	{
 		int line  = txt->LineFromPosition(event.GetPosition()),
-			lines = event.GetLinesAdded();
+			lines = event.GetLinesAdded(),
+			linecount = txt->GetLineCount();
 
+		
 		if(lines!=0)
 		{
 			// Add or remove lines
 			updateLineNbMargin();
-			_fastFindLine->SetRange(1, getCurrentTextCtrl()->GetLineCount());
+			_fastFindLine->SetRange(1, linecount);
 		
 			// Bookmarks
 			if(getDocument()->getBookmarks().addLines(line, lines))
 				UpdateBookmarkPanel();
+
+			// Markers
+			_markbar->SetMax(linecount);
+			_markbar->MoveMarkers(line, lines);
 		}
 	}
 	
@@ -367,8 +378,8 @@ void TextFrame::addBookmark(int line, wxString name)
 			list.insert(bm);
 			UpdateBookmarkPanel();
 
-			// Add Bookmark marker (Scintilla)
-			txt->MarkerAdd(line, TEXT_MARKER_BOOKMARK);
+			// Add Bookmark marker
+			addMarker(TEXT_MARKER_BOOKMARK, name, line);
 		}
 	}
 }
@@ -377,26 +388,14 @@ void TextFrame::remBookmark(int line)
 {
 	getDocument()->getBookmarks().remove(line);
 	UpdateBookmarkPanel();
-
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	if(txt)
-	{
-		// Rem Bookmark marker (Scintilla)
-		txt->MarkerDelete(line, TEXT_MARKER_BOOKMARK);
-	}	
+	remMarker(TEXT_MARKER_BOOKMARK, line);
 }
 
 void TextFrame::clearBookmarks()
 {
 	getDocument()->getBookmarks().clear();
-	UpdateBookmarkPanel();	
-
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	if(txt)
-	{
-		// Rem Bookmark markers (Scintilla)
-		txt->MarkerDeleteAll(TEXT_MARKER_BOOKMARK);
-	}
+	UpdateBookmarkPanel();
+	remMarkers(TEXT_MARKER_BOOKMARK);
 }
 
 void TextFrame::UpdateBookmarkPanel()
@@ -414,21 +413,17 @@ void TextFrame::UpdateBookmarkPanel()
 
 void TextFrame::addBookmarksFromProvider()
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	if(txt)
+	BookmarkList& list = getDocument()->getBookmarks();
+
+	// Remove existing markers then add from provider
+	remMarkers(TEXT_MARKER_BOOKMARK);
+	for(BookmarkList::iterator it=list.begin(); it!=list.end(); ++it)
 	{
-		BookmarkList& list = getDocument()->getBookmarks();
-
-		// Remove existing markers (Scintilla) then add from provider
-		txt->MarkerDeleteAll(TEXT_MARKER_BOOKMARK);
-		for(BookmarkList::iterator it=list.begin(); it!=list.end(); ++it)
-		{
-			txt->MarkerAdd(it->line, TEXT_MARKER_BOOKMARK);			
-		}
-
-		// Update Bookmark panel
-		UpdateBookmarkPanel();
+		addMarker(TEXT_MARKER_BOOKMARK, it->name, it->line);
 	}
+
+	// Update Bookmark panel
+	UpdateBookmarkPanel();
 }
 
 void TextFrame::gotoPrevBookmark()
@@ -497,8 +492,8 @@ void TextFrame::onSelectionChanged()
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	int len = txt->GetLength();
 
-	// Rem Bookmark markers (Scintilla)
-	txt->MarkerDeleteAll(TEXT_MARKER_FIND);
+	// Rem Bookmark markers
+	remMarkers(TEXT_MARKER_SEARCH);
 
 	// Rem indicators (Scintilla)
 	txt->SetIndicatorCurrent(TEXT_INDICATOR_SEARCH);
@@ -515,14 +510,54 @@ void TextFrame::onSelectionChanged()
 		while(pos = txt->FindText(pos+1, len, sel), pos>=0 && pos<len )
 		{
 			// Add markers and indicators
-			txt->MarkerAdd(txt->LineFromPosition(pos), TEXT_MARKER_FIND);
+			addMarker(TEXT_MARKER_SEARCH, sel, txt->LineFromPosition(pos));
 			txt->IndicatorFillRange(pos, sellen);
 		}
 	}
 	
 }
 
+void TextFrame::setMarkerStyle(int id, const wxBitmap &bmp, const wxColour& fore, const wxColour& back)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->MarkerDefineBitmap(id, bmp);
+	_markbar->SetCategory(id, fore, back);
+}
 
+void TextFrame::setMarkerStyle(int id, int predefStyle, const wxColour& fore, const wxColour& back)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->MarkerDefine(id, predefStyle, fore, back);
+	_markbar->SetCategory(id, fore, back);
+}
+
+void TextFrame::addMarker(int id, const wxString& name, int line)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->MarkerAdd(line, id);
+	_markbar->AddMarker(line, name, id);
+}
+
+void TextFrame::remMarker(int id, int line)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->MarkerDelete(line, id);
+	_markbar->RemoveMarker(line, id);
+}
+
+void TextFrame::remMarkers(int id)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->MarkerDeleteAll(id);
+	_markbar->RemoveCategoryMarker(id);
+}
+
+void TextFrame::onMarkerActivated(wxMarkBarEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+	txt->GotoLine(event.getPosition());
+	setFocusToTextCtrl();
+}
 
 
 

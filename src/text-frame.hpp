@@ -26,8 +26,11 @@ class TextDocument;
 class MainFrame;
 
 class wxAuiNotebook;
+class wxMarkBar;
+class wxMarkBarEvent;
 class wxSearchCtrl;
 class wxSpinCtrl;
+
 
 class TextFrame: public wxPanel
 {
@@ -69,8 +72,6 @@ public:
 
 	void setFocusToTextCtrl();
 
-	
-	
 protected:
 	void CommonInit();
 	void InitTextCtrl(wxStyledTextCtrl* txt);
@@ -83,8 +84,19 @@ protected:
 		FoldingID
 	};
 
-	void UpdateBookmarkPanel();
+	enum MARKER_ID{
+		TEXT_MARKER_BOOKMARK,
+		TEXT_MARKER_SEARCH
+	};
 	
+	void UpdateBookmarkPanel();
+
+	void setMarkerStyle(int id, const wxBitmap &bmp, const wxColour& fore, const wxColour& back);
+	void setMarkerStyle(int id, int predefStyle, const wxColour& fore, const wxColour& back);
+	void addMarker(int id, const wxString& name, int line=wxNOT_FOUND);
+	void remMarker(int id, int line=wxNOT_FOUND);
+	void remMarkers(int id);
+
 private:
 	TextDocument* _document;
 	wxStyledTextCtrl* _mainText;
@@ -94,6 +106,7 @@ private:
 	wxSearchCtrl* _fastFindText;
 	wxSpinCtrl*   _fastFindLine;
 	wxBitmapButton* _fastFindClose;
+	wxMarkBar*  _markbar;
 
 	// margin variables
 	bool _lineNrMarginShown;
@@ -110,6 +123,8 @@ private:
 	void OnTextModified(wxStyledTextEvent& event);
 	void onUpdateUI(wxStyledTextEvent& event);
 
+	void onMarkerActivated(wxMarkBarEvent& event);
+	
 	void onSelectionChanged();
 };
 
