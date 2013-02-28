@@ -152,7 +152,9 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_GOTO_LAST, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			
 		}
 	}
 	_ribbon->Realise();
@@ -245,10 +247,14 @@ void MainFrame::toggleBookmarkPanel()
 
 void MainFrame::onRibbonButtonClicked(wxEvent/*wxRibbonButtonBarEvent*/& event)
 {
+	wxRibbonButtonBarEvent *ribbonevent = dynamic_cast<wxRibbonButtonBarEvent*>(&event);
+	
 	// Process an equivalent wxEVT_COMMAND_MENU_SELECTED event for simulating menu events.
 	// Used to unify RibbonButton click and accelerator entries.
 	
 	wxCommandEvent evt(wxEVT_COMMAND_MENU_SELECTED, event.GetId());
+	if(ribbonevent)
+		evt.SetInt(ribbonevent->GetInt());
 	ProcessEvent(evt);
 
 	event.Skip();
@@ -299,6 +305,11 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(XRCID("Toggle bookmark"), MainFrame::onToggleBookmark)
 	EVT_MENU(wxID_UP, MainFrame::onPreviousBookmark)
 	EVT_MENU(wxID_DOWN, MainFrame::onNextBookmark)
+
+	EVT_MENU(XRCID("Display line numbers"), MainFrame::onDisplayLineNumber)
+	EVT_UPDATE_UI(XRCID("Display line numbers"), MainFrame::onUpdateDisplayLineNumber)
+	EVT_MENU(XRCID("Display caret line"), MainFrame::onDisplayCaretLine)
+	EVT_UPDATE_UI(XRCID("Display caret line"), MainFrame::onUpdateDisplayCaretLine)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
@@ -588,3 +599,38 @@ void MainFrame::onNextBookmark(wxCommandEvent& event)
 	}
 }
 
+void MainFrame::onDisplayLineNumber(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showLineNumbers(event.IsChecked());
+	}	
+}
+
+void MainFrame::onUpdateDisplayLineNumber(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->lineNumbersShown());
+	}
+}
+
+void MainFrame::onDisplayCaretLine(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showCaretLine(event.IsChecked());
+	}
+}
+
+void MainFrame::onUpdateDisplayCaretLine(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->caretLineShown());
+	}
+}

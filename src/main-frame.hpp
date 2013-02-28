@@ -102,6 +102,11 @@ private:
 	void onToggleBookmark(wxCommandEvent& event);
 	void onPreviousBookmark(wxCommandEvent& event);
 	void onNextBookmark(wxCommandEvent& event);
+
+	void onDisplayLineNumber(wxCommandEvent& event);
+	void onUpdateDisplayLineNumber(wxUpdateUIEvent& event);
+	void onDisplayCaretLine(wxCommandEvent& event);
+	void onUpdateDisplayCaretLine(wxUpdateUIEvent& event);
 };
 
 #endif // _MAIN_FRAME_HPP_

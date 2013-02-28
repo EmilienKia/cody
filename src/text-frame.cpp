@@ -135,8 +135,23 @@ void TextFrame::showLineNumbers(bool show)
 {
 	_lineNrMarginShown = show;
 	updateLineNbMargin();
-
 }
+
+bool TextFrame::lineNumbersShown()const
+{
+	return _lineNrMarginShown;
+}
+
+void TextFrame::showCaretLine(bool show)
+{
+	getCurrentTextCtrl()->SetCaretLineVisible(show);
+}
+
+bool TextFrame::caretLineShown()const
+{
+	return getCurrentTextCtrl()->GetCaretLineVisible();
+}
+
 
 void TextFrame::updateLineNbMargin()
 {

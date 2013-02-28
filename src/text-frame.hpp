@@ -43,8 +43,8 @@ public:
 	
 	void initAfterLoading();
 		
-	wxStyledTextCtrl* getMainTextCtrl(){return _mainText;}
-	wxStyledTextCtrl* getCurrentTextCtrl(){return _mainText;}
+	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
+	wxStyledTextCtrl* getCurrentTextCtrl()const{return _mainText;}
 
 	MainFrame* getMainFrame();
 
@@ -60,6 +60,9 @@ public:
 	void setTitle(const wxString& title);
 
 	void showLineNumbers(bool show = true);
+	bool lineNumbersShown()const;
+	void showCaretLine(bool show = true);
+	bool caretLineShown()const;
 
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));
