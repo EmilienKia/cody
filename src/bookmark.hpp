@@ -69,14 +69,17 @@ class BookmarkProvider : public wxModule, public std::map<wxString, BookmarkList
 	wxDECLARE_DYNAMIC_CLASS(BookmarkProvider);	
 protected:
 	static BookmarkProvider s_bookmarks;
+	wxString m_bookmarkFilePath;
+
+	bool load();
+	void save();
+	
 public:
 	BookmarkProvider(){}
 	virtual bool OnInit();
 	virtual void OnExit();
 	
 	static BookmarkList& get(const wxString& file);
-	static void load();
-	static void save();
 };
 
 

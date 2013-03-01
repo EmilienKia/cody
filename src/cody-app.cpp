@@ -22,8 +22,10 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/wx.h>
 
 #include <wx/aboutdlg.h>
+#include <wx/dir.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/ribbon/buttonbar.h>
+#include <wx/stdpaths.h>
 
 #include "cody-app.hpp"
 
@@ -41,12 +43,23 @@ END_EVENT_TABLE()
 
 bool CodyApp::OnInit()
 {
-	_config = new wxConfig("Cody");
+	// Ensure that user local data dir is created
+	if(!wxDir::Exists(wxStandardPaths::Get().GetUserLocalDataDir()))
+	   wxDir::Make(wxStandardPaths::Get().GetUserLocalDataDir());
+
+	// Load config
+ 	_config = new wxFileConfig("Cody", "Cody", 
+		wxStandardPaths::Get().GetUserLocalDataDir() + wxFileName::GetPathSeparator() + "cody.conf",
+	    wxStandardPaths::Get().GetConfigDir() + wxFileName::GetPathSeparator() + "cody.conf");
+
+	// Load history from conf
 	_fileHistory.Load(*_config);
-	
+
+	// Create the first main frame
 	_frame = new MainFrame();
 	_frame->Show(TRUE);
 
+	// Create an empty document
 	createEmptyDocument(_frame);
 	
 	return TRUE;

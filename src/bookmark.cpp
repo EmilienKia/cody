@@ -139,10 +139,10 @@ wxIMPLEMENT_DYNAMIC_CLASS(BookmarkProvider, wxModule);
 
 BookmarkProvider BookmarkProvider::s_bookmarks;
 
+
 bool BookmarkProvider::OnInit()
 {
-	load();
-	return true;
+	return load();
 }
 
 void BookmarkProvider::OnExit()
@@ -155,20 +155,16 @@ BookmarkList& BookmarkProvider::get(const wxString& file)
 	return s_bookmarks[file];
 }
 
-void BookmarkProvider::load()
+bool BookmarkProvider::load()
 {
-	wxString path = wxStandardPaths::Get().GetUserConfigDir();
-	if(path.IsEmpty())
-		return;
-	path += wxFileName::GetPathSeparator();
-	path += "bookmarks.txt";
-	
-	if(!wxFileName::FileExists(path))
-		return;
-
 	BookmarkList* list = NULL;
+
+	wxString path = wxStandardPaths::Get().GetUserLocalDataDir();
+	if(path.IsEmpty())
+		return false;
+	m_bookmarkFilePath = path +  wxFileName::GetPathSeparator() + "bookmarks.txt";
 	
-	wxFFileInputStream file(path);
+	wxFFileInputStream file(m_bookmarkFilePath);
 	if(file.IsOk())
 	{
 		wxTextInputStream txt(file);
@@ -201,17 +197,12 @@ void BookmarkProvider::load()
 			}
 		}
 	}
+	return true;
 }
 
 void BookmarkProvider::save()
 {
-	wxString path = wxStandardPaths::Get().GetUserConfigDir();
-	if(path.IsEmpty())
-		return;
-	path += wxFileName::GetPathSeparator();
-	path += "bookmarks.txt";
-	
-	wxFFileOutputStream file(path);
+	wxFFileOutputStream file(m_bookmarkFilePath);
 	if(!file.IsOk())
 		return;
 	
