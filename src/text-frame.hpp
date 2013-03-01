@@ -65,6 +65,8 @@ public:
 	bool caretLineShown()const;
 	void showWhiteSpaces(bool show = true);
 	bool whiteSpacesShown()const;
+	void showIndentationGuides(bool show = true);
+	bool indentationGuidesShown()const;
 
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));

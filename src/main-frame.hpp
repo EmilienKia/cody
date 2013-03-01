@@ -109,6 +109,9 @@ private:
 	void onUpdateDisplayCaretLine(wxUpdateUIEvent& event);
 	void onDisplayWhiteSpaces(wxCommandEvent& event);
 	void onUpdateDisplayWhiteSpaces(wxUpdateUIEvent& event);
+	void onDisplayIndentationGuides(wxCommandEvent& event);
+	void onUpdateDisplayIndentationGuides(wxUpdateUIEvent& event);
+
 };
 
 #endif // _MAIN_FRAME_HPP_

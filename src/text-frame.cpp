@@ -162,6 +162,16 @@ bool TextFrame::whiteSpacesShown()const
 	return getCurrentTextCtrl()->GetViewWhiteSpace()!=wxSTC_WS_INVISIBLE;
 }
 
+void TextFrame::showIndentationGuides(bool show)
+{
+	getCurrentTextCtrl()->SetIndentationGuides(show?wxSTC_IV_LOOKFORWARD:wxSTC_IV_NONE);
+}
+
+bool TextFrame::indentationGuidesShown()const
+{
+	return getCurrentTextCtrl()->GetIndentationGuides()!=wxSTC_IV_NONE;
+}
+
 void TextFrame::updateLineNbMargin()
 {
 	wxStyledTextCtrl* txt = getMainTextCtrl();
