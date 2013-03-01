@@ -63,6 +63,8 @@ public:
 	bool lineNumbersShown()const;
 	void showCaretLine(bool show = true);
 	bool caretLineShown()const;
+	void showWhiteSpaces(bool show = true);
+	bool whiteSpacesShown()const;
 
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));

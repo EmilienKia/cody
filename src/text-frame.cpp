@@ -152,6 +152,15 @@ bool TextFrame::caretLineShown()const
 	return getCurrentTextCtrl()->GetCaretLineVisible();
 }
 
+void TextFrame::showWhiteSpaces(bool show)
+{
+	getCurrentTextCtrl()->SetViewWhiteSpace(show?wxSTC_WS_VISIBLEALWAYS:wxSTC_WS_INVISIBLE);
+}
+
+bool TextFrame::whiteSpacesShown()const
+{
+	return getCurrentTextCtrl()->GetViewWhiteSpace()!=wxSTC_WS_INVISIBLE;
+}
 
 void TextFrame::updateLineNbMargin()
 {

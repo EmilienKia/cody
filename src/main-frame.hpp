@@ -107,6 +107,8 @@ private:
 	void onUpdateDisplayLineNumber(wxUpdateUIEvent& event);
 	void onDisplayCaretLine(wxCommandEvent& event);
 	void onUpdateDisplayCaretLine(wxUpdateUIEvent& event);
+	void onDisplayWhiteSpaces(wxCommandEvent& event);
+	void onUpdateDisplayWhiteSpaces(wxUpdateUIEvent& event);
 };
 
 #endif // _MAIN_FRAME_HPP_

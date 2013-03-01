@@ -154,7 +154,7 @@ void MainFrame::InitRibbon()
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			
+			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 		}
 	}
 	_ribbon->Realise();
@@ -310,6 +310,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display line numbers"), MainFrame::onUpdateDisplayLineNumber)
 	EVT_MENU(XRCID("Display caret line"), MainFrame::onDisplayCaretLine)
 	EVT_UPDATE_UI(XRCID("Display caret line"), MainFrame::onUpdateDisplayCaretLine)
+	EVT_MENU(XRCID("Display white spaces"), MainFrame::onDisplayWhiteSpaces)
+	EVT_UPDATE_UI(XRCID("Display white spaces"), MainFrame::onUpdateDisplayWhiteSpaces)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
@@ -632,5 +634,23 @@ void MainFrame::onUpdateDisplayCaretLine(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Check(frame->caretLineShown());
+	}
+}
+
+void MainFrame::onDisplayWhiteSpaces(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showWhiteSpaces(event.IsChecked());
+	}	
+}
+
+void MainFrame::onUpdateDisplayWhiteSpaces(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->whiteSpacesShown());
 	}
 }
