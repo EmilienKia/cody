@@ -152,11 +152,17 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+		}
+		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Margins");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display markers"), "Markers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display folders"), "Folders", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 		}
 	}
 	_ribbon->Realise();
@@ -310,6 +316,11 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 
 	EVT_MENU(XRCID("Display line numbers"), MainFrame::onDisplayLineNumber)
 	EVT_UPDATE_UI(XRCID("Display line numbers"), MainFrame::onUpdateDisplayLineNumber)
+	EVT_MENU(XRCID("Display markers"), MainFrame::onDisplayMarkers)
+	EVT_UPDATE_UI(XRCID("Display markers"), MainFrame::onUpdateDisplayMarkers)
+	EVT_MENU(XRCID("Display folders"), MainFrame::onDisplayFolders)
+	EVT_UPDATE_UI(XRCID("Display folderes"), MainFrame::onUpdateDisplayFolders)
+
 	EVT_MENU(XRCID("Display caret line"), MainFrame::onDisplayCaretLine)
 	EVT_UPDATE_UI(XRCID("Display caret line"), MainFrame::onUpdateDisplayCaretLine)
 	EVT_MENU(XRCID("Display white spaces"), MainFrame::onDisplayWhiteSpaces)
@@ -622,6 +633,42 @@ void MainFrame::onUpdateDisplayLineNumber(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Check(frame->lineNumbersShown());
+	}
+}
+
+void MainFrame::onDisplayMarkers(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showMarkers(event.IsChecked());
+	}	
+}
+
+void MainFrame::onUpdateDisplayMarkers(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->markersShown());
+	}
+}
+
+void MainFrame::onDisplayFolders(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showFolders(event.IsChecked());
+	}	
+}
+
+void MainFrame::onUpdateDisplayFolders(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->foldersShown());
 	}
 }
 

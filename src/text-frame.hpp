@@ -61,6 +61,11 @@ public:
 
 	void showLineNumbers(bool show = true);
 	bool lineNumbersShown()const;
+	void showMarkers(bool show = true);
+	bool markersShown()const;
+	void showFolders(bool show = true);
+	bool foldersShown()const;	
+
 	void showCaretLine(bool show = true);
 	bool caretLineShown()const;
 	void showWhiteSpaces(bool show = true);
@@ -81,23 +86,27 @@ public:
 
 	void setFocusToTextCtrl();
 
+	
 protected:
 	void CommonInit();
 	void InitTextCtrl(wxStyledTextCtrl* txt);
-
+	
 	wxAuiNotebook* getNotebook();
 
-	enum {
-		LineNrID,
-		DividerID,
-		FoldingID
+	enum MARGIN_ID{
+		MARGIN_LINE_NB,
+		MARGIN_MARKER,
+		MARGIN_FOLD
 	};
 
+	void showMargin(unsigned id, bool shown=true);
+	bool marginShown(unsigned id)const;
+	
 	enum MARKER_ID{
 		TEXT_MARKER_BOOKMARK,
 		TEXT_MARKER_SEARCH
 	};
-	
+
 	void UpdateBookmarkPanel();
 
 	void setMarkerStyle(int id, const wxBitmap &bmp, const wxColour& fore, const wxColour& back);
@@ -117,9 +126,7 @@ private:
 	wxBitmapButton* _fastFindClose;
 	wxMarkBar*  _markbar;
 
-	// margin variables
-	bool _lineNrMarginShown;
-	int _foldingMargin;
+	unsigned int _marginShown;
 
 	void updateLineNbMargin();
 	

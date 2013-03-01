@@ -68,8 +68,6 @@ void TextFrame::CommonInit()
 	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
 	
 	InitTextCtrl(_mainText);
-	
-	updateLineNbMargin();
 
 	wxSizer* gsz = new wxBoxSizer(wxHORIZONTAL);
 	wxSizer* vsz = new wxBoxSizer(wxVERTICAL);
@@ -111,6 +109,16 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	txt->IndicatorSetStyle(TEXT_INDICATOR_SEARCH, wxSTC_INDIC_STRAIGHTBOX);
 	txt->IndicatorSetForeground(TEXT_INDICATOR_SEARCH, wxColour(0, 156, 0));
 	txt->IndicatorSetUnder(TEXT_INDICATOR_SEARCH, true);
+
+	// Initialize margins
+	txt->SetMarginType(MARGIN_LINE_NB, wxSTC_MARGIN_NUMBER);
+	txt->SetMarginType(MARGIN_MARKER, wxSTC_MARGIN_SYMBOL);
+	txt->SetMarginMask(MARGIN_MARKER, ~wxSTC_MASK_FOLDERS);
+	txt->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
+	txt->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
+	showLineNumbers(/*lineNumbersShown()*/);
+	showMarkers(/*markersShown()*/);
+	showFolders(/*foldersShown()*/);
 }
 
 void TextFrame::initAfterLoading()
@@ -133,13 +141,35 @@ MainFrame* TextFrame::getMainFrame()
 
 void TextFrame::showLineNumbers(bool show)
 {
-	_lineNrMarginShown = show;
+	showMargin(MARGIN_LINE_NB, show);
 	updateLineNbMargin();
 }
 
 bool TextFrame::lineNumbersShown()const
 {
-	return _lineNrMarginShown;
+	return marginShown(MARGIN_LINE_NB);
+}
+
+void TextFrame::showMarkers(bool show)
+{
+	showMargin(MARGIN_MARKER, show);
+	getCurrentTextCtrl()->SetMarginWidth(MARGIN_MARKER, show?16:0);	
+}
+
+bool TextFrame::markersShown()const
+{
+	return marginShown(MARGIN_MARKER);
+}
+
+void TextFrame::showFolders(bool show)
+{
+	showMargin(MARGIN_FOLD, show);
+	getCurrentTextCtrl()->SetMarginWidth(MARGIN_FOLD, show?16:0);
+}
+
+bool TextFrame::foldersShown()const
+{
+	return marginShown(MARGIN_FOLD);
 }
 
 void TextFrame::showCaretLine(bool show)
@@ -187,7 +217,7 @@ void TextFrame::updateLineNbMargin()
 	wxStyledTextCtrl* txt = getMainTextCtrl();
 	if(txt)
 	{
-		if(_lineNrMarginShown)
+		if(marginShown(MARGIN_LINE_NB))
 		{
 			int c = txt->GetLineCount();
 			int sz = 0;
@@ -201,11 +231,11 @@ void TextFrame::updateLineNbMargin()
 				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
 			else
 				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999999"));
-			txt->SetMarginWidth(LineNrID, sz);
+			txt->SetMarginWidth(MARGIN_LINE_NB, sz);
 		}
 		else
 		{
-			txt->SetMarginWidth(LineNrID, 0);
+			txt->SetMarginWidth(MARGIN_LINE_NB, 0);
 		}
 	}
 }
@@ -601,6 +631,23 @@ void TextFrame::onMarkerActivated(wxMarkBarEvent& event)
 	wxStyledTextCtrl* txt = getCurrentTextCtrl();
 	txt->GotoLine(event.getPosition());
 	setFocusToTextCtrl();
+}
+
+void TextFrame::showMargin(unsigned id, bool shown)
+{
+	if(shown)
+	{
+		_marginShown |= (1 << id);
+	}
+	else
+	{
+		_marginShown &= ~ (1 << id);
+	}
+}
+
+bool TextFrame::marginShown(unsigned id)const
+{
+	return (_marginShown & (1 << id)) != 0;
 }
 
 

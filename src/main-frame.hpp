@@ -105,6 +105,11 @@ private:
 
 	void onDisplayLineNumber(wxCommandEvent& event);
 	void onUpdateDisplayLineNumber(wxUpdateUIEvent& event);
+	void onDisplayMarkers(wxCommandEvent& event);
+	void onUpdateDisplayMarkers(wxUpdateUIEvent& event);
+	void onDisplayFolders(wxCommandEvent& event);
+	void onUpdateDisplayFolders(wxUpdateUIEvent& event);
+	
 	void onDisplayCaretLine(wxCommandEvent& event);
 	void onUpdateDisplayCaretLine(wxUpdateUIEvent& event);
 	void onDisplayWhiteSpaces(wxCommandEvent& event);
