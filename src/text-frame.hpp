@@ -67,6 +67,8 @@ public:
 	bool whiteSpacesShown()const;
 	void showIndentationGuides(bool show = true);
 	bool indentationGuidesShown()const;
+	void showEOL(bool show = true);
+	bool EOLShown()const;
 
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));

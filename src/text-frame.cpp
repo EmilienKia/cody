@@ -172,6 +172,16 @@ bool TextFrame::indentationGuidesShown()const
 	return getCurrentTextCtrl()->GetIndentationGuides()!=wxSTC_IV_NONE;
 }
 
+void TextFrame::showEOL(bool show)
+{
+	getCurrentTextCtrl()->SetViewEOL(show);
+}
+
+bool TextFrame::EOLShown()const
+{
+	return getCurrentTextCtrl()->GetViewEOL();
+}
+
 void TextFrame::updateLineNbMargin()
 {
 	wxStyledTextCtrl* txt = getMainTextCtrl();

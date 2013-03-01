@@ -111,6 +111,8 @@ private:
 	void onUpdateDisplayWhiteSpaces(wxUpdateUIEvent& event);
 	void onDisplayIndentationGuides(wxCommandEvent& event);
 	void onUpdateDisplayIndentationGuides(wxUpdateUIEvent& event);
+	void onDisplayEOL(wxCommandEvent& event);
+	void onUpdateDisplayEOL(wxUpdateUIEvent& event);
 
 };
 

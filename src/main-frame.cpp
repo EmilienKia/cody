@@ -156,6 +156,7 @@ void MainFrame::InitRibbon()
 			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
 		}
 	}
 	_ribbon->Realise();
@@ -315,6 +316,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display white spaces"), MainFrame::onUpdateDisplayWhiteSpaces)
 	EVT_MENU(XRCID("Display indentation guides"), MainFrame::onDisplayIndentationGuides)
 	EVT_UPDATE_UI(XRCID("Display indentation guides"), MainFrame::onUpdateDisplayIndentationGuides)
+	EVT_MENU(XRCID("Display end of lines"), MainFrame::onDisplayEOL)
+	EVT_UPDATE_UI(XRCID("Display end of lines"), MainFrame::onUpdateDisplayEOL)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
@@ -673,5 +676,23 @@ void MainFrame::onUpdateDisplayIndentationGuides(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Check(frame->indentationGuidesShown());
+	}
+}
+
+void MainFrame::onDisplayEOL(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showEOL(event.IsChecked());
+	}	
+}
+
+void MainFrame::onUpdateDisplayEOL(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->EOLShown());
 	}
 }
