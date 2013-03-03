@@ -62,4 +62,11 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 po/Makefile.in
+share/Makefile
+share/icons/Makefile
+share/icons/hicolor/Makefile
+share/icons/hicolor/24x24/Makefile
+share/icons/hicolor/scalable/Makefile
+share/icons/hicolor/24x24/actions/Makefile
+share/icons/hicolor/scalable/actions/Makefile
 ])

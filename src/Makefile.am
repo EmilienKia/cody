@@ -27,7 +27,9 @@ cody_SOURCES = \
 	bookmark.cpp \
 	bookmark.hpp \
 	markbar.cpp \
-	markbar.hpp
+	markbar.hpp \
+	fdartprov.cpp \
+	fdartprov.hpp
 
 cody_LDFLAGS = 
 
