@@ -34,6 +34,9 @@ cody is free software: you can redistribute it and/or modify it
 #include "cody-app.hpp"
 
 
+#define wxArtIcon(artid, sz) (wxArtProvider::GetBitmap(artid, wxART_OTHER, wxSize(sz,sz)))
+
+
 MainFrame::MainFrame():
 wxFrame(NULL, wxID_ANY, "Cody")
 {
@@ -83,33 +86,33 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Load");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_NEW, "New", wxArtProvider::GetBitmap(wxART_NEW, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddHybridButton(wxID_OPEN, "Open", wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_REVERT_TO_SAVED, "Revert", wxArtProvider::GetBitmap(wxART_UNDO, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_NEW, "New", wxArtIcon("document-new", 24));
+			bar->AddHybridButton(wxID_OPEN, "Open", wxArtIcon("document-open", 24));
+			bar->AddButton(wxID_REVERT_TO_SAVED, "Revert", wxArtIcon("document-revert", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Save");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_SAVE, "Save", wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_SAVEAS, "Save as", wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(XRCID("Save all"), "Save all", wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_SAVE, "Save", wxArtIcon("document-save", 24));
+			bar->AddButton(wxID_SAVEAS, "Save as", wxArtIcon("document-save-as", 24));
+			bar->AddButton(XRCID("Save all"), "Save all", wxArtIcon("document-save", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Close");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_CLOSE, "Close", wxArtProvider::GetBitmap(wxART_CLOSE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(XRCID("Close all"), "Close all", wxArtProvider::GetBitmap(wxART_CLOSE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_CLOSE, "Close", wxArtIcon("document-close", 24));
+			bar->AddButton(XRCID("Close all"), "Close all", wxArtIcon("document-close", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Help");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_HELP, "Help", wxArtProvider::GetBitmap(wxART_HELP, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_ABOUT, "About Cody", wxArtProvider::GetBitmap(wxART_INFORMATION, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_HELP, "Help", wxArtIcon("help-contents", 24));
+			bar->AddButton(wxID_ABOUT, "About Cody", wxArtIcon("help-about", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_EXIT, "Quit", wxArtProvider::GetBitmap(wxART_QUIT, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_EXIT, "Quit", wxArtIcon("application-exit", 24));
 		}
 	}
 	{// Edit page
@@ -117,16 +120,16 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "History");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_UNDO, "Undo", wxArtProvider::GetBitmap(wxART_UNDO, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_REDO, "Redo", wxArtProvider::GetBitmap(wxART_REDO, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_UNDO, "Undo", wxArtIcon("edit-undo", 24));
+			bar->AddButton(wxID_REDO, "Redo", wxArtIcon("edit-redo", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Clipboard");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_DELETE, "Delete", wxArtProvider::GetBitmap(wxART_DELETE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_CUT, "Cut", wxArtProvider::GetBitmap(wxART_CUT, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_COPY, "Copy", wxArtProvider::GetBitmap(wxART_COPY, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_PASTE, "Paste", wxArtProvider::GetBitmap(wxART_PASTE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_DELETE, "Delete", wxArtIcon("edit-delete", 24));
+			bar->AddButton(wxID_CUT, "Cut", wxArtIcon("edit-cut", 24));
+			bar->AddButton(wxID_COPY, "Copy", wxArtIcon("edit-copy", 24));
+			bar->AddButton(wxID_PASTE, "Paste", wxArtIcon("edit-paste", 24));
 		}
 	}
 	{// Navigate page
@@ -134,17 +137,17 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, XRCID("Search panel"), "Search", wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_DEFAULT_STYLE|wxRIBBON_PANEL_EXT_BUTTON);
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_FIND, "Find", wxArtProvider::GetBitmap(wxART_FIND, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_BACKWARD, "Find previous", wxArtProvider::GetBitmap(wxART_GO_BACK, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_FORWARD, "Find next", wxArtProvider::GetBitmap(wxART_GO_FORWARD, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(XRCID("Go to line"), "Go to line", wxArtProvider::GetBitmap(wxART_GOTO_LAST, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(wxID_FIND, "Find", wxArtIcon("edit-find", 24));
+			bar->AddButton(wxID_BACKWARD, "Find previous", wxArtIcon("go-previous", 24));
+			bar->AddButton(wxID_FORWARD, "Find next", wxArtIcon("go-next", 24));
+			bar->AddButton(XRCID("Go to line"), "Go to line", wxArtIcon("go-to-line", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, XRCID("Bookmark panel"), "Bookmarks", wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_DEFAULT_STYLE|wxRIBBON_PANEL_EXT_BUTTON);
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(XRCID("Toggle bookmark"), "Toggle", wxArtProvider::GetBitmap(wxART_ADD_BOOKMARK, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_UP, "Previous", wxArtProvider::GetBitmap(wxART_GO_UP, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddButton(wxID_DOWN, "Next", wxArtProvider::GetBitmap(wxART_GO_DOWN, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddButton(XRCID("Toggle bookmark"), "Toggle", wxArtIcon("bookmark-toggle", 24));
+			bar->AddButton(wxID_UP, "Previous", wxArtIcon("bookmark-prev", 24));
+			bar->AddButton(wxID_DOWN, "Next", wxArtIcon("bookmark-next", 24));
 		}
 	}
 	{// View page
@@ -152,17 +155,17 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtIcon("caret-line", 24));
+			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtIcon("white-spaces", 24));
+			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", wxArtIcon("indent-lines", 24));
+			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", wxArtIcon("end-of-lines", 24));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Margins");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddToggleButton(XRCID("Display markers"), "Markers", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
-			bar->AddToggleButton(XRCID("Display folders"), "Folders", wxArtProvider::GetBitmap(wxART_MISSING_IMAGE, wxART_BUTTON, wxSize(24, 24)));
+			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtIcon("line-numbers", 24));
+			bar->AddToggleButton(XRCID("Display markers"), "Markers", wxArtIcon("marker-margin", 24));
+			bar->AddToggleButton(XRCID("Display folders"), "Folders", wxArtIcon("folder-margin", 24));
 		}
 	}
 	_ribbon->Realise();

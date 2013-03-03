@@ -22,6 +22,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/wx.h>
 
 #include <wx/aboutdlg.h>
+#include <wx/artprov.h>
 #include <wx/dir.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/ribbon/buttonbar.h>
@@ -29,6 +30,7 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "cody-app.hpp"
 
+#include "fdartprov.hpp"
 #include "main-frame.hpp"
 #include "text-document.hpp"
 #include "text-frame.hpp"
@@ -43,6 +45,13 @@ END_EVENT_TABLE()
 
 bool CodyApp::OnInit()
 {
+	// Init all image handlers
+	wxInitAllImageHandlers();
+
+	// Plug additionnal art providers
+	wxArtProvider::Push(new wxFreedesktopArtProvider("/usr/share/icons/gnome"));
+	wxArtProvider::Push(new wxFreedesktopArtProvider(wxStandardPaths::Get().GetDataDir()+"/icons/hicolor"));
+	
 	// Ensure that user local data dir is created
 	if(!wxDir::Exists(wxStandardPaths::Get().GetUserLocalDataDir()))
 	   wxDir::Make(wxStandardPaths::Get().GetUserLocalDataDir());

@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 ## Created by Anjuta
 
-SUBDIRS = src po
+SUBDIRS = src po share
 
 codydocdir = ${prefix}/doc/cody
 codydoc_DATA = \
