@@ -35,6 +35,7 @@ cody is free software: you can redistribute it and/or modify it
 
 
 #define wxArtIcon(artid, sz) (wxArtProvider::GetBitmap(artid, wxART_OTHER, wxSize(sz,sz)))
+#define RibbonIcon(artid) wxArtIcon(artid, 32)
 
 
 MainFrame::MainFrame():
@@ -86,33 +87,33 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Load");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_NEW, "New", wxArtIcon("document-new", 24));
-			bar->AddHybridButton(wxID_OPEN, "Open", wxArtIcon("document-open", 24));
-			bar->AddButton(wxID_REVERT_TO_SAVED, "Revert", wxArtIcon("document-revert", 24));
+			bar->AddButton(wxID_NEW, "New", RibbonIcon("document-new"));
+			bar->AddHybridButton(wxID_OPEN, "Open", RibbonIcon("document-open"));
+			bar->AddButton(wxID_REVERT_TO_SAVED, "Reload", RibbonIcon("document-reload"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Save");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_SAVE, "Save", wxArtIcon("document-save", 24));
-			bar->AddButton(wxID_SAVEAS, "Save as", wxArtIcon("document-save-as", 24));
-			bar->AddButton(XRCID("Save all"), "Save all", wxArtIcon("document-save", 24));
+			bar->AddButton(wxID_SAVE, "Save", RibbonIcon("document-save"));
+			bar->AddButton(wxID_SAVEAS, "Save as", RibbonIcon("document-save-as"));
+			bar->AddButton(XRCID("Save all"), "Save all", RibbonIcon("document-save-all"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Close");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_CLOSE, "Close", wxArtIcon("document-close", 24));
-			bar->AddButton(XRCID("Close all"), "Close all", wxArtIcon("document-close", 24));
+			bar->AddButton(wxID_CLOSE, "Close", RibbonIcon("document-close"));
+			bar->AddButton(XRCID("Close all"), "Close all", RibbonIcon("document-close-all"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Help");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_HELP, "Help", wxArtIcon("help-contents", 24));
-			bar->AddButton(wxID_ABOUT, "About Cody", wxArtIcon("help-about", 24));
+			bar->AddButton(wxID_HELP, "Help", RibbonIcon("help-contents"));
+			bar->AddButton(wxID_ABOUT, "About Cody", RibbonIcon("help-about"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_EXIT, "Quit", wxArtIcon("application-exit", 24));
+			bar->AddButton(wxID_EXIT, "Quit", RibbonIcon("application-exit"));
 		}
 	}
 	{// Edit page
@@ -120,16 +121,16 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "History");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_UNDO, "Undo", wxArtIcon("edit-undo", 24));
-			bar->AddButton(wxID_REDO, "Redo", wxArtIcon("edit-redo", 24));
+			bar->AddButton(wxID_UNDO, "Undo", RibbonIcon("edit-undo"));
+			bar->AddButton(wxID_REDO, "Redo", RibbonIcon("edit-redo"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Clipboard");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_DELETE, "Delete", wxArtIcon("edit-delete", 24));
-			bar->AddButton(wxID_CUT, "Cut", wxArtIcon("edit-cut", 24));
-			bar->AddButton(wxID_COPY, "Copy", wxArtIcon("edit-copy", 24));
-			bar->AddButton(wxID_PASTE, "Paste", wxArtIcon("edit-paste", 24));
+			bar->AddButton(wxID_DELETE, "Delete",RibbonIcon("edit-delete"));
+			bar->AddButton(wxID_CUT, "Cut", RibbonIcon("edit-cut"));
+			bar->AddButton(wxID_COPY, "Copy", RibbonIcon("edit-copy"));
+			bar->AddButton(wxID_PASTE, "Paste", RibbonIcon("edit-paste"));
 		}
 	}
 	{// Navigate page
@@ -137,17 +138,17 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, XRCID("Search panel"), "Search", wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_DEFAULT_STYLE|wxRIBBON_PANEL_EXT_BUTTON);
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(wxID_FIND, "Find", wxArtIcon("edit-find", 24));
-			bar->AddButton(wxID_BACKWARD, "Find previous", wxArtIcon("go-previous", 24));
-			bar->AddButton(wxID_FORWARD, "Find next", wxArtIcon("go-next", 24));
-			bar->AddButton(XRCID("Go to line"), "Go to line", wxArtIcon("go-to-line", 24));
+			bar->AddButton(wxID_FIND, "Find", RibbonIcon("edit-find"));
+			bar->AddButton(wxID_BACKWARD, "Find previous", RibbonIcon("go-previous"));
+			bar->AddButton(wxID_FORWARD, "Find next", RibbonIcon("go-next"));
+			bar->AddButton(XRCID("Go to line"), "Go to line", RibbonIcon("go-jump"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, XRCID("Bookmark panel"), "Bookmarks", wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_DEFAULT_STYLE|wxRIBBON_PANEL_EXT_BUTTON);
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddButton(XRCID("Toggle bookmark"), "Toggle", wxArtIcon("bookmark-toggle", 24));
-			bar->AddButton(wxID_UP, "Previous", wxArtIcon("bookmark-prev", 24));
-			bar->AddButton(wxID_DOWN, "Next", wxArtIcon("bookmark-next", 24));
+			bar->AddButton(XRCID("Toggle bookmark"), "Toggle", RibbonIcon("bookmark-new"));
+			bar->AddButton(wxID_UP, "Previous", RibbonIcon("bookmark-prev"));
+			bar->AddButton(wxID_DOWN, "Next", RibbonIcon("bookmark-next"));
 		}
 	}
 	{// View page
@@ -155,17 +156,17 @@ void MainFrame::InitRibbon()
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", wxArtIcon("caret-line", 24));
-			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", wxArtIcon("white-spaces", 24));
-			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", wxArtIcon("indent-lines", 24));
-			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", wxArtIcon("end-of-lines", 24));
+			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", RibbonIcon("view-caret-line"));
+			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", RibbonIcon("view-white-spaces"));
+			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", RibbonIcon("view-indent-lines"));
+			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", RibbonIcon("view-end-of-lines"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Margins");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
-			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", wxArtIcon("line-numbers", 24));
-			bar->AddToggleButton(XRCID("Display markers"), "Markers", wxArtIcon("marker-margin", 24));
-			bar->AddToggleButton(XRCID("Display folders"), "Folders", wxArtIcon("folder-margin", 24));
+			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", RibbonIcon("view-line-numbers"));
+			bar->AddToggleButton(XRCID("Display markers"), "Markers", RibbonIcon("view-marker-margin"));
+			bar->AddToggleButton(XRCID("Display folders"), "Folders", RibbonIcon("view-folder-margin"));
 		}
 	}
 	_ribbon->Realise();

@@ -65,8 +65,8 @@ po/Makefile.in
 share/Makefile
 share/icons/Makefile
 share/icons/hicolor/Makefile
-share/icons/hicolor/24x24/Makefile
+share/icons/hicolor/32x32/Makefile
 share/icons/hicolor/scalable/Makefile
-share/icons/hicolor/24x24/actions/Makefile
+share/icons/hicolor/32x32/actions/Makefile
 share/icons/hicolor/scalable/actions/Makefile
 ])
