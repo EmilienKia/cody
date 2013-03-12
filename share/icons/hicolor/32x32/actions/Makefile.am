@@ -46,5 +46,8 @@ icon_DATA = \
 	view-toggle-folder.png \
 	view-white-spaces.png \
 	view-wrap-mode.png \
+	view-zoom-0.png \
+	view-zoom-in.png \
+	view-zoom-out.png \
 	window-new.png
 

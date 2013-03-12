@@ -154,6 +154,13 @@ void MainFrame::InitRibbon()
 	{// View page
 		wxRibbonPage* page = new wxRibbonPage(_ribbon, wxID_ANY, "View");
 		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Zoom");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddButton(XRCID("Zoom in"), "Zoom in", RibbonIcon("view-zoom-in"));
+			bar->AddButton(XRCID("Zoom reset"), "Reset zoom", RibbonIcon("view-zoom-0"));
+			bar->AddButton(XRCID("Zoom out"), "Zoom out", RibbonIcon("view-zoom-out"));
+		}
+		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Decorations");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddToggleButton(XRCID("Display caret line"), "Caret line", RibbonIcon("view-caret-line"));
@@ -336,6 +343,13 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display end of lines"), MainFrame::onUpdateDisplayEOL)
 	EVT_MENU(XRCID("Display long lines"), MainFrame::onDisplayLongLines)
 	EVT_UPDATE_UI(XRCID("Display long lines"), MainFrame::onUpdateDisplayLongLines)
+
+	EVT_MENU(XRCID("Zoom in"), MainFrame::onZoomIn)
+	EVT_UPDATE_UI(XRCID("Zoom in"), MainFrame::onUpdateHasOpenDocument)
+	EVT_MENU(XRCID("Zoom out"), MainFrame::onZoomOut)
+	EVT_UPDATE_UI(XRCID("Zoom out"), MainFrame::onUpdateHasOpenDocument)
+	EVT_MENU(XRCID("Zoom reset"), MainFrame::onZoomReset)
+	EVT_UPDATE_UI(XRCID("Zoom reset"), MainFrame::onUpdateHasOpenDocument)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
@@ -766,5 +780,32 @@ void MainFrame::onUpdateDisplayLongLines(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Check(frame->longLinesShown());
+	}
+}
+
+void MainFrame::onZoomIn(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->zoomIn();
+	}
+}
+
+void MainFrame::onZoomOut(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->zoomOut();
+	}
+}
+
+void MainFrame::onZoomReset(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->setZoom(0);
 	}
 }

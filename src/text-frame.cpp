@@ -226,6 +226,26 @@ bool TextFrame::longLinesShown()const
 	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_EDGE_NONE;
 }
 
+void TextFrame::setZoom(int scale)
+{
+	getCurrentTextCtrl()->SetZoom(scale);
+}
+
+int TextFrame::getScale()const
+{
+	return getCurrentTextCtrl()->GetZoom();
+}
+
+void TextFrame::zoomIn()
+{
+	getCurrentTextCtrl()->ZoomIn();
+}
+
+void TextFrame::zoomOut()
+{
+	getCurrentTextCtrl()->ZoomOut();
+}
+
 void TextFrame::updateLineNbMargin()
 {
 	wxStyledTextCtrl* txt = getMainTextCtrl();

@@ -77,6 +77,11 @@ public:
 	void showLongLines(bool show = true);
 	bool longLinesShown()const;
 
+	void setZoom(int scale=0);
+	int getScale()const;
+	void zoomIn();
+	void zoomOut();
+	
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));
 	void remBookmark(int line=wxNOT_FOUND);

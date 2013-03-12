@@ -121,6 +121,10 @@ private:
 	void onDisplayLongLines(wxCommandEvent& event);
 	void onUpdateDisplayLongLines(wxUpdateUIEvent& event);
 
+	void onZoomIn(wxCommandEvent& event);
+	void onZoomOut(wxCommandEvent& event);
+	void onZoomReset(wxCommandEvent& event);
+	
 };
 
 #endif // _MAIN_FRAME_HPP_
