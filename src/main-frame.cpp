@@ -167,6 +167,7 @@ void MainFrame::InitRibbon()
 			bar->AddToggleButton(XRCID("Display white spaces"), "White spaces", RibbonIcon("view-white-spaces"));
 			bar->AddToggleButton(XRCID("Display indentation guides"), "Indentation guides", RibbonIcon("view-indent-lines"));
 			bar->AddToggleButton(XRCID("Display end of lines"), "End of lines", RibbonIcon("view-end-of-lines"));
+			bar->AddToggleButton(XRCID("Display wrap long lines"), "Wrap long lines", RibbonIcon("view-wrap-mode"));
 		}
 		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Margins");
@@ -343,6 +344,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display end of lines"), MainFrame::onUpdateDisplayEOL)
 	EVT_MENU(XRCID("Display long lines"), MainFrame::onDisplayLongLines)
 	EVT_UPDATE_UI(XRCID("Display long lines"), MainFrame::onUpdateDisplayLongLines)
+	EVT_MENU(XRCID("Display wrap long lines"), MainFrame::onDisplayWrapLongLines)
+	EVT_UPDATE_UI(XRCID("Display wrap long lines"), MainFrame::onUpdateDisplayWrapLongLines)
 
 	EVT_MENU(XRCID("Zoom in"), MainFrame::onZoomIn)
 	EVT_UPDATE_UI(XRCID("Zoom in"), MainFrame::onUpdateHasOpenDocument)
@@ -782,6 +785,25 @@ void MainFrame::onUpdateDisplayLongLines(wxUpdateUIEvent& event)
 		event.Check(frame->longLinesShown());
 	}
 }
+
+void MainFrame::onDisplayWrapLongLines(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->wrapLongLines(event.IsChecked());
+	}
+}
+
+void MainFrame::onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->longLinesWrapped());
+	}
+}
+
 
 void MainFrame::onZoomIn(wxCommandEvent& event)
 {

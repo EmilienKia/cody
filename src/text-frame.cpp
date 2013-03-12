@@ -123,6 +123,7 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	// Initialize long lines
 	txt->SetEdgeColumn(80);
 	txt->SetEdgeColour(*wxLIGHT_GREY);
+	txt->SetWrapVisualFlags(wxSTC_WRAPVISUALFLAG_END);
 }
 
 void TextFrame::initAfterLoading()
@@ -224,6 +225,16 @@ void TextFrame::showLongLines(bool show)
 bool TextFrame::longLinesShown()const
 {
 	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_EDGE_NONE;
+}
+
+void TextFrame::wrapLongLines(bool wrap)
+{
+	getCurrentTextCtrl()->SetWrapMode(wrap?wxSTC_WRAP_WORD:wxSTC_WRAP_NONE);
+}
+
+bool TextFrame::longLinesWrapped()const
+{
+	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_WRAP_NONE;
 }
 
 void TextFrame::setZoom(int scale)

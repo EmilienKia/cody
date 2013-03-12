@@ -76,6 +76,8 @@ public:
 	bool EOLShown()const;
 	void showLongLines(bool show = true);
 	bool longLinesShown()const;
+	void wrapLongLines(bool wrap = true);
+	bool longLinesWrapped()const;
 
 	void setZoom(int scale=0);
 	int getScale()const;

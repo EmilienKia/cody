@@ -120,6 +120,8 @@ private:
 	void onUpdateDisplayEOL(wxUpdateUIEvent& event);
 	void onDisplayLongLines(wxCommandEvent& event);
 	void onUpdateDisplayLongLines(wxUpdateUIEvent& event);
+	void onDisplayWrapLongLines(wxCommandEvent& event);
+	void onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event);
 
 	void onZoomIn(wxCommandEvent& event);
 	void onZoomOut(wxCommandEvent& event);
