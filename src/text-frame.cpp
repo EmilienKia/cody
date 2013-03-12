@@ -119,6 +119,10 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	showLineNumbers(/*lineNumbersShown()*/);
 	showMarkers(/*markersShown()*/);
 	showFolders(/*foldersShown()*/);
+
+	// Initialize long lines
+	txt->SetEdgeColumn(80);
+	txt->SetEdgeColour(*wxLIGHT_GREY);
 }
 
 void TextFrame::initAfterLoading()
@@ -210,6 +214,16 @@ void TextFrame::showEOL(bool show)
 bool TextFrame::EOLShown()const
 {
 	return getCurrentTextCtrl()->GetViewEOL();
+}
+
+void TextFrame::showLongLines(bool show)
+{
+	getCurrentTextCtrl()->SetEdgeMode(show?wxSTC_EDGE_LINE:wxSTC_EDGE_NONE);
+}
+
+bool TextFrame::longLinesShown()const
+{
+	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_EDGE_NONE;
 }
 
 void TextFrame::updateLineNbMargin()

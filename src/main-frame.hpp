@@ -118,6 +118,8 @@ private:
 	void onUpdateDisplayIndentationGuides(wxUpdateUIEvent& event);
 	void onDisplayEOL(wxCommandEvent& event);
 	void onUpdateDisplayEOL(wxUpdateUIEvent& event);
+	void onDisplayLongLines(wxCommandEvent& event);
+	void onUpdateDisplayLongLines(wxUpdateUIEvent& event);
 
 };
 

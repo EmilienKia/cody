@@ -74,6 +74,8 @@ public:
 	bool indentationGuidesShown()const;
 	void showEOL(bool show = true);
 	bool EOLShown()const;
+	void showLongLines(bool show = true);
+	bool longLinesShown()const;
 
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));

@@ -167,6 +167,7 @@ void MainFrame::InitRibbon()
 			bar->AddToggleButton(XRCID("Display line numbers"), "Line numbers", RibbonIcon("view-line-numbers"));
 			bar->AddToggleButton(XRCID("Display markers"), "Markers", RibbonIcon("view-marker-margin"));
 			bar->AddToggleButton(XRCID("Display folders"), "Folders", RibbonIcon("view-folder-margin"));
+			bar->AddToggleButton(XRCID("Display long lines"), "Long line", RibbonIcon("view-long-lines"));
 		}
 	}
 	_ribbon->Realise();
@@ -333,6 +334,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display indentation guides"), MainFrame::onUpdateDisplayIndentationGuides)
 	EVT_MENU(XRCID("Display end of lines"), MainFrame::onDisplayEOL)
 	EVT_UPDATE_UI(XRCID("Display end of lines"), MainFrame::onUpdateDisplayEOL)
+	EVT_MENU(XRCID("Display long lines"), MainFrame::onDisplayLongLines)
+	EVT_UPDATE_UI(XRCID("Display long lines"), MainFrame::onUpdateDisplayLongLines)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
@@ -745,5 +748,23 @@ void MainFrame::onUpdateDisplayEOL(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Check(frame->EOLShown());
+	}
+}
+
+void MainFrame::onDisplayLongLines(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->showLongLines(event.IsChecked());
+	}
+}
+
+void MainFrame::onUpdateDisplayLongLines(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->longLinesShown());
 	}
 }
