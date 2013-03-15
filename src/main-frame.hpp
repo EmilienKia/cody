@@ -53,6 +53,8 @@ protected:
 	void InitRibbon();
 	void InitAcceleratorTable();
 
+	void UpdateTitle();
+
 	wxAuiNotebook* getNotebook(){return _notebook;}
 
 private:

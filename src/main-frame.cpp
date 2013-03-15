@@ -222,6 +222,17 @@ void MainFrame::InitAcceleratorTable()
 	SetAcceleratorTable(accel);
 }
 
+void MainFrame::UpdateTitle()
+{
+	TextDocument* doc = getCurrentDocument();
+	wxString title = "Cody"; 
+	if(doc)
+	{
+		title += " - " + doc->getTitle();
+	}
+	SetTitle(title);
+}
+
 bool MainFrame::Destroy()
 {
 	if(!wxFrame::Destroy())
@@ -461,6 +472,7 @@ void MainFrame::onPageChanged(wxAuiNotebookEvent& event)
 	{
 		getBookmarkPanel()->setView(getCurrentTextFrame());
 	}
+	UpdateTitle();
 }
 
 void MainFrame::onUndo(wxCommandEvent& event)

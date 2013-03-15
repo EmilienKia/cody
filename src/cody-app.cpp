@@ -104,6 +104,10 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 		_fileHistory.AddFileToHistory(path);
 		_fileHistory.Save(*_config);
 	}
+
+	if(mainFrame)
+		mainFrame->UpdateTitle();
+	
 	return doc;
 }
 
