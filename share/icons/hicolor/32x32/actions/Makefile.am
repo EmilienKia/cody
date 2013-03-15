@@ -44,6 +44,7 @@ icon_DATA = \
 	view-long-lines.png \
 	view-marker-margin.png \
 	view-split.png \
+	view-split-swap.png \
 	view-toggle-folder.png \
 	view-white-spaces.png \
 	view-wrap-mode.png \

@@ -87,6 +87,7 @@ public:
 
 	void splitView(bool split = true);
 	bool viewSplitted()const;
+	void swapViews();
 	
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));

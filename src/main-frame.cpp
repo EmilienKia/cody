@@ -181,6 +181,7 @@ void MainFrame::InitRibbon()
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "View");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddToggleButton(XRCID("Split view"), "Split", RibbonIcon("view-split"));
+			bar->AddButton(XRCID("Swap views"), "Swap", RibbonIcon("view-split-swap"));
 		}
 	}
 	_ribbon->Realise();
@@ -354,6 +355,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 
 	EVT_MENU(XRCID("Split view"), MainFrame::onSplitView)
 	EVT_UPDATE_UI(XRCID("Split view"), MainFrame::onUpdateSplitView)
+	EVT_MENU(XRCID("Swap views"), MainFrame::onSwapView)
+	EVT_UPDATE_UI(XRCID("Swap views"), MainFrame::onUpdateSwapView)
 
 	EVT_MENU(XRCID("Zoom in"), MainFrame::onZoomIn)
 	EVT_UPDATE_UI(XRCID("Zoom in"), MainFrame::onUpdateHasOpenDocument)
@@ -857,3 +860,22 @@ void MainFrame::onUpdateSplitView(wxUpdateUIEvent& event)
 		event.Check(frame->viewSplitted());
 	}
 }
+
+void MainFrame::onSwapView(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->swapViews();
+	}
+}
+
+void MainFrame::onUpdateSwapView(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Enable(frame->viewSplitted());
+	}
+}
+

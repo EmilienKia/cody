@@ -125,6 +125,8 @@ private:
 
 	void onSplitView(wxCommandEvent& event);
 	void onUpdateSplitView(wxUpdateUIEvent& event);
+	void onSwapView(wxCommandEvent& event);
+	void onUpdateSwapView(wxUpdateUIEvent& event);
 	
 	void onZoomIn(wxCommandEvent& event);
 	void onZoomOut(wxCommandEvent& event);

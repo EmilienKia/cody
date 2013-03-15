@@ -773,6 +773,18 @@ bool TextFrame::viewSplitted()const
 	return _splitter->IsSplit();
 }
 
+void TextFrame::swapViews()
+{
+	if(viewSplitted())
+	{
+		int line1 = _mainText->GetFirstVisibleLine();
+		int line2 = _secondText->GetFirstVisibleLine();
+		_mainText->SetFirstVisibleLine(line2);
+		_secondText->SetFirstVisibleLine(line1);
+		UpdateMarkerPages();
+	}
+}
+
 void TextFrame::onChildFocus(wxChildFocusEvent& event)
 {
 	if(event.GetWindow()==_mainText)
