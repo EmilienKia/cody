@@ -96,6 +96,7 @@ void TextFrame::CommonInit()
 	_currentText = NULL;
 
 	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
+	_markbar->AddPage(0, 0, wxColour(0, 192, 0));
 
 	wxSizer* gsz = new wxBoxSizer(wxHORIZONTAL);
 	wxSizer* vsz = new wxBoxSizer(wxVERTICAL);
@@ -157,6 +158,7 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 void TextFrame::initAfterLoading()
 {
 	addBookmarksFromProvider();
+	UpdateMarkerPages();
 }
 
 MainFrame* TextFrame::getMainFrame()
@@ -641,6 +643,10 @@ void TextFrame::onUpdateUI(wxStyledTextEvent& event)
 	{
 		onSelectionChanged();
 	}
+	else if(event.GetUpdated()==wxSTC_UPDATE_V_SCROLL)
+	{
+		UpdateMarkerPages();
+	}
 }
 
 void TextFrame::onSelectionChanged()
@@ -736,20 +742,29 @@ void TextFrame::splitView(bool split)
 
 	if(split)
 	{
+		// Add and show second view
 		_splitter->Freeze();
-		//_secondText->Show();
 		_secondPanel->Show();
-		_splitter->SplitHorizontally(/*_mainText, _secondText*/_firstPanel, _secondPanel);
+		_splitter->SplitHorizontally(_firstPanel, _secondPanel);
 		_splitter->Thaw();
+		
+		// Add page in markbar
+		if(_markbar->GetPageCount()<2)
+			_markbar->AddPage(0, 0, wxColour(0, 0, 192));
 	}
 	else
 	{
+		// Hide second view
 		_splitter->Freeze();
-		_splitter->Unsplit(_secondPanel/*_secondText*/);
-		//_secondText->Hide();
+		_splitter->Unsplit(_secondPanel);
 		_secondPanel->Hide();
-		_splitter->Thaw();		
+		_splitter->Thaw();
+
+		// Remove page in markbar
+		if(_markbar->GetPageCount()>=2)
+			_markbar->RemPage(1);
 	}
+	UpdateMarkerPages();
 }
 
 bool TextFrame::viewSplitted()const
@@ -768,3 +783,28 @@ void TextFrame::onChildFocus(wxChildFocusEvent& event)
 		_currentText = _secondText;
 	}
 }
+
+void TextFrame::UpdateMarkerPages()
+{
+	int start, end;
+	
+	// First panel
+	start = _mainText->GetFirstVisibleLine();
+	end = start + _mainText->LinesOnScreen();
+	if(end>=_mainText->GetLineCount())
+		end = _mainText->GetLineCount()-1;
+	_markbar->SetPage(0, start, end);
+
+	// Second panel
+	if(viewSplitted())
+	{
+		start = _secondText->GetFirstVisibleLine();
+		end = start + _secondText->LinesOnScreen();
+		if(end>=_secondText->GetLineCount())
+			end = _secondText->GetLineCount()-1;
+		_markbar->SetPage(1, start, end);		
+	}
+
+	_markbar->Refresh();
+}
+

@@ -73,6 +73,13 @@ public:
 	int HitTest(const wxPoint& pt)const;
 
 	void MoveMarkers(int pos, int offset);
+
+
+	int AddPage(int start, int stop, wxColour color);
+	void RemPage(int id);
+	void SetPage(int id, int start, int end);
+	void SetPage(int id, wxColour color);
+	size_t GetPageCount()const;
 	
 protected:
 	struct wxMarkBarMarker{
@@ -98,6 +105,14 @@ protected:
 	markerList::iterator find(int index);
 	bool InternalIsCategoryShown(int category)const{return shownCategories&(1<<category)!=0;}
 
+
+	struct wxMarkBarPage{
+		int start, end;
+		wxColour color;
+	};
+	typedef std::vector<wxMarkBarPage> pageArray;
+	pageArray pages;
+	
 	void OnSetCursor(wxSetCursorEvent& event);
 	void OnMouseEnter(wxMouseEvent& event);
 	void OnMouseLeave(wxMouseEvent& event);

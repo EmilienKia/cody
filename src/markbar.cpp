@@ -289,6 +289,18 @@ void wxMarkBar::OnPaint(wxPaintEvent& event)
 
 	if((GetWindowStyle()&MB_VERTICAL)!=0)
 	{
+		size_t count = 0;
+		for(pageArray::reverse_iterator it=pages.rbegin(); it!=pages.rend(); it++)
+		{
+			wxMarkBarPage& page = *it;
+			int start = WXMARKBAR_CALCPOSITION(sz.y, page.start, min, max);
+			int end   = WXMARKBAR_CALCPOSITION(sz.y, page.end, min, max);
+			wxPen pen(page.color);
+			wxDCPenChanger pc(dc, pen);
+			int x = sz.x - (2*count++) -1;
+			dc.DrawLine(x, start, x, end);
+			dc.DrawLine(x-1, start, x-1, end);
+		}
 		for(markerList::iterator it=markers.begin(); it!=markers.end(); it++)
 		{
 			if(InternalIsCategoryShown(it->category))
@@ -300,6 +312,18 @@ void wxMarkBar::OnPaint(wxPaintEvent& event)
 	}
 	else
 	{
+		size_t count = 0;
+		for(pageArray::reverse_iterator it=pages.rbegin(); it!=pages.rend(); it++)
+		{
+			wxMarkBarPage& page = *it;
+			int start = WXMARKBAR_CALCPOSITION(sz.x, page.start, min, max);
+			int end   = WXMARKBAR_CALCPOSITION(sz.x, page.end, min, max);
+			wxPen pen(page.color);
+			wxDCPenChanger pc(dc, pen);
+			int y = sz.y - (2*count++) -1;
+			dc.DrawLine(start, y, end, y);
+			dc.DrawLine(start, y-1, end, y-1);
+		}		
 		for(markerList::iterator it=markers.begin(); it!=markers.end(); it++)
 		{
 			if(InternalIsCategoryShown(it->category))
@@ -442,4 +466,33 @@ void wxMarkBar::MoveMarkers(int pos, int offset)
 		if(it->pos>=pos)
 			it->pos+=offset;
 	}
+}
+
+int wxMarkBar::AddPage(int start, int stop, wxColour color)
+{
+	wxMarkBarPage page = {start, stop, color};
+	pages.push_back(page);
+	return pages.size()-1;
+}
+
+void wxMarkBar::RemPage(int id)
+{
+	pages.erase(pages.begin()+id);
+}
+
+void wxMarkBar::SetPage(int id, int start, int end)
+{
+	wxMarkBarPage &page = pages[id];
+	page.start = start;
+	page.end  = end;
+}
+
+void wxMarkBar::SetPage(int id, wxColour color)
+{
+	pages[id].color = color;
+}
+
+size_t wxMarkBar::GetPageCount()const
+{
+	return pages.size();
 }

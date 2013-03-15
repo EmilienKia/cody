@@ -128,6 +128,8 @@ protected:
 	void remMarker(int id, int line=wxNOT_FOUND);
 	void remMarkers(int id);
 
+	void UpdateMarkerPages();
+
 private:
 	TextDocument*     _document;
 	wxStyledTextCtrl* _mainText;
