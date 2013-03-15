@@ -177,6 +177,11 @@ void MainFrame::InitRibbon()
 			bar->AddToggleButton(XRCID("Display folders"), "Folders", RibbonIcon("view-folder-margin"));
 			bar->AddToggleButton(XRCID("Display long lines"), "Long line", RibbonIcon("view-long-lines"));
 		}
+		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "View");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddToggleButton(XRCID("Split view"), "Split", RibbonIcon("view-split"));
+		}
 	}
 	_ribbon->Realise();
 }
@@ -346,6 +351,9 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display long lines"), MainFrame::onUpdateDisplayLongLines)
 	EVT_MENU(XRCID("Display wrap long lines"), MainFrame::onDisplayWrapLongLines)
 	EVT_UPDATE_UI(XRCID("Display wrap long lines"), MainFrame::onUpdateDisplayWrapLongLines)
+
+	EVT_MENU(XRCID("Split view"), MainFrame::onSplitView)
+	EVT_UPDATE_UI(XRCID("Split view"), MainFrame::onUpdateSplitView)
 
 	EVT_MENU(XRCID("Zoom in"), MainFrame::onZoomIn)
 	EVT_UPDATE_UI(XRCID("Zoom in"), MainFrame::onUpdateHasOpenDocument)
@@ -829,5 +837,23 @@ void MainFrame::onZoomReset(wxCommandEvent& event)
 	if(frame)
 	{
 		frame->setZoom(0);
+	}
+}
+
+void MainFrame::onSplitView(wxCommandEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		frame->splitView(event.IsChecked());
+	}
+}
+
+void MainFrame::onUpdateSplitView(wxUpdateUIEvent& event)
+{
+	TextFrame* frame = getCurrentTextFrame();
+	if(frame)
+	{
+		event.Check(frame->viewSplitted());
 	}
 }

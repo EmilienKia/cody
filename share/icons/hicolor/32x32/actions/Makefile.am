@@ -43,6 +43,7 @@ icon_DATA = \
 	view-line-numbers.png \
 	view-long-lines.png \
 	view-marker-margin.png \
+	view-split.png \
 	view-toggle-folder.png \
 	view-white-spaces.png \
 	view-wrap-mode.png \

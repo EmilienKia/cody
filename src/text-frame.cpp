@@ -24,6 +24,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/aui/auibook.h>
 #include <wx/srchctrl.h>
 #include <wx/spinctrl.h>
+#include <wx/splitter.h>
 #include <wx/xrc/xmlres.h>
 
 #include "text-frame.hpp"
@@ -39,6 +40,8 @@ enum TEXT_INDICATORS
 };
 
 BEGIN_EVENT_TABLE(TextFrame, wxPanel)
+	EVT_CHILD_FOCUS(TextFrame::onChildFocus)
+
 	EVT_BUTTON(XRCID("FAST_FIND_CLOSE"), TextFrame::onCloseFastFind)
 	EVT_BUTTON(wxID_FORWARD, TextFrame::onFastFindNext)
 	EVT_BUTTON(wxID_BACKWARD, TextFrame::onFastFindPrev)
@@ -64,14 +67,24 @@ _fastFindShown(false)
 
 void TextFrame::CommonInit()
 {
-	_mainText = new wxStyledTextCtrl(this, wxID_ANY);
-	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
-	
+	_splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER|wxSP_PERMIT_UNSPLIT|wxSP_LIVE_UPDATE);
+
+	_mainText    = new wxStyledTextCtrl(_splitter, wxID_ANY);
+	_secondText  = new wxStyledTextCtrl(_splitter, wxID_ANY);
+	_currentText = NULL;
+
 	InitTextCtrl(_mainText);
+	InitTextCtrl(_secondText);
+	_secondText->SetDocPointer(_mainText->GetDocPointer());
+
+	_splitter->Initialize(_mainText);
+	_secondText->Hide();
+
+	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
 
 	wxSizer* gsz = new wxBoxSizer(wxHORIZONTAL);
 	wxSizer* vsz = new wxBoxSizer(wxVERTICAL);
-	vsz->Add(_mainText, 1, wxEXPAND);
+	vsz->Add(_splitter, 1, wxEXPAND);
 
 	// Fast find
 	_fastFindLine  = new wxSpinCtrl(this, XRCID("FAST_FIND_LINE"), "", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS|wxTE_PROCESS_ENTER);
@@ -158,7 +171,8 @@ bool TextFrame::lineNumbersShown()const
 void TextFrame::showMarkers(bool show)
 {
 	showMargin(MARGIN_MARKER, show);
-	getCurrentTextCtrl()->SetMarginWidth(MARGIN_MARKER, show?16:0);	
+	_mainText  ->SetMarginWidth(MARGIN_MARKER, show?16:0);
+	_secondText->SetMarginWidth(MARGIN_MARKER, show?16:0);
 }
 
 bool TextFrame::markersShown()const
@@ -169,7 +183,8 @@ bool TextFrame::markersShown()const
 void TextFrame::showFolders(bool show)
 {
 	showMargin(MARGIN_FOLD, show);
-	getCurrentTextCtrl()->SetMarginWidth(MARGIN_FOLD, show?16:0);
+	_mainText  ->SetMarginWidth(MARGIN_FOLD, show?16:0);
+	_secondText->SetMarginWidth(MARGIN_FOLD, show?16:0);
 }
 
 bool TextFrame::foldersShown()const
@@ -179,109 +194,116 @@ bool TextFrame::foldersShown()const
 
 void TextFrame::showCaretLine(bool show)
 {
-	getCurrentTextCtrl()->SetCaretLineVisible(show);
+	_mainText  ->SetCaretLineVisible(show);
+	_secondText->SetCaretLineVisible(show);
 }
 
 bool TextFrame::caretLineShown()const
 {
-	return getCurrentTextCtrl()->GetCaretLineVisible();
+	return _mainText->GetCaretLineVisible();
 }
 
 void TextFrame::showWhiteSpaces(bool show)
 {
-	getCurrentTextCtrl()->SetViewWhiteSpace(show?wxSTC_WS_VISIBLEALWAYS:wxSTC_WS_INVISIBLE);
+	_mainText  ->SetViewWhiteSpace(show?wxSTC_WS_VISIBLEALWAYS:wxSTC_WS_INVISIBLE);
+	_secondText->SetViewWhiteSpace(show?wxSTC_WS_VISIBLEALWAYS:wxSTC_WS_INVISIBLE);
 }
 
 bool TextFrame::whiteSpacesShown()const
 {
-	return getCurrentTextCtrl()->GetViewWhiteSpace()!=wxSTC_WS_INVISIBLE;
+	return _mainText->GetViewWhiteSpace()!=wxSTC_WS_INVISIBLE;
 }
 
 void TextFrame::showIndentationGuides(bool show)
 {
-	getCurrentTextCtrl()->SetIndentationGuides(show?wxSTC_IV_LOOKFORWARD:wxSTC_IV_NONE);
+	_mainText  ->SetIndentationGuides(show?wxSTC_IV_LOOKFORWARD:wxSTC_IV_NONE);
+	_secondText->SetIndentationGuides(show?wxSTC_IV_LOOKFORWARD:wxSTC_IV_NONE);
 }
 
 bool TextFrame::indentationGuidesShown()const
 {
-	return getCurrentTextCtrl()->GetIndentationGuides()!=wxSTC_IV_NONE;
+	return _mainText->GetIndentationGuides()!=wxSTC_IV_NONE;
 }
 
 void TextFrame::showEOL(bool show)
 {
-	getCurrentTextCtrl()->SetViewEOL(show);
+	_mainText  ->SetViewEOL(show);
+	_secondText->SetViewEOL(show);
 }
 
 bool TextFrame::EOLShown()const
 {
-	return getCurrentTextCtrl()->GetViewEOL();
+	return _mainText->GetViewEOL();
 }
 
 void TextFrame::showLongLines(bool show)
 {
-	getCurrentTextCtrl()->SetEdgeMode(show?wxSTC_EDGE_LINE:wxSTC_EDGE_NONE);
+	_mainText  ->SetEdgeMode(show?wxSTC_EDGE_LINE:wxSTC_EDGE_NONE);
+	_secondText->SetEdgeMode(show?wxSTC_EDGE_LINE:wxSTC_EDGE_NONE);
 }
 
 bool TextFrame::longLinesShown()const
 {
-	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_EDGE_NONE;
+	return _mainText->GetEdgeMode()!=wxSTC_EDGE_NONE;
 }
 
 void TextFrame::wrapLongLines(bool wrap)
 {
-	getCurrentTextCtrl()->SetWrapMode(wrap?wxSTC_WRAP_WORD:wxSTC_WRAP_NONE);
+	_mainText  ->SetWrapMode(wrap?wxSTC_WRAP_WORD:wxSTC_WRAP_NONE);
+	_secondText->SetWrapMode(wrap?wxSTC_WRAP_WORD:wxSTC_WRAP_NONE);
 }
 
 bool TextFrame::longLinesWrapped()const
 {
-	return getCurrentTextCtrl()->GetEdgeMode()!=wxSTC_WRAP_NONE;
+	return _mainText->GetEdgeMode()!=wxSTC_WRAP_NONE;
 }
 
 void TextFrame::setZoom(int scale)
 {
-	getCurrentTextCtrl()->SetZoom(scale);
+	_mainText  ->SetZoom(scale);
+	_secondText->SetZoom(scale);
 }
 
 int TextFrame::getScale()const
 {
-	return getCurrentTextCtrl()->GetZoom();
+	return _mainText->GetZoom();
 }
 
 void TextFrame::zoomIn()
 {
-	getCurrentTextCtrl()->ZoomIn();
+	_mainText  ->ZoomIn();
+	_secondText->ZoomIn();
 }
 
 void TextFrame::zoomOut()
 {
-	getCurrentTextCtrl()->ZoomOut();
+	_mainText  ->ZoomOut();
+	_secondText->ZoomOut();
 }
 
 void TextFrame::updateLineNbMargin()
 {
-	wxStyledTextCtrl* txt = getMainTextCtrl();
-	if(txt)
+	if(marginShown(MARGIN_LINE_NB))
 	{
-		if(marginShown(MARGIN_LINE_NB))
-		{
-			int c = txt->GetLineCount();
-			int sz = 0;
-			if(c<=999)
-				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999"));
-			else if(c<=9999)
-				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_9999"));
-			else if(c<=99999)
-				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
-			else if(c<=99999)
-				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
-			else
-				sz = txt->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999999"));
-			txt->SetMarginWidth(MARGIN_LINE_NB, sz);
-		}
+		int c = _mainText->GetLineCount();
+		int sz = 0;
+		if(c<=999)
+			sz = _mainText->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999"));
+		else if(c<=9999)
+			sz = _mainText->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_9999"));
+		else if(c<=99999)
+			sz = _mainText->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
+		else if(c<=99999)
+			sz = _mainText->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_99999"));
 		else
-		{
-			txt->SetMarginWidth(MARGIN_LINE_NB, 0);
-		}
+			sz = _mainText->TextWidth (wxSTC_STYLE_LINENUMBER, _T("_999999"));
+		_mainText  ->SetMarginWidth(MARGIN_LINE_NB, sz);
+		_secondText->SetMarginWidth(MARGIN_LINE_NB, sz);
+	}
+	else
+	{
+		_mainText  ->SetMarginWidth(MARGIN_LINE_NB, 0);
+		_secondText->SetMarginWidth(MARGIN_LINE_NB, 0);
 	}
 }
 
@@ -638,36 +660,33 @@ void TextFrame::onSelectionChanged()
 
 void TextFrame::setMarkerStyle(int id, const wxBitmap &bmp, const wxColour& fore, const wxColour& back)
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	txt->MarkerDefineBitmap(id, bmp);
+	_mainText  ->MarkerDefineBitmap(id, bmp);
+	_secondText->MarkerDefineBitmap(id, bmp);
 	_markbar->SetCategory(id, fore, back);
 }
 
 void TextFrame::setMarkerStyle(int id, int predefStyle, const wxColour& fore, const wxColour& back)
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	txt->MarkerDefine(id, predefStyle, fore, back);
+	_mainText  ->MarkerDefine(id, predefStyle, fore, back);
+	_secondText->MarkerDefine(id, predefStyle, fore, back);
 	_markbar->SetCategory(id, fore, back);
 }
 
 void TextFrame::addMarker(int id, const wxString& name, int line)
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	txt->MarkerAdd(line, id);
+	_mainText->MarkerAdd(line, id);
 	_markbar->AddMarker(line, name, id);
 }
 
 void TextFrame::remMarker(int id, int line)
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	txt->MarkerDelete(line, id);
+	_mainText->MarkerDelete(line, id);
 	_markbar->RemoveMarker(line, id);
 }
 
 void TextFrame::remMarkers(int id)
 {
-	wxStyledTextCtrl* txt = getCurrentTextCtrl();
-	txt->MarkerDeleteAll(id);
+	_mainText->MarkerDeleteAll(id);
 	_markbar->RemoveCategoryMarker(id);
 }
 
@@ -695,5 +714,40 @@ bool TextFrame::marginShown(unsigned id)const
 	return (_marginShown & (1 << id)) != 0;
 }
 
+void TextFrame::splitView(bool split)
+{
+	if(viewSplitted()==split)
+		return; // If already in the wanted state, do nothing.
 
+	if(split)
+	{
+		_splitter->Freeze();
+		_secondText->Show();
+		_splitter->SplitHorizontally(_mainText, _secondText);
+		_splitter->Thaw();
+	}
+	else
+	{
+		_splitter->Freeze();
+		_splitter->Unsplit(_secondText);
+		_secondText->Hide();
+		_splitter->Thaw();		
+	}
+}
 
+bool TextFrame::viewSplitted()const
+{
+	return _splitter->IsSplit();
+}
+
+void TextFrame::onChildFocus(wxChildFocusEvent& event)
+{
+	if(event.GetWindow()==_mainText)
+	{
+		_currentText = _mainText;
+	}
+	else if(event.GetWindow()==_secondText)
+	{
+		_currentText = _secondText;
+	}
+}

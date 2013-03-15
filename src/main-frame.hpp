@@ -123,6 +123,9 @@ private:
 	void onDisplayWrapLongLines(wxCommandEvent& event);
 	void onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event);
 
+	void onSplitView(wxCommandEvent& event);
+	void onUpdateSplitView(wxUpdateUIEvent& event);
+	
 	void onZoomIn(wxCommandEvent& event);
 	void onZoomOut(wxCommandEvent& event);
 	void onZoomReset(wxCommandEvent& event);

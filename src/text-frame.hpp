@@ -30,6 +30,7 @@ class wxMarkBar;
 class wxMarkBarEvent;
 class wxSearchCtrl;
 class wxSpinCtrl;
+class wxSplitterWindow;
 
 
 class TextFrame: public wxPanel
@@ -44,7 +45,7 @@ public:
 	void initAfterLoading();
 		
 	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
-	wxStyledTextCtrl* getCurrentTextCtrl()const{return _mainText;}
+	wxStyledTextCtrl* getCurrentTextCtrl()const{return _currentText!=NULL?_currentText:_mainText;}
 
 	MainFrame* getMainFrame();
 
@@ -83,6 +84,9 @@ public:
 	int getScale()const;
 	void zoomIn();
 	void zoomOut();
+
+	void splitView(bool split = true);
+	bool viewSplitted()const;
 	
 	void toggleBookmark();
 	void addBookmark(int line=wxNOT_FOUND, wxString name=wxT(""));
@@ -125,9 +129,13 @@ protected:
 	void remMarkers(int id);
 
 private:
-	TextDocument* _document;
+	TextDocument*     _document;
 	wxStyledTextCtrl* _mainText;
-
+	wxStyledTextCtrl* _secondText;
+	wxStyledTextCtrl* _currentText;
+	wxSplitterWindow* _splitter;
+	
+	
 	bool _fastFindShown;
 	wxSizer* _fastFindSizer;
 	wxSearchCtrl* _fastFindText;
@@ -151,6 +159,8 @@ private:
 	void onMarkerActivated(wxMarkBarEvent& event);
 	
 	void onSelectionChanged();
+
+	void onChildFocus(wxChildFocusEvent& event); 
 };
 
 #endif // _TEXT_FRAME_HPP_
