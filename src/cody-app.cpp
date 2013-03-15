@@ -30,6 +30,7 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "cody-app.hpp"
 
+#include "config-view.hpp"
 #include "fdartprov.hpp"
 #include "main-frame.hpp"
 #include "text-document.hpp"
@@ -40,6 +41,7 @@ IMPLEMENT_APP(CodyApp)
 BEGIN_EVENT_TABLE(CodyApp, wxApp)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_ABOUT, CodyApp::onAbout)
 	EVT_RIBBONBUTTONBAR_CLICKED(wxID_EXIT, CodyApp::onExit)
+	EVT_RIBBONBUTTONBAR_CLICKED(wxID_PREFERENCES, CodyApp::onPreferences)
 END_EVENT_TABLE()
 
 
@@ -199,3 +201,25 @@ wxFileHistory& CodyApp::getFileHistory()
 {
 	return _fileHistory;
 }
+
+void CodyApp::onPreferences(wxRibbonButtonBarEvent& event)
+{
+	preferences();
+}
+
+void CodyApp::preferences()
+{
+	wxDialog dialog(_frame, wxID_ANY, "Cody - Preferences");
+	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
+	wxNotebook* notebook = new wxNotebook(&dialog, wxID_ANY);
+
+	notebook->AddPage(new ConfigView(notebook), "View");
+	
+	gsz->Add(notebook, 1, wxEXPAND);
+	gsz->Add(dialog.CreateButtonSizer(wxCLOSE), 0, wxEXPAND);
+	dialog.SetSizer(gsz);
+	dialog.AddMainButtonId(wxID_CLOSE);
+	dialog.SetAffirmativeId(wxID_CLOSE);
+	dialog.ShowModal();
+}
+

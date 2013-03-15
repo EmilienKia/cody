@@ -3,6 +3,7 @@ icondir = $(datadir)/@PACKAGE@/icons/hicolor/32x32/actions
 
 icon_DATA = \
 	application-exit.png \
+	application-preferences.png \
 	bookmark-clear.png \
 	bookmark-new.png \
 	bookmark-next.png \

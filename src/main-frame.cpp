@@ -105,6 +105,11 @@ void MainFrame::InitRibbon()
 			bar->AddButton(XRCID("Close all"), "Close all", RibbonIcon("document-close-all"));
 		}
 		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddButton(wxID_PREFERENCES, "Preferences", RibbonIcon("application-preferences"));
+		}
+		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Help");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddButton(wxID_HELP, "Help", RibbonIcon("help-contents"));

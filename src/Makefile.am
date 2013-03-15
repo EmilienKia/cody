@@ -29,7 +29,9 @@ cody_SOURCES = \
 	markbar.cpp \
 	markbar.hpp \
 	fdartprov.cpp \
-	fdartprov.hpp
+	fdartprov.hpp \
+	config-view.cpp \
+	config-view.hpp
 
 cody_LDFLAGS = 
 

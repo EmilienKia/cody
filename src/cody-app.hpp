@@ -50,6 +50,8 @@ public:
 
 	wxConfig* getConfig();
 	wxFileHistory& getFileHistory();
+
+	void preferences();
 		
 protected:
 	MainFrame* _frame;
@@ -62,6 +64,7 @@ protected:
 private:
 	void onAbout(wxRibbonButtonBarEvent& event);
 	void onExit(wxRibbonButtonBarEvent& event);
+	void onPreferences(wxRibbonButtonBarEvent& event);
 };
 
 DECLARE_APP(CodyApp)
