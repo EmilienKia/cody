@@ -54,7 +54,7 @@ void MainFrame::CommonInit()
 	_ribbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxSize(800, 600), wxRIBBON_BAR_FLOW_HORIZONTAL
                                 | wxRIBBON_BAR_SHOW_PAGE_LABELS
                                 | wxRIBBON_BAR_SHOW_PANEL_EXT_BUTTONS
-                                | wxRIBBON_BAR_SHOW_TOGGLE_BUTTON
+                                //| wxRIBBON_BAR_SHOW_TOGGLE_BUTTON
                                 //| wxRIBBON_BAR_SHOW_HELP_BUTTON
                                 );
 	InitRibbon();
