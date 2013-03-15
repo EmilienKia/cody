@@ -746,6 +746,7 @@ void TextFrame::splitView(bool split)
 		_splitter->Freeze();
 		_secondPanel->Show();
 		_splitter->SplitHorizontally(_firstPanel, _secondPanel);
+		_secondText->SetFirstVisibleLine(_mainText->GetFirstVisibleLine() + _mainText->LinesOnScreen());
 		_splitter->Thaw();
 		
 		// Add page in markbar
