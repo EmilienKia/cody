@@ -67,18 +67,33 @@ _fastFindShown(false)
 
 void TextFrame::CommonInit()
 {
+	wxSizer *sz;
+
 	_splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER|wxSP_PERMIT_UNSPLIT|wxSP_LIVE_UPDATE);
 
-	_mainText    = new wxStyledTextCtrl(_splitter, wxID_ANY);
-	_secondText  = new wxStyledTextCtrl(_splitter, wxID_ANY);
-	_currentText = NULL;
-
+	_firstPanel = new wxPanel(_splitter, wxID_ANY);
+	_secondPanel = new wxPanel(_splitter, wxID_ANY);	
+	
+	_mainText    = new wxStyledTextCtrl(_firstPanel, wxID_ANY);
+	_secondText  = new wxStyledTextCtrl(_secondPanel, wxID_ANY);
+	
 	InitTextCtrl(_mainText);
 	InitTextCtrl(_secondText);
-	_secondText->SetDocPointer(_mainText->GetDocPointer());
+	
+	sz = new wxBoxSizer(wxVERTICAL);
+	sz->Add(_mainText, 1, wxEXPAND|wxALL, 1);
+	_firstPanel->SetSizer(sz);
+	_firstPanel->SetBackgroundColour(wxColour(128, 192, 128));
+	
+	sz = new wxBoxSizer(wxVERTICAL);
+	sz->Add(_secondText, 1, wxEXPAND|wxALL, 1);
+	_secondPanel->SetSizer(sz);
+	_secondPanel->SetBackgroundColour(wxColour(128, 128, 192));
 
-	_splitter->Initialize(_mainText);
-	_secondText->Hide();
+	_secondText->SetDocPointer(_mainText->GetDocPointer());
+	_splitter->Initialize(_firstPanel);
+	_secondPanel->Hide();	
+	_currentText = NULL;
 
 	_markbar = new wxMarkBar(this, wxID_ANY, 0, 1, wxDefaultPosition, wxSize(14, -1), MB_VERTICAL|wxBORDER_NONE);
 
@@ -722,15 +737,17 @@ void TextFrame::splitView(bool split)
 	if(split)
 	{
 		_splitter->Freeze();
-		_secondText->Show();
-		_splitter->SplitHorizontally(_mainText, _secondText);
+		//_secondText->Show();
+		_secondPanel->Show();
+		_splitter->SplitHorizontally(/*_mainText, _secondText*/_firstPanel, _secondPanel);
 		_splitter->Thaw();
 	}
 	else
 	{
 		_splitter->Freeze();
-		_splitter->Unsplit(_secondText);
-		_secondText->Hide();
+		_splitter->Unsplit(_secondPanel/*_secondText*/);
+		//_secondText->Hide();
+		_secondPanel->Hide();
 		_splitter->Thaw();		
 	}
 }

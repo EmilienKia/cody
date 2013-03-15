@@ -134,7 +134,9 @@ private:
 	wxStyledTextCtrl* _secondText;
 	wxStyledTextCtrl* _currentText;
 	wxSplitterWindow* _splitter;
-	
+
+	wxPanel *_firstPanel;
+	wxPanel *_secondPanel;
 	
 	bool _fastFindShown;
 	wxSizer* _fastFindSizer;
