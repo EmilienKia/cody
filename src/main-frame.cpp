@@ -67,7 +67,7 @@ void MainFrame::CommonInit()
 	gsz->Add(_panel, 1, wxEXPAND);
 	SetSizer(gsz);
 
-	_notebook = new wxAuiNotebook(_panel, wxID_ANY);
+	_notebook = new wxAuiNotebook(_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_NB_DEFAULT_STYLE|wxAUI_NB_TAB_SPLIT);
 	_manager.AddPane(_notebook, wxAuiPaneInfo().CenterPane().PaneBorder(false));
 
 	_bookmark = new BookmarkPanel(_panel, wxID_ANY);
