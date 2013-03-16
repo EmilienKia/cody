@@ -31,7 +31,8 @@ cody_SOURCES = \
 	fdartprov.cpp \
 	fdartprov.hpp \
 	config-view.cpp \
-	config-view.hpp
+	config-view.hpp \
+	decls.hpp
 
 cody_LDFLAGS = 
 

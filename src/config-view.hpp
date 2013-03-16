@@ -22,12 +22,14 @@ cody is free software: you can redistribute it and/or modify it
 
 class ConfigView: public wxPanel 
 {
+	wxDECLARE_EVENT_TABLE();
 public:
 	ConfigView(wxWindow* parent, wxWindowID id = wxID_ANY);
 protected:
 
 private:
-
+	void Initialize();
+	void onCheckCaretLine(wxCommandEvent& event);
 };
 
 #endif // _CONFIG_VIEW_HPP_

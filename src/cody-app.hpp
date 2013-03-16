@@ -52,7 +52,9 @@ public:
 	wxFileHistory& getFileHistory();
 
 	void preferences();
-		
+
+	std::set<TextDocument*>& getDocuments(){return _documents;}
+	
 protected:
 	MainFrame* _frame;
 

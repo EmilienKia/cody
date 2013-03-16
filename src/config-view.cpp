@@ -23,8 +23,55 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "config-view.hpp"
 
+#include "cody-app.hpp"
+#include "decls.hpp"
+#include "text-document.hpp"
+#include "text-frame.hpp"
+
+enum ConfigViewID
+{
+	ConfigView_CaretLine = 100
+};
+
+
+wxBEGIN_EVENT_TABLE(ConfigView, wxPanel)
+	EVT_CHECKBOX(ConfigView_CaretLine, ConfigView::onCheckCaretLine)
+wxEND_EVENT_TABLE()
+
+
 ConfigView::ConfigView(wxWindow* parent, wxWindowID id):
 wxPanel(parent, id)
 {
+	Initialize();
 }
 
+void ConfigView::Initialize()
+{
+	wxSizer* sz = new wxBoxSizer(wxVERTICAL);
+
+	wxConfig* conf = wxGetApp().getConfig();
+	wxCheckBox *cb;
+	
+	{
+		sz->Add(new wxStaticText(this, wxID_ANY, "Decorations"), 0, wxALL, 4);
+
+		cb = new wxCheckBox(this, ConfigView_CaretLine, "Caret line");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWCARETLINE, CONFDEFAULT_EDITOR_SHOWCARETLINE));
+		sz->Add(cb, 0, wxALL, 4);
+		        
+	}
+	
+	SetSizer(sz);
+}
+
+void ConfigView::onCheckCaretLine(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_SHOWCARETLINE, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showCaretLine(checked);
+	}
+	
+}

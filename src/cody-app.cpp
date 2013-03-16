@@ -84,6 +84,11 @@ int CodyApp::OnExit()
 	return wxApp::OnExit();
 }
 
+wxConfig* CodyApp::getConfig()
+{
+	return _config;
+}
+
 TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
 {
 	if(mainFrame==NULL)
