@@ -36,7 +36,13 @@ enum ConfigViewID
 	ConfigView_ShowWhiteSpaces,
 	ConfigView_ShowIndentGuides,
 	ConfigView_ShowEndOfLines,
-	ConfigView_WrapLongLines
+	ConfigView_WrapLongLines,
+
+	ConfigView_MarginLineNumbers,
+	ConfigView_MarginMarkers,
+	ConfigView_MarginFolders,
+	ConfigView_MarginLongLines
+	
 	
 };
 
@@ -47,6 +53,11 @@ wxBEGIN_EVENT_TABLE(ConfigView, wxPanel)
 	EVT_CHECKBOX(ConfigView_ShowIndentGuides, ConfigView::onCheckShowIndentGuides)
 	EVT_CHECKBOX(ConfigView_ShowEndOfLines, ConfigView::onCheckShowEndOfLines)
 	EVT_CHECKBOX(ConfigView_WrapLongLines, ConfigView::onCheckWrapLongLines)
+
+	EVT_CHECKBOX(ConfigView_MarginLineNumbers, ConfigView::onCheckMarginLineNumbers)
+	EVT_CHECKBOX(ConfigView_MarginMarkers, ConfigView::onCheckMarginMarkers)
+	EVT_CHECKBOX(ConfigView_MarginFolders, ConfigView::onCheckMarginFolders)
+	EVT_CHECKBOX(ConfigView_MarginLongLines, ConfigView::onCheckMarginLongLines)
 wxEND_EVENT_TABLE()
 
 ConfigView::ConfigView(wxWindow* parent, wxWindowID id):
@@ -94,6 +105,33 @@ void ConfigView::Initialize()
 		gsz->Add(bsz, 0, wxEXPAND|wxALL, 8);
 	}
 
+	{
+		wxStaticBoxSizer *bsz = new wxStaticBoxSizer(wxVERTICAL, this, "Margins");		
+
+		// Line numbers
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_MarginLineNumbers, "Line numbers");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_MARGINLINENUMBERS, CONFDEFAULT_EDITOR_MARGINLINENUMBERS));
+		bsz->Add(cb, 0, wxALL, 4);
+
+		// Marker margin
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_MarginMarkers, "Markers");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_MARGINMARKERS, CONFDEFAULT_EDITOR_MARGINMARKERS));
+		bsz->Add(cb, 0, wxALL, 4);
+		
+		// Folder margin
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_MarginFolders, "Folders");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_MARGINFOLDERS, CONFDEFAULT_EDITOR_MARGINFOLDERS));
+		bsz->Add(cb, 0, wxALL, 4);
+
+		// Long line margin
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_MarginLongLines, "Long lines");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_MARGINLONGLINES, CONFDEFAULT_EDITOR_MARGINLONGLINES));
+		bsz->Add(cb, 0, wxALL, 4);
+
+		bsz->RecalcSizes();		
+		gsz->Add(bsz, 0, wxEXPAND|wxALL, 8);
+	}
+	
 	SetSizer(gsz);
 }
 
@@ -105,7 +143,7 @@ void ConfigView::onCheckShowCaretLine(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->showCaretLine(checked);
-	}	
+	}
 }
 
 void ConfigView::onCheckShowWhiteSpaces(wxCommandEvent& event)
@@ -116,7 +154,7 @@ void ConfigView::onCheckShowWhiteSpaces(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->showWhiteSpaces(checked);
-	}	
+	}
 }
 
 void ConfigView::onCheckShowIndentGuides(wxCommandEvent& event)
@@ -127,7 +165,7 @@ void ConfigView::onCheckShowIndentGuides(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->showIndentationGuides(checked);
-	}	
+	}
 }
 
 void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
@@ -138,7 +176,7 @@ void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->showEOL(checked);
-	}	
+	}
 }
 
 void ConfigView::onCheckWrapLongLines(wxCommandEvent& event)
@@ -149,6 +187,49 @@ void ConfigView::onCheckWrapLongLines(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->wrapLongLines(checked);
-	}	
+	}
 }
 
+void ConfigView::onCheckMarginLineNumbers(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_MARGINLINENUMBERS, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showLineNumbers(checked);
+	}
+}
+
+void ConfigView::onCheckMarginMarkers(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_MARGINMARKERS, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showMarkers(checked);
+	}
+}
+
+void ConfigView::onCheckMarginFolders(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_MARGINFOLDERS, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showFolders(checked);
+	}
+}
+
+void ConfigView::onCheckMarginLongLines(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_MARGINLONGLINES, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showLongLines(checked);
+	}
+}

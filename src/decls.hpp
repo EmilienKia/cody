@@ -32,3 +32,16 @@
 
 #define CONFPATH_EDITOR_WRAPLONGLINES   "/editor/wrap-long-lines"
 #define CONFDEFAULT_EDITOR_WRAPLONGLINES   false
+
+#define CONFPATH_EDITOR_MARGINLINENUMBERS   "/editor/margin-line-numbers"
+#define CONFDEFAULT_EDITOR_MARGINLINENUMBERS	true
+
+#define CONFPATH_EDITOR_MARGINMARKERS   "/editor/margin-markers"
+#define CONFDEFAULT_EDITOR_MARGINMARKERS	true
+
+#define CONFPATH_EDITOR_MARGINFOLDERS   "/editor/margin-folders"
+#define CONFDEFAULT_EDITOR_MARGINFOLDERS	true
+
+#define CONFPATH_EDITOR_MARGINLONGLINES   "/editor/margin-long-line"
+#define CONFDEFAULT_EDITOR_MARGINLONGLINES  false
+

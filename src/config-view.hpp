@@ -29,11 +29,18 @@ protected:
 
 private:
 	void Initialize();
+
 	void onCheckShowCaretLine(wxCommandEvent& event);
 	void onCheckShowWhiteSpaces(wxCommandEvent& event);
 	void onCheckShowIndentGuides(wxCommandEvent& event);
 	void onCheckShowEndOfLines(wxCommandEvent& event);
 	void onCheckWrapLongLines(wxCommandEvent& event);
+
+	void onCheckMarginLineNumbers(wxCommandEvent& event);
+	void onCheckMarginMarkers(wxCommandEvent& event);
+	void onCheckMarginFolders(wxCommandEvent& event);
+	void onCheckMarginLongLines(wxCommandEvent& event);
+	
 };
 
 
