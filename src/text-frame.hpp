@@ -104,6 +104,7 @@ public:
 protected:
 	void CommonInit();
 	void InitTextCtrl(wxStyledTextCtrl* txt);
+	void ApplyGlobalConfig();
 	
 	wxAuiNotebook* getNotebook();
 

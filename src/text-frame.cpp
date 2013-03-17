@@ -29,7 +29,9 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "text-frame.hpp"
 
+#include "cody-app.hpp"
 #include "bookmark.hpp"
+#include "decls.hpp"
 #include "main-frame.hpp"
 #include "markbar.hpp"
 #include "text-document.hpp"
@@ -127,6 +129,9 @@ void TextFrame::CommonInit()
 	// Initialize markers (Scintilla and MarkBar)
 	setMarkerStyle(TEXT_MARKER_BOOKMARK, wxSTC_MARK_ARROW, wxColour(0, 0, 156), wxColour(0, 0, 192));
 	setMarkerStyle(TEXT_MARKER_SEARCH,   wxSTC_MARK_ARROW,  wxColour(0, 156, 0), wxColour(0, 192, 0));
+
+	// Apply global config
+	ApplyGlobalConfig();
 }
 
 void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
@@ -145,14 +150,27 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 	txt->SetMarginMask(MARGIN_MARKER, ~wxSTC_MASK_FOLDERS);
 	txt->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
 	txt->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
-	showLineNumbers(/*lineNumbersShown()*/);
-	showMarkers(/*markersShown()*/);
-	showFolders(/*foldersShown()*/);
 
 	// Initialize long lines
 	txt->SetEdgeColumn(80);
 	txt->SetEdgeColour(*wxLIGHT_GREY);
 	txt->SetWrapVisualFlags(wxSTC_WRAPVISUALFLAG_END);
+}
+
+void TextFrame::ApplyGlobalConfig()
+{
+	wxConfig* conf = wxGetApp().getConfig();
+	
+	showCaretLine(conf->ReadBool(CONFPATH_EDITOR_SHOWCARETLINE, CONFDEFAULT_EDITOR_SHOWCARETLINE));
+	showWhiteSpaces(conf->ReadBool(CONFPATH_EDITOR_SHOWWHITESPACES, CONFDEFAULT_EDITOR_SHOWWHITESPACES));
+	showIndentationGuides(conf->ReadBool(CONFPATH_EDITOR_SHOWINDENTGUIDES, CONFDEFAULT_EDITOR_SHOWINDENTGUIDES));
+	showEOL(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
+	wrapLongLines(conf->ReadBool(CONFPATH_EDITOR_WRAPLONGLINES, CONFDEFAULT_EDITOR_WRAPLONGLINES));
+
+	showLineNumbers(conf->ReadBool(CONFPATH_EDITOR_MARGINLINENUMBERS, CONFDEFAULT_EDITOR_MARGINLINENUMBERS));
+	showMarkers(conf->ReadBool(CONFPATH_EDITOR_MARGINMARKERS, CONFDEFAULT_EDITOR_MARGINMARKERS));
+	showFolders(conf->ReadBool(CONFPATH_EDITOR_MARGINFOLDERS, CONFDEFAULT_EDITOR_MARGINFOLDERS));
+	showLongLines(conf->ReadBool(CONFPATH_EDITOR_MARGINLONGLINES, CONFDEFAULT_EDITOR_MARGINLONGLINES));
 }
 
 void TextFrame::initAfterLoading()
