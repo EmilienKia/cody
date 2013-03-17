@@ -220,8 +220,8 @@ void CodyApp::preferences()
 
 	notebook->AddPage(new ConfigView(notebook), "View");
 	
-	gsz->Add(notebook, 1, wxEXPAND);
-	gsz->Add(dialog.CreateButtonSizer(wxCLOSE), 0, wxEXPAND);
+	gsz->Add(notebook, 1, wxEXPAND|wxALL, 4);
+	gsz->Add(dialog.CreateButtonSizer(wxCLOSE), 0, wxEXPAND|wxALL, 4);
 	dialog.SetSizer(gsz);
 	dialog.Fit();
 	dialog.AddMainButtonId(wxID_CLOSE);
