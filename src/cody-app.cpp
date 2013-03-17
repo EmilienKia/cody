@@ -191,7 +191,7 @@ void CodyApp::onAbout(wxRibbonButtonBarEvent& event)
 	aboutInfo.SetVersion("0.1", "0.1 dev");
 	aboutInfo.SetDescription(_("A simple code/script/text editor"));
 	aboutInfo.SetCopyright("(C) 2012");
-	aboutInfo.SetWebSite("http://emilienkia.net");
+	aboutInfo.SetWebSite("https://github.com/balooloo/cody");
 	aboutInfo.AddDeveloper("Émilien Kia <emilien.kia@gmail.com>");
 
 	wxAboutBox(aboutInfo);
