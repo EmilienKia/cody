@@ -21,6 +21,8 @@ cody is free software: you can redistribute it and/or modify it
 #endif
 #include <wx/wx.h>
 
+#include <wx/statbox.h>
+
 #include "config-view.hpp"
 
 #include "cody-app.hpp"
@@ -56,41 +58,42 @@ wxPanel(parent, id)
 void ConfigView::Initialize()
 {
 	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
-	wxSizer* sz = new wxBoxSizer(wxVERTICAL);
 
 	wxConfig* conf = wxGetApp().getConfig();
 	wxCheckBox *cb;
-	
+
 	{
-		sz->Add(new wxStaticText(this, wxID_ANY, "Decorations"), 0, wxALL, 4);
+		wxStaticBoxSizer *bsz = new wxStaticBoxSizer(wxVERTICAL, this, "Decorations");		
 
 		// Caret line
-		cb = new wxCheckBox(this, ConfigView_ShowCaretLine, "Caret line");
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowCaretLine, "Caret line");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWCARETLINE, CONFDEFAULT_EDITOR_SHOWCARETLINE));
-		sz->Add(cb, 0, wxALL, 4);
+		bsz->Add(cb, 0, wxALL, 4);
 
 		// White spaces
-		cb = new wxCheckBox(this, ConfigView_ShowWhiteSpaces, "White space");
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowWhiteSpaces, "White space");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWWHITESPACES, CONFDEFAULT_EDITOR_SHOWWHITESPACES));
-		sz->Add(cb, 0, wxALL, 4);
+		bsz->Add(cb, 0, wxALL, 4);
 		
 		// Indentation guides
-		cb = new wxCheckBox(this, ConfigView_ShowIndentGuides, "Indentation guides");
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowIndentGuides, "Indentation guides");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWINDENTGUIDES, CONFDEFAULT_EDITOR_SHOWINDENTGUIDES));
-		sz->Add(cb, 0, wxALL, 4);
+		bsz->Add(cb, 0, wxALL, 4);
 
 		// EOL
-		cb = new wxCheckBox(this, ConfigView_ShowEndOfLines, "End of lines");
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowEndOfLines, "End of lines");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
-		sz->Add(cb, 0, wxALL, 4);
+		bsz->Add(cb, 0, wxALL, 4);
 
 		// Wrap long lines
-		cb = new wxCheckBox(this, ConfigView_WrapLongLines, "Wrap long lines");
+		cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_WrapLongLines, "Wrap long lines");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_WRAPLONGLINES, CONFDEFAULT_EDITOR_WRAPLONGLINES));
-		sz->Add(cb, 0, wxALL, 4);
+		bsz->Add(cb, 0, wxALL, 4);
 
+		bsz->RecalcSizes();		
+		gsz->Add(bsz, 0, wxEXPAND|wxALL, 8);
 	}
-	gsz->Add(sz, 1, wxEXPAND|wxALL, 8);
+
 	SetSizer(gsz);
 }
 
