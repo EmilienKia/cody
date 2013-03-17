@@ -55,6 +55,7 @@ wxPanel(parent, id)
 
 void ConfigView::Initialize()
 {
+	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
 	wxSizer* sz = new wxBoxSizer(wxVERTICAL);
 
 	wxConfig* conf = wxGetApp().getConfig();
@@ -89,8 +90,8 @@ void ConfigView::Initialize()
 		sz->Add(cb, 0, wxALL, 4);
 
 	}
-	
-	SetSizer(sz);
+	gsz->Add(sz, 1, wxEXPAND|wxALL, 8);
+	SetSizer(gsz);
 }
 
 void ConfigView::onCheckShowCaretLine(wxCommandEvent& event)

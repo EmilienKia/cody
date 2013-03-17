@@ -223,6 +223,7 @@ void CodyApp::preferences()
 	gsz->Add(notebook, 1, wxEXPAND);
 	gsz->Add(dialog.CreateButtonSizer(wxCLOSE), 0, wxEXPAND);
 	dialog.SetSizer(gsz);
+	dialog.Fit();
 	dialog.AddMainButtonId(wxID_CLOSE);
 	dialog.SetAffirmativeId(wxID_CLOSE);
 	dialog.ShowModal();
