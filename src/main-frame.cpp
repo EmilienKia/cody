@@ -307,6 +307,7 @@ void MainFrame::onRibbonButtonClicked(wxEvent/*wxRibbonButtonBarEvent*/& event)
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_CUSTOM(wxEVT_COMMAND_RIBBONBUTTON_CLICKED, wxID_ANY, MainFrame::onRibbonButtonClicked)
 
+	EVT_UPDATE_UI(wxID_REVERT_TO_SAVED, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(wxID_SAVE, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(wxID_SAVEAS, MainFrame::onUpdateHasOpenDocument)
 	EVT_UPDATE_UI(XRCID("Save all"), MainFrame::onUpdateHasOpenDocument)
@@ -343,18 +344,25 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(wxID_BACKWARD, MainFrame::onFindPrev)
 	EVT_MENU(wxID_FORWARD, MainFrame::onFindNext)
 	EVT_MENU(XRCID("Go to line"), MainFrame::onGoToLine)
+	EVT_UPDATE_UI(wxID_FIND, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_BACKWARD, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_FORWARD, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(XRCID("Go to line"), MainFrame::onUpdateHasOpenDocument)
 
 	EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Bookmark panel"), MainFrame::onBookmarkRibbonBarExtActivated)
 	EVT_MENU(XRCID("Toggle bookmark"), MainFrame::onToggleBookmark)
 	EVT_MENU(wxID_UP, MainFrame::onPreviousBookmark)
 	EVT_MENU(wxID_DOWN, MainFrame::onNextBookmark)
+	EVT_UPDATE_UI(XRCID("Toggle bookmark"), MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_UP, MainFrame::onUpdateHasOpenDocument)
+	EVT_UPDATE_UI(wxID_DOWN, MainFrame::onUpdateHasOpenDocument)
 
 	EVT_MENU(XRCID("Display line numbers"), MainFrame::onDisplayLineNumber)
 	EVT_UPDATE_UI(XRCID("Display line numbers"), MainFrame::onUpdateDisplayLineNumber)
 	EVT_MENU(XRCID("Display markers"), MainFrame::onDisplayMarkers)
 	EVT_UPDATE_UI(XRCID("Display markers"), MainFrame::onUpdateDisplayMarkers)
 	EVT_MENU(XRCID("Display folders"), MainFrame::onDisplayFolders)
-	EVT_UPDATE_UI(XRCID("Display folderes"), MainFrame::onUpdateDisplayFolders)
+	EVT_UPDATE_UI(XRCID("Display folders"), MainFrame::onUpdateDisplayFolders)
 
 	EVT_MENU(XRCID("Display caret line"), MainFrame::onDisplayCaretLine)
 	EVT_UPDATE_UI(XRCID("Display caret line"), MainFrame::onUpdateDisplayCaretLine)
@@ -684,7 +692,12 @@ void MainFrame::onUpdateDisplayLineNumber(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->lineNumbersShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -702,7 +715,12 @@ void MainFrame::onUpdateDisplayMarkers(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->markersShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -720,7 +738,12 @@ void MainFrame::onUpdateDisplayFolders(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->foldersShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -738,7 +761,12 @@ void MainFrame::onUpdateDisplayCaretLine(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->caretLineShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -756,7 +784,12 @@ void MainFrame::onUpdateDisplayWhiteSpaces(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->whiteSpacesShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -774,7 +807,12 @@ void MainFrame::onUpdateDisplayIndentationGuides(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->indentationGuidesShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -792,7 +830,12 @@ void MainFrame::onUpdateDisplayEOL(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->EOLShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -810,7 +853,12 @@ void MainFrame::onUpdateDisplayLongLines(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->longLinesShown());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -828,7 +876,12 @@ void MainFrame::onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->longLinesWrapped());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -874,7 +927,12 @@ void MainFrame::onUpdateSplitView(wxUpdateUIEvent& event)
 	TextFrame* frame = getCurrentTextFrame();
 	if(frame)
 	{
+		event.Enable(true);
 		event.Check(frame->viewSplitted());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
@@ -893,6 +951,10 @@ void MainFrame::onUpdateSwapView(wxUpdateUIEvent& event)
 	if(frame)
 	{
 		event.Enable(frame->viewSplitted());
+	}
+	else
+	{
+		event.Enable(false);
 	}
 }
 
