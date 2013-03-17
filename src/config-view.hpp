@@ -29,8 +29,13 @@ protected:
 
 private:
 	void Initialize();
-	void onCheckCaretLine(wxCommandEvent& event);
+	void onCheckShowCaretLine(wxCommandEvent& event);
+	void onCheckShowWhiteSpaces(wxCommandEvent& event);
+	void onCheckShowIndentGuides(wxCommandEvent& event);
+	void onCheckShowEndOfLines(wxCommandEvent& event);
+	void onCheckWrapLongLines(wxCommandEvent& event);
 };
+
 
 #endif // _CONFIG_VIEW_HPP_
 

@@ -30,14 +30,22 @@ cody is free software: you can redistribute it and/or modify it
 
 enum ConfigViewID
 {
-	ConfigView_CaretLine = 100
+	ConfigView_ShowCaretLine = 100,
+	ConfigView_ShowWhiteSpaces,
+	ConfigView_ShowIndentGuides,
+	ConfigView_ShowEndOfLines,
+	ConfigView_WrapLongLines
+	
 };
 
 
 wxBEGIN_EVENT_TABLE(ConfigView, wxPanel)
-	EVT_CHECKBOX(ConfigView_CaretLine, ConfigView::onCheckCaretLine)
+	EVT_CHECKBOX(ConfigView_ShowCaretLine, ConfigView::onCheckShowCaretLine)
+	EVT_CHECKBOX(ConfigView_ShowWhiteSpaces, ConfigView::onCheckShowWhiteSpaces)
+	EVT_CHECKBOX(ConfigView_ShowIndentGuides, ConfigView::onCheckShowIndentGuides)
+	EVT_CHECKBOX(ConfigView_ShowEndOfLines, ConfigView::onCheckShowEndOfLines)
+	EVT_CHECKBOX(ConfigView_WrapLongLines, ConfigView::onCheckWrapLongLines)
 wxEND_EVENT_TABLE()
-
 
 ConfigView::ConfigView(wxWindow* parent, wxWindowID id):
 wxPanel(parent, id)
@@ -55,16 +63,37 @@ void ConfigView::Initialize()
 	{
 		sz->Add(new wxStaticText(this, wxID_ANY, "Decorations"), 0, wxALL, 4);
 
-		cb = new wxCheckBox(this, ConfigView_CaretLine, "Caret line");
+		// Caret line
+		cb = new wxCheckBox(this, ConfigView_ShowCaretLine, "Caret line");
 		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWCARETLINE, CONFDEFAULT_EDITOR_SHOWCARETLINE));
 		sz->Add(cb, 0, wxALL, 4);
-		        
+
+		// White spaces
+		cb = new wxCheckBox(this, ConfigView_ShowWhiteSpaces, "White space");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWWHITESPACES, CONFDEFAULT_EDITOR_SHOWWHITESPACES));
+		sz->Add(cb, 0, wxALL, 4);
+		
+		// Indentation guides
+		cb = new wxCheckBox(this, ConfigView_ShowIndentGuides, "Indentation guides");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWINDENTGUIDES, CONFDEFAULT_EDITOR_SHOWINDENTGUIDES));
+		sz->Add(cb, 0, wxALL, 4);
+
+		// EOL
+		cb = new wxCheckBox(this, ConfigView_ShowEndOfLines, "End of lines");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
+		sz->Add(cb, 0, wxALL, 4);
+
+		// Wrap long lines
+		cb = new wxCheckBox(this, ConfigView_WrapLongLines, "Wrap long lines");
+		cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_WRAPLONGLINES, CONFDEFAULT_EDITOR_WRAPLONGLINES));
+		sz->Add(cb, 0, wxALL, 4);
+
 	}
 	
 	SetSizer(sz);
 }
 
-void ConfigView::onCheckCaretLine(wxCommandEvent& event)
+void ConfigView::onCheckShowCaretLine(wxCommandEvent& event)
 {
 	bool checked = event.IsChecked();
 	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_SHOWCARETLINE, checked);
@@ -72,6 +101,50 @@ void ConfigView::onCheckCaretLine(wxCommandEvent& event)
 	{
 		TextDocument* txt = *it;
 		txt->getFrame()->showCaretLine(checked);
-	}
-	
+	}	
 }
+
+void ConfigView::onCheckShowWhiteSpaces(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_SHOWWHITESPACES, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showWhiteSpaces(checked);
+	}	
+}
+
+void ConfigView::onCheckShowIndentGuides(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_SHOWINDENTGUIDES, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showIndentationGuides(checked);
+	}	
+}
+
+void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_SHOWENDOFLINES, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->showEOL(checked);
+	}	
+}
+
+void ConfigView::onCheckWrapLongLines(wxCommandEvent& event)
+{
+	bool checked = event.IsChecked();
+	wxGetApp().getConfig()->Write(CONFPATH_EDITOR_WRAPLONGLINES, checked);
+	for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+	{
+		TextDocument* txt = *it;
+		txt->getFrame()->wrapLongLines(checked);
+	}	
+}
+

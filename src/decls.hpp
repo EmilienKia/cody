@@ -20,3 +20,15 @@
 
 #define CONFPATH_EDITOR_SHOWCARETLINE   "/editor/show-caret-line"
 #define CONFDEFAULT_EDITOR_SHOWCARETLINE   true
+
+#define CONFPATH_EDITOR_SHOWWHITESPACES   "/editor/show-white-spaces"
+#define CONFDEFAULT_EDITOR_SHOWWHITESPACES   false
+
+#define CONFPATH_EDITOR_SHOWINDENTGUIDES   "/editor/show-indent-guides"
+#define CONFDEFAULT_EDITOR_SHOWINDENTGUIDES   false
+
+#define CONFPATH_EDITOR_SHOWENDOFLINES   "/editor/show-end-of-lines"
+#define CONFDEFAULT_EDITOR_SHOWENDOFLINES   false
+
+#define CONFPATH_EDITOR_WRAPLONGLINES   "/editor/wrap-long-lines"
+#define CONFDEFAULT_EDITOR_WRAPLONGLINES   false
