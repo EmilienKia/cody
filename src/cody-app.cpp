@@ -61,7 +61,7 @@ bool CodyApp::OnInit()
 	// Load config
  	_config = new wxFileConfig("Cody", "Cody", 
 		wxStandardPaths::Get().GetUserLocalDataDir() + wxFileName::GetPathSeparator() + "cody.conf",
-	    wxStandardPaths::Get().GetConfigDir() + wxFileName::GetPathSeparator() + "cody.conf");
+	    wxStandardPaths::Get().GetDataDir() + wxFileName::GetPathSeparator() + "cody.conf");
 
 	// Load history from conf
 	_fileHistory.Load(*_config);

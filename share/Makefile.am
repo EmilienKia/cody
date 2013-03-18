@@ -3,3 +3,9 @@
 
 SUBDIRS = \
 	icons
+	
+sharedir = $(datadir)/@PACKAGE@
+
+share_DATA = cody.conf
+
+
