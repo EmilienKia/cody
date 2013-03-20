@@ -32,7 +32,9 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "config-view.hpp"
 #include "fdartprov.hpp"
+#include "file-type.hpp"
 #include "main-frame.hpp"
+#include "template-tools.hpp"
 #include "text-document.hpp"
 #include "text-frame.hpp"
 
@@ -63,6 +65,9 @@ bool CodyApp::OnInit()
 		wxStandardPaths::Get().GetUserLocalDataDir() + wxFileName::GetPathSeparator() + "cody.conf",
 	    wxStandardPaths::Get().GetDataDir() + wxFileName::GetPathSeparator() + "cody.conf");
 
+	// Load file type descriptions
+	_fileTypeMap = FileType::fromConf(_config);
+	
 	// Load history from conf
 	_fileHistory.Load(*_config);
 
@@ -110,6 +115,10 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 	{
 		_fileHistory.AddFileToHistory(path);
 		_fileHistory.Save(*_config);
+
+		const FileType* type = deduceFileTypeFromName(path);
+		if(type!=NULL)
+			doc->setDocumentType(type);
 	}
 
 	if(mainFrame)
@@ -243,3 +252,24 @@ void CodyApp::preferences()
 	dialog.ShowModal();
 }
 
+const FileType& CodyApp::getFileType(const wxString& type)const
+{
+	FileTypeMap::const_iterator it=_fileTypeMap.find(type);
+	if(it!=_fileTypeMap.end())
+		return it->second;
+	return FileType::nullFileType;
+}
+
+const FileType* CodyApp::deduceFileTypeFromName(const wxString& name)const
+{
+	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
+	{
+		const FileType& type = it->second;
+		for(size_t n=0; n<type.getPatterns().GetCount(); ++n)
+		{
+			if(name.Matches(type.getPatterns()[n]))
+			   return &type;
+		}
+	}
+	return NULL;
+}

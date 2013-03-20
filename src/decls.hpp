@@ -45,3 +45,6 @@
 #define CONFPATH_EDITOR_MARGINLONGLINES   "/editor/margin-long-line"
 #define CONFDEFAULT_EDITOR_MARGINLONGLINES  false
 
+
+#define CONFPATH_FILETYPE_ROOT  "/filetype"
+

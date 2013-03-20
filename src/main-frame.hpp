@@ -46,8 +46,7 @@ public:
 	
 	virtual bool Destroy();
 
-	void toggleBookmarkPanel();
-	
+	void toggleBookmarkPanel();	
 protected:
 	void CommonInit();
 	void InitRibbon();

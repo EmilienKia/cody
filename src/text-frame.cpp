@@ -32,6 +32,7 @@ cody is free software: you can redistribute it and/or modify it
 #include "cody-app.hpp"
 #include "bookmark.hpp"
 #include "decls.hpp"
+#include "file-type.hpp"
 #include "main-frame.hpp"
 #include "markbar.hpp"
 #include "text-document.hpp"
@@ -177,6 +178,30 @@ void TextFrame::initAfterLoading()
 {
 	addBookmarksFromProvider();
 	UpdateMarkerPages();
+}
+
+void TextFrame::applyFileTypeStyle(const FileType& type)
+{
+	// Lexer
+	_mainText->SetLexer(type.getLexer());
+	
+	// Styles
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(type.getStyleDef(n))
+		{
+			_mainText->StyleSetSpec(n, type.getStyleDef(n));
+		}
+	}
+
+	// Keywords
+	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
+	{
+		if(type.getKeywords(n))
+		{
+			_mainText->SetKeyWords(n, type.getKeywords(n));
+		}
+	}
 }
 
 MainFrame* TextFrame::getMainFrame()

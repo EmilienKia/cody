@@ -22,6 +22,7 @@ cody is free software: you can redistribute it and/or modify it
 
 class TextFrame;
 class BookmarkList;
+class FileType;
 
 class wxAuiNotebook;
 class wxStyledTextCtrl;
@@ -55,10 +56,14 @@ public:
 	wxStyledTextCtrl* getMainCtrl();
 
 	BookmarkList& getBookmarks();
+
+	void setDocumentType(const FileType* type);
 	
 protected:
 	wxString _title, _file;
 	bool _modified;
+
+	const FileType* _type;
 	
 	TextFrame* _frame;
 	wxAuiNotebook* _parent;

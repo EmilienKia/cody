@@ -26,6 +26,8 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "text-document.hpp"
 
+#include "cody-app.hpp"
+#include "file-type.hpp"
 #include "text-frame.hpp"
 #include "bookmark.hpp"
 
@@ -121,4 +123,16 @@ BookmarkList& TextDocument::getBookmarks()
 {
 	return BookmarkProvider::get(getFile());
 }
+
+void TextDocument::setDocumentType(const FileType* type)
+{
+	_type = type;
+
+	TextFrame* frame = getFrame();
+	if(frame)
+	{
+		frame->applyFileTypeStyle(*type);
+	}	
+}
+
 

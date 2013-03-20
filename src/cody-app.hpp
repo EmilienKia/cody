@@ -22,9 +22,12 @@ cody is free software: you can redistribute it and/or modify it
 
 #include <set>
 #include <list>
+#include <map>
 
 #include <wx/filehistory.h>
 #include <wx/config.h>
+
+#include "file-type.hpp"
 
 class MainFrame;
 class TextDocument;
@@ -55,6 +58,9 @@ public:
 	void preferences();
 
 	std::set<TextDocument*>& getDocuments(){return _documents;}
+
+	const FileType& getFileType(const wxString& type)const;
+	const FileType* deduceFileTypeFromName(const wxString& name)const;
 	
 protected:
 	MainFrame* _frame;
@@ -63,6 +69,8 @@ protected:
 
 	wxFileHistory _fileHistory;
 	wxConfig* _config;
+
+	FileTypeMap _fileTypeMap;
 
 private:
 	void onAbout(wxRibbonButtonBarEvent& event);

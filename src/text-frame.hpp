@@ -22,8 +22,10 @@ cody is free software: you can redistribute it and/or modify it
 
 #include <wx/stc/stc.h>
 
+
 class TextDocument;
 class MainFrame;
+class FileType;
 
 class wxAuiNotebook;
 class wxMarkBar;
@@ -43,6 +45,9 @@ public:
 	void setDocument(TextDocument* doc){_document = doc;}
 	
 	void initAfterLoading();
+
+	void applyFileTypeStyle(const FileType& type);
+
 		
 	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
 	wxStyledTextCtrl* getCurrentTextCtrl()const{return _currentText!=NULL?_currentText:_mainText;}
