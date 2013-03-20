@@ -118,12 +118,26 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 	return doc;
 }
 
-TextDocument* CodyApp::queryLoadFile(MainFrame* mainFrame)
+std::list<TextDocument*> CodyApp::queryLoadFile(MainFrame* mainFrame)
 {
-	wxString file = wxLoadFileSelector("Open a file", "*", wxEmptyString, mainFrame);
-	if(file.IsEmpty())
-		return NULL;
-	return loadDocument(file, mainFrame);
+	std::list<TextDocument*> list;
+	
+	wxFileDialog openDialog(mainFrame, "Open files", wxEmptyString, wxEmptyString,
+	"All files (*)|*", wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
+	
+	if(openDialog.ShowModal() == wxID_OK)
+	{
+		wxArrayString filenames;
+		openDialog.GetPaths(filenames);
+
+		for(size_t n=0; n<filenames.size(); ++n)
+		{
+			TextDocument* doc = loadDocument(filenames[n], mainFrame);
+			if(doc)
+				list.push_back(doc);
+		}
+	}
+	return list;
 }
 
 bool CodyApp::saveDocumentAs(TextDocument* doc, MainFrame* mainFrame)

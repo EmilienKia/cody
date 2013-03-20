@@ -21,6 +21,7 @@ cody is free software: you can redistribute it and/or modify it
 #define _CODY_APP_HPP_
 
 #include <set>
+#include <list>
 
 #include <wx/filehistory.h>
 #include <wx/config.h>
@@ -41,7 +42,7 @@ public:
 	TextDocument* createEmptyDocument(MainFrame* mainFrame = NULL);
 	TextDocument* loadDocument(const wxString& path, MainFrame* mainFrame = NULL);
 
-	TextDocument* queryLoadFile(MainFrame* mainFrame = NULL);
+	std::list<TextDocument*> queryLoadFile(MainFrame* mainFrame = NULL);
 
 	bool saveDocumentAs(TextDocument* doc, MainFrame* mainFrame = NULL);
 
