@@ -24,6 +24,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/aboutdlg.h>
 #include <wx/artprov.h>
 #include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/ribbon/buttonbar.h>
 #include <wx/stdpaths.h>
@@ -110,13 +111,17 @@ TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
 TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 {
 	TextDocument* doc = createEmptyDocument(mainFrame);
-	// TODO absolutize file path and verify existance
-	if(doc->loadFile(path))
+
+	wxFileName filename = path;
+	filename.MakeAbsolute();
+	wxString filepath = filename.GetFullPath();
+	
+	if(doc->loadFile(filepath))
 	{
-		_fileHistory.AddFileToHistory(path);
+		_fileHistory.AddFileToHistory(filepath);
 		_fileHistory.Save(*_config);
 
-		const FileType* type = deduceFileTypeFromName(path);
+		const FileType* type = deduceFileTypeFromName(filename.GetFullName());
 		if(type!=NULL)
 			doc->setDocumentType(type);
 	}
