@@ -198,6 +198,8 @@ int FileType::lexerFromName(const wxString& lexerName)
 {
 	if(lexerName == "txt")
 		return wxSTC_LEX_NULL;  // 1
+	if(lexerName == "python")
+		return wxSTC_LEX_PYTHON;	// 2
 	if(lexerName == "props")
 		return wxSTC_LEX_PROPERTIES;	// 9
 	if(lexerName == "error")
@@ -218,6 +220,8 @@ wxString FileType::lexerToName(int lexer)
 	{
 		case wxSTC_LEX_NULL: // 1
 			return "txt";
+		case wxSTC_LEX_PYTHON:  // 2
+			return "python";
 		case wxSTC_LEX_PROPERTIES:  // 9
 			return "props";
 		case wxSTC_LEX_ERRORLIST: // 10
