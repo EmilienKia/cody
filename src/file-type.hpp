@@ -27,6 +27,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/stc/stc.h>
 
 #include "template-tools.hpp"
+#include "editor-theme.hpp"
 
 class FileType;
 typedef std::map<wxString, FileType> FileTypeMap;
@@ -48,6 +49,12 @@ public:
 	static StyleDef fromString(const wxString& str);
 };
 */
+
+class FileStyle
+{
+public:
+	
+};
 
 class FileType
 {

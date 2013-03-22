@@ -47,4 +47,7 @@
 
 
 #define CONFPATH_FILETYPE_ROOT  "/filetype"
+#define CONFPATH_EDITOR_THEME_ROOT  "/editor/theme"
+#define CONFPATH_EDITOR_STYLE_ROOT  "/editor/style"
+
 

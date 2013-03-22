@@ -32,6 +32,7 @@ cody is free software: you can redistribute it and/or modify it
 #include "cody-app.hpp"
 
 #include "config-view.hpp"
+#include "editor-theme.hpp"
 #include "fdartprov.hpp"
 #include "file-type.hpp"
 #include "main-frame.hpp"
@@ -66,6 +67,9 @@ bool CodyApp::OnInit()
 		wxStandardPaths::Get().GetUserLocalDataDir() + wxFileName::GetPathSeparator() + "cody.conf",
 	    wxStandardPaths::Get().GetDataDir() + wxFileName::GetPathSeparator() + "cody.conf");
 
+	// Load theme and style
+	EditorThemeManager::get().readFromConfig(_config);
+	
 	// Load file type descriptions
 	_fileTypeMap = FileType::fromConf(_config);
 	

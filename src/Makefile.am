@@ -35,7 +35,9 @@ cody_SOURCES = \
 	decls.hpp \
 	file-type.cpp \
 	file-type.hpp \
-	template-tools.hpp
+	template-tools.hpp \
+	editor-theme.cpp \
+	editor-theme.hpp
 
 cody_LDFLAGS = 
 
