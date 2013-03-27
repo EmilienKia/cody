@@ -34,6 +34,8 @@ class CodyApp;
 class FileType;
 typedef std::map<wxString, FileType> FileTypeMap;
 
+class FileTypeManager;
+
 /*
 class StyleDef
 {
@@ -56,11 +58,8 @@ public:
 class FileType
 {
 	friend class CodyApp;
+	friend class FileTypeManager;
 public:
-	static FileTypeMap readFromConfig(wxConfig* config);
-	static bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
-	static FileType nullFileType;
-
 	FileType();
 	FileType(const FileType& type);
 
@@ -103,6 +102,25 @@ protected:
 	static wxString lexerToName(int lexer);
 
 };
+
+class FileTypeManager
+{
+private:
+	static FileTypeManager s_manager;
+	static FileType        s_nullFileType;
+public:
+	static FileTypeManager& get();
+
+	FileType getFileType(const wxString& type)const;
+	wxString deduceFileTypeFromName(const wxString& name)const;
+
+	void readFromConfig(wxConfig* config);
+	bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
+protected:
+	FileTypeMap _fileTypeMap;
+};
+
+
 
 #endif // _FILE_TYPE_HPP_
 

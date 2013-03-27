@@ -95,40 +95,87 @@ StyleDef StyleDef::fromString(const wxString& str)
 // FileType
 //
 
-FileType FileType::nullFileType;
 
-FileTypeMap FileType::readFromConfig(wxConfig* config)
+int FileType::lexerFromName(const wxString& lexerName)
 {
-	wxString oldPath = config->GetPath();
-	config->SetPath(CONFPATH_FILETYPE_ROOT);
-	bool expand = config->IsExpandingEnvVars();
-	config->SetExpandEnvVars(false);
-	
-	FileTypeMap res;
+	if(lexerName == "txt")
+		return wxSTC_LEX_NULL;  // 1
+	if(lexerName == "python")
+		return wxSTC_LEX_PYTHON;	// 2
+	if(lexerName == "cpp")
+		return wxSTC_LEX_CPP;	// 3
+	if(lexerName == "props")
+		return wxSTC_LEX_PROPERTIES;	// 9
+	if(lexerName == "error")
+		return wxSTC_LEX_ERRORLIST;	// 10
+	if(lexerName == "make")
+		return wxSTC_LEX_MAKEFILE;	// 11
+	if(lexerName == "winbatch")
+		return wxSTC_LEX_BATCH;	// 12
+	if(lexerName == "diff")
+		return wxSTC_LEX_DIFF;	// 16
 
-	// Iterate over configured file types
-	wxString name;
-	long index;
-	if(config->GetFirstGroup(name, index))
-	{
-		FileType filetype;
-		if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
-			res[filetype.getID()] = filetype;
-		
-		while(config->GetNextGroup(name, index))
-		{
-			FileType filetype;
-			if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
-				res[filetype.getID()] = filetype;
-		}
-	}
-	
-	config->SetPath(oldPath);
-	config->SetExpandEnvVars(expand);
-	return res;
+	return 0;
 }
 
-bool FileType::readFromConfig(wxConfig* config, wxString absPath, FileType& filetype)
+wxString FileType::lexerToName(int lexer)
+{
+	switch(lexer)
+	{
+		case wxSTC_LEX_NULL: // 1
+			return "txt";
+		case wxSTC_LEX_PYTHON:  // 2
+			return "python";
+		case wxSTC_LEX_CPP:  // 3
+			return "cpp";
+		case wxSTC_LEX_PROPERTIES:  // 9
+			return "props";
+		case wxSTC_LEX_ERRORLIST: // 10
+			return "error";
+		case wxSTC_LEX_MAKEFILE: // 11
+			return "make";
+		case wxSTC_LEX_BATCH: // 12
+			return "winbatch";
+		case wxSTC_LEX_DIFF: // 16
+			return "diff";
+		default:
+			return "";
+	}
+}
+
+FileType::FileType()
+{
+}
+
+FileType::FileType(const FileType& type):
+_name(type._name),
+_id(type._id),
+_fileFilter(type._fileFilter),
+_defStyle(type._defStyle),
+_patterns(type._patterns),
+_lexer(type._lexer),
+_styleDef(type._styleDef)
+{
+	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
+		_keywords[n] = type._keywords[n];
+}
+
+
+//
+// FileTypeManager
+//
+
+FileTypeManager FileTypeManager::s_manager;
+FileType        FileTypeManager::s_nullFileType;
+
+
+FileTypeManager& FileTypeManager::get()
+{
+	return s_manager;
+}
+
+
+bool FileTypeManager::readFromConfig(wxConfig* config, wxString absPath, FileType& filetype)
 {
 	wxString oldPath = config->GetPath();
 	config->SetPath(absPath);
@@ -201,67 +248,89 @@ bool FileType::readFromConfig(wxConfig* config, wxString absPath, FileType& file
 	return true;
 }
 
-int FileType::lexerFromName(const wxString& lexerName)
+void FileTypeManager::readFromConfig(wxConfig* config)
 {
-	if(lexerName == "txt")
-		return wxSTC_LEX_NULL;  // 1
-	if(lexerName == "python")
-		return wxSTC_LEX_PYTHON;	// 2
-	if(lexerName == "cpp")
-		return wxSTC_LEX_CPP;	// 3
-	if(lexerName == "props")
-		return wxSTC_LEX_PROPERTIES;	// 9
-	if(lexerName == "error")
-		return wxSTC_LEX_ERRORLIST;	// 10
-	if(lexerName == "make")
-		return wxSTC_LEX_MAKEFILE;	// 11
-	if(lexerName == "winbatch")
-		return wxSTC_LEX_BATCH;	// 12
-	if(lexerName == "diff")
-		return wxSTC_LEX_DIFF;	// 16
+	wxString oldPath = config->GetPath();
+	config->SetPath(CONFPATH_FILETYPE_ROOT);
+	bool expand = config->IsExpandingEnvVars();
+	config->SetExpandEnvVars(false);
 
-	return 0;
-}
-
-wxString FileType::lexerToName(int lexer)
-{
-	switch(lexer)
+	_fileTypeMap.clear();
+	
+	// Iterate over configured file types
+	wxString name;
+	long index;
+	if(config->GetFirstGroup(name, index))
 	{
-		case wxSTC_LEX_NULL: // 1
-			return "txt";
-		case wxSTC_LEX_PYTHON:  // 2
-			return "python";
-		case wxSTC_LEX_CPP:  // 3
-			return "cpp";
-		case wxSTC_LEX_PROPERTIES:  // 9
-			return "props";
-		case wxSTC_LEX_ERRORLIST: // 10
-			return "error";
-		case wxSTC_LEX_MAKEFILE: // 11
-			return "make";
-		case wxSTC_LEX_BATCH: // 12
-			return "winbatch";
-		case wxSTC_LEX_DIFF: // 16
-			return "diff";
-		default:
-			return "";
+		FileType filetype;
+		if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
+			_fileTypeMap[filetype.getID()] = filetype;
+		
+		while(config->GetNextGroup(name, index))
+		{
+			FileType filetype;
+			if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
+				_fileTypeMap[filetype.getID()] = filetype;
+		}
 	}
+	
+	config->SetPath(oldPath);
+	config->SetExpandEnvVars(expand);
 }
 
-FileType::FileType()
+FileType FileTypeManager::getFileType(const wxString& type)const
 {
+	FileType res;
+	EditorStyle style;
+
+	// Find file type from its ID
+	FileTypeMap::const_iterator it=_fileTypeMap.find(type);
+	if(it!=_fileTypeMap.end())
+	{
+		res = it->second;
+	}
+	
+	// Get its default style if any. 
+	if(!res.getDefaultStyle().IsEmpty())
+	{
+		style = EditorThemeManager::get().getStyle(res.getDefaultStyle());
+	}
+	else
+	{
+		style = EditorThemeManager::get().getStyle("default");
+	}
+
+	// Override styles with file-specific styles
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		Optional<wxString>& st = res.getStyleDef(n);
+		if(st)
+		{
+			style[n] = *style[n] + "," + *st;
+		}
+	}
+
+	// Substitue variables variables
+	EditorThemeManager::get().expandStyle(style);
+	
+	// Apply expanded theme to file type.
+	res._styleDef = style;
+	
+	return res;
 }
 
-FileType::FileType(const FileType& type):
-_name(type._name),
-_id(type._id),
-_fileFilter(type._fileFilter),
-_defStyle(type._defStyle),
-_patterns(type._patterns),
-_lexer(type._lexer),
-_styleDef(type._styleDef)
+wxString FileTypeManager::deduceFileTypeFromName(const wxString& name)const
 {
-	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
-		_keywords[n] = type._keywords[n];
+	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
+	{
+		const FileType& type = it->second;
+		for(size_t n=0; n<type.getPatterns().GetCount(); ++n)
+		{
+			if(name.Matches(type.getPatterns()[n]))
+			   return it->first;
+		}
+	}
+	return "";
 }
+
 

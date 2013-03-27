@@ -59,9 +59,6 @@ public:
 
 	std::set<TextDocument*>& getDocuments(){return _documents;}
 
-	FileType getFileType(const wxString& type)const;
-	wxString deduceFileTypeFromName(const wxString& name)const;
-	
 protected:
 	MainFrame* _frame;
 
@@ -69,8 +66,6 @@ protected:
 
 	wxFileHistory _fileHistory;
 	wxConfig* _config;
-
-	FileTypeMap _fileTypeMap;
 
 private:
 	void onAbout(wxRibbonButtonBarEvent& event);
