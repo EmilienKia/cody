@@ -53,8 +53,11 @@ public:
 	EditorStyle(const EditorStyle& style);	
 
 	bool     has(size_t idx)const;
-	wxString get(size_t idx)const;
+	Optional<wxString> get(size_t idx)const;
 	void     set(size_t idx, const wxString& value = "");
+
+	Optional<wxString>& operator[](size_t idx);
+	const Optional<wxString>& operator[](size_t idx)const; 
 	
 protected:
 	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
@@ -72,15 +75,18 @@ public:
 
 	const EditorTheme& getTheme(const wxString& name)const;
 	const EditorTheme& getCurrentTheme()const;
+	wxString getCurrentThemeName()const{return _theme;}
 
-	wxString getThemeProperty(const wxString& name)const;
-	wxString getThemeExpandedProperty(const wxString& name)const;
+	wxString getCurrentThemeProperty(const wxString& name)const;
+	wxString expandCurrentThemeProperty(const wxString& name)const;
 	wxString getThemeExpandedValue(const wxString& value)const;
 
 
 	const EditorStyle& getStyle(const wxString& name)const;
 
+	void expandStyle(EditorStyle& style)const;
 	EditorStyle getExpandedStyle(const wxString& name)const;
+	
 	
 	void readFromConfig(wxConfig* config);
 	

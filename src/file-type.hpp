@@ -29,6 +29,8 @@ cody is free software: you can redistribute it and/or modify it
 #include "template-tools.hpp"
 #include "editor-theme.hpp"
 
+class CodyApp;
+
 class FileType;
 typedef std::map<wxString, FileType> FileTypeMap;
 
@@ -50,17 +52,13 @@ public:
 };
 */
 
-class FileStyle
-{
-public:
-	
-};
 
 class FileType
 {
+	friend class CodyApp;
 public:
-	static FileTypeMap fromConf(wxConfig* config);
-	static bool fromConf(wxConfig* config, wxString absPath, FileType& filetype);
+	static FileTypeMap readFromConfig(wxConfig* config);
+	static bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
 	static FileType nullFileType;
 
 	FileType();
@@ -77,6 +75,9 @@ public:
 	wxString getFileFilter()const{return _fileFilter;}
 	void setFileFilter(const wxString& fileFilter){_fileFilter = fileFilter;}
 
+	wxString getDefaultStyle()const{return _defStyle;}
+	void setDefaultStyle(const wxString& defStyle){_defStyle = defStyle;}
+	
 	const wxArrayString& getPatterns()const{return _patterns;}
 	void setPatterns(const wxArrayString& patterns){_patterns = patterns;}
 
@@ -86,14 +87,16 @@ public:
 	void setLexerName(const wxString& lexerName){setLexer(lexerFromName(lexerName));}
 
 	const Optional<wxString>& getStyleDef(size_t n)const{return _styleDef[n];}
+	Optional<wxString>& getStyleDef(size_t n){return _styleDef[n];}
+	
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
-
+	
 protected:
-	wxString _name, _id, _fileFilter;
+	wxString _name, _id, _fileFilter, _defStyle;
 	wxArrayString _patterns;
 	int _lexer;
 
-	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
+	EditorStyle        _styleDef;
 	Optional<wxString> _keywords[wxSTC_KEYWORDSET_MAX];
 	
 	static int lexerFromName(const wxString& lexerName);

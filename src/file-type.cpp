@@ -97,34 +97,38 @@ StyleDef StyleDef::fromString(const wxString& str)
 
 FileType FileType::nullFileType;
 
-FileTypeMap FileType::fromConf(wxConfig* config)
+FileTypeMap FileType::readFromConfig(wxConfig* config)
 {
-	FileTypeMap res;
 	wxString oldPath = config->GetPath();
 	config->SetPath(CONFPATH_FILETYPE_ROOT);
+	bool expand = config->IsExpandingEnvVars();
+	config->SetExpandEnvVars(false);
 	
+	FileTypeMap res;
+
+	// Iterate over configured file types
 	wxString name;
 	long index;
 	if(config->GetFirstGroup(name, index))
 	{
 		FileType filetype;
-		if(fromConf(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
+		if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
 			res[filetype.getID()] = filetype;
 		
 		while(config->GetNextGroup(name, index))
 		{
 			FileType filetype;
-			if(fromConf(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
+			if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
 				res[filetype.getID()] = filetype;
 		}
 	}
 	
 	config->SetPath(oldPath);
-
+	config->SetExpandEnvVars(expand);
 	return res;
 }
 
-bool FileType::fromConf(wxConfig* config, wxString absPath, FileType& filetype)
+bool FileType::readFromConfig(wxConfig* config, wxString absPath, FileType& filetype)
 {
 	wxString oldPath = config->GetPath();
 	config->SetPath(absPath);
@@ -160,15 +164,6 @@ bool FileType::fromConf(wxConfig* config, wxString absPath, FileType& filetype)
 		return false;
 	filetype.setFileFilter(str);
 
-	// Style definitions (0 - 39)
-	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
-	{
-		if(config->Read(wxString::Format("style.%lu", n), &str))
-		{
-			filetype._styleDef[n] = str;
-		}
-	}
-
 	// Keyword lists (0-8)
 	for(size_t n=0; n<=wxSTC_KEYWORDSET_MAX; ++n)
 	{
@@ -176,6 +171,18 @@ bool FileType::fromConf(wxConfig* config, wxString absPath, FileType& filetype)
 		{
 			filetype._keywords[n] = str;
 		}		
+	}
+
+	// Default style (if any)
+	filetype._defStyle = config->Read("style", "");
+	
+	// Style definitions (0 - 39)
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(config->Read(wxString::Format("style.%lu", n), &str))
+		{
+			filetype._styleDef[n] = str;
+		}
 	}
 
 	// Iterate for all other properties
@@ -249,11 +256,11 @@ FileType::FileType(const FileType& type):
 _name(type._name),
 _id(type._id),
 _fileFilter(type._fileFilter),
+_defStyle(type._defStyle),
 _patterns(type._patterns),
-_lexer(type._lexer)
+_lexer(type._lexer),
+_styleDef(type._styleDef)
 {
-	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
-		_styleDef[n] = type._styleDef[n];
 	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
 		_keywords[n] = type._keywords[n];
 }

@@ -59,7 +59,7 @@ EditorTheme EditorTheme::readFromConfig(wxConfig* config, const wxString& path)
 {
 	EditorTheme theme;
 	wxString oldPath = config->GetPath();
-	config->SetPath(CONFPATH_FILETYPE_ROOT);
+	config->SetPath(wxString(CONFPATH_EDITOR_THEME_ROOT) + "/" + path);
 
 	// Iterate to store all properties
 	wxString name;
@@ -71,7 +71,7 @@ EditorTheme EditorTheme::readFromConfig(wxConfig* config, const wxString& path)
 		{
 			theme.set(name, config->Read(name, ""));
 		}
-	}	
+	}
 	
 	config->SetPath(oldPath);
 	return theme;
@@ -95,10 +95,10 @@ bool EditorStyle::has(size_t idx)const
 	return _styleDef[idx]; 
 }
 
-wxString EditorStyle::get(size_t idx)const
+Optional<wxString> EditorStyle::get(size_t idx)const
 {
 	if(idx >= wxSTC_STYLE_LASTPREDEFINED)
-		return "";
+		return Optional<wxString>();
 	return _styleDef[idx];
 }
 
@@ -106,6 +106,16 @@ void EditorStyle::set(size_t idx, const wxString& value)
 {
 	if(idx < wxSTC_STYLE_LASTPREDEFINED)
 		_styleDef[idx] = value;
+}
+
+Optional<wxString>& EditorStyle::operator[](size_t idx)
+{
+	return _styleDef[idx];
+}
+
+const Optional<wxString>& EditorStyle::operator[](size_t idx)const
+{
+	return _styleDef[idx];
 }
 
 //
@@ -136,7 +146,7 @@ const EditorTheme& EditorThemeManager::getCurrentTheme()const
 	return getTheme(_theme);	
 }
 
-wxString EditorThemeManager::getThemeProperty(const wxString& name)const
+wxString EditorThemeManager::getCurrentThemeProperty(const wxString& name)const
 {
 	const EditorTheme& cur = getCurrentTheme();
 	EditorTheme::const_iterator itcur = cur.find(name);
@@ -151,10 +161,9 @@ wxString EditorThemeManager::getThemeProperty(const wxString& name)const
 	return "";
 }
 
-wxString EditorThemeManager::getThemeExpandedProperty(const wxString& name)const
+wxString EditorThemeManager::expandCurrentThemeProperty(const wxString& name)const
 {
-	// TODO do cache and optimization !!!
-	return getThemeExpandedValue(getThemeProperty(name));
+	return getThemeExpandedValue(getCurrentThemeProperty(name));
 }
 
 wxString EditorThemeManager::getThemeExpandedValue(const wxString& value)const
@@ -164,7 +173,7 @@ wxString EditorThemeManager::getThemeExpandedValue(const wxString& value)const
 	wxString res = value;
 
 	size_t idx;	
-	while(idx = res.find("$("), idx != wxNOT_FOUND)
+	while(idx = res.find("$("), idx != wxString::npos)
 	{
 		wxString before = res.Mid(0, idx),
 			     middle = res.Mid(idx+2);
@@ -172,13 +181,13 @@ wxString EditorThemeManager::getThemeExpandedValue(const wxString& value)const
 		size_t idx2 = middle.find(")");
 
 		wxString subvar, after;
-		
-		if(idx2==0)
+
+		if(idx2 == 0)
 		{
 			subvar = "";
 			after  = middle;
 		}
-		else if(idx2==wxString::npos)
+		else if(idx2 == wxString::npos)
 		{
 			subvar = middle;
 			after  = "";
@@ -189,7 +198,7 @@ wxString EditorThemeManager::getThemeExpandedValue(const wxString& value)const
 			after  = middle.Mid(idx2+1);
 		}
 
-		res = before + getThemeExpandedProperty(subvar) + after;
+		res = before + expandCurrentThemeProperty(subvar) + after;
 	}
 	
 	return res;
@@ -202,6 +211,15 @@ const EditorStyle& EditorThemeManager::getStyle(const wxString& name)const
 		return it->second;
 	else
 		return nullEditorStyle;
+}
+
+void EditorThemeManager::expandStyle(EditorStyle& style)const
+{
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(style.has(n))
+		   style.set(n, getThemeExpandedValue(style.get(n)));
+	}
 }
 
 EditorStyle EditorThemeManager::getExpandedStyle(const wxString& name)const

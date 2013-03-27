@@ -59,8 +59,8 @@ public:
 
 	std::set<TextDocument*>& getDocuments(){return _documents;}
 
-	const FileType& getFileType(const wxString& type)const;
-	const FileType* deduceFileTypeFromName(const wxString& name)const;
+	FileType getFileType(const wxString& type)const;
+	wxString deduceFileTypeFromName(const wxString& name)const;
 	
 protected:
 	MainFrame* _frame;

@@ -71,7 +71,7 @@ bool CodyApp::OnInit()
 	EditorThemeManager::get().readFromConfig(_config);
 	
 	// Load file type descriptions
-	_fileTypeMap = FileType::fromConf(_config);
+	_fileTypeMap = FileType::readFromConfig(_config);
 	
 	// Load history from conf
 	_fileHistory.Load(*_config);
@@ -82,7 +82,7 @@ bool CodyApp::OnInit()
 
 	// Create an empty document
 	createEmptyDocument(_frame);
-	
+
 	return TRUE;
 }
 
@@ -125,9 +125,12 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 		_fileHistory.AddFileToHistory(filepath);
 		_fileHistory.Save(*_config);
 
-		const FileType* type = deduceFileTypeFromName(filename.GetFullName());
-		if(type!=NULL)
-			doc->setDocumentType(type);
+		wxString type = deduceFileTypeFromName(filename.GetFullName());
+		if(!type.IsEmpty())
+		{
+			FileType ftype = getFileType(type);
+			doc->setDocumentType(ftype);
+		}
 	}
 
 	if(mainFrame)
@@ -261,15 +264,48 @@ void CodyApp::preferences()
 	dialog.ShowModal();
 }
 
-const FileType& CodyApp::getFileType(const wxString& type)const
+FileType CodyApp::getFileType(const wxString& type)const
 {
+	FileType res = FileType::nullFileType;
+	EditorStyle style;
+
+	// Find file type from its ID
 	FileTypeMap::const_iterator it=_fileTypeMap.find(type);
 	if(it!=_fileTypeMap.end())
-		return it->second;
-	return FileType::nullFileType;
+	{
+		res = it->second;
+	}
+	
+	// Get its default style if any. 
+	if(!res.getDefaultStyle().IsEmpty())
+	{
+		style = EditorThemeManager::get().getStyle(res.getDefaultStyle());
+	}
+	else
+	{
+		style = EditorThemeManager::get().getStyle("default");
+	}
+
+	// Override styles with file-specific styles
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		Optional<wxString>& st = res.getStyleDef(n);
+		if(st)
+		{
+			style[n] = *style[n] + "," + *st;
+		}
+	}
+
+	// Substitue variables variables
+	EditorThemeManager::get().expandStyle(style);
+	
+	// Apply expanded theme to file type.
+	res._styleDef = style;
+	
+	return res;
 }
 
-const FileType* CodyApp::deduceFileTypeFromName(const wxString& name)const
+wxString CodyApp::deduceFileTypeFromName(const wxString& name)const
 {
 	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
 	{
@@ -277,8 +313,8 @@ const FileType* CodyApp::deduceFileTypeFromName(const wxString& name)const
 		for(size_t n=0; n<type.getPatterns().GetCount(); ++n)
 		{
 			if(name.Matches(type.getPatterns()[n]))
-			   return &type;
+			   return it->first;
 		}
 	}
-	return NULL;
+	return "";
 }

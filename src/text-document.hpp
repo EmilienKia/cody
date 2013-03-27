@@ -27,6 +27,8 @@ class FileType;
 class wxAuiNotebook;
 class wxStyledTextCtrl;
 
+#include "file-type.hpp"
+
 class TextDocument: public wxObject 
 {
 public:
@@ -57,13 +59,13 @@ public:
 
 	BookmarkList& getBookmarks();
 
-	void setDocumentType(const FileType* type);
+	void setDocumentType(const FileType& type);
 	
 protected:
 	wxString _title, _file;
 	bool _modified;
 
-	const FileType* _type;
+	FileType _type;
 	
 	TextFrame* _frame;
 	wxAuiNotebook* _parent;
