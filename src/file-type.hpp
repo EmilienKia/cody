@@ -76,6 +76,9 @@ public:
 
 	wxString getDefaultStyle()const{return _defStyle;}
 	void setDefaultStyle(const wxString& defStyle){_defStyle = defStyle;}
+
+	wxString getFilePattern()const{return _filePattern;}
+	void setFilePattern(const wxString& filePattern){_filePattern = filePattern;}
 	
 	const wxArrayString& getPatterns()const{return _patterns;}
 	void setPatterns(const wxArrayString& patterns){_patterns = patterns;}
@@ -91,7 +94,7 @@ public:
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
 	
 protected:
-	wxString _name, _id, _fileFilter, _defStyle;
+	wxString _name, _id, _fileFilter, _defStyle, _filePattern;
 	wxArrayString _patterns;
 	int _lexer;
 
@@ -114,6 +117,8 @@ public:
 	FileType getFileType(const wxString& type)const;
 	wxString deduceFileTypeFromName(const wxString& name)const;
 
+	wxString getWildcard()const;
+	
 	void readFromConfig(wxConfig* config);
 	bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
 protected:

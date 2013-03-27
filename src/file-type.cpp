@@ -200,6 +200,7 @@ bool FileTypeManager::readFromConfig(wxConfig* config, wxString absPath, FileTyp
 	// Read file pattern
 	if(!config->Read("patterns", &str))
 		return false;
+	filetype.setFilePattern(str);
 	wxStringTokenizer tkzPattern(str, ";");
 	while ( tkzPattern.HasMoreTokens() )
 	{
@@ -333,4 +334,16 @@ wxString FileTypeManager::deduceFileTypeFromName(const wxString& name)const
 	return "";
 }
 
+wxString FileTypeManager::getWildcard()const
+{
+	wxString wildcard = "All files (autodetect)|*|";
+
+	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
+    {
+		const FileType& type = it->second;
+		wildcard += type.getFileFilter() + "|" + type.getFilePattern() + "|";
+	}
+
+	return wildcard;
+}
 
