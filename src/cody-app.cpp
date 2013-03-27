@@ -112,7 +112,7 @@ TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
 	return doc;
 }
 
-TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
+TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame, int filetype)
 {
 	TextDocument* doc = createEmptyDocument(mainFrame);
 
@@ -125,7 +125,13 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame)
 		_fileHistory.AddFileToHistory(filepath);
 		_fileHistory.Save(*_config);
 
-		wxString type = FileTypeManager::get().deduceFileTypeFromName(filename.GetFullName());
+		wxString type;
+std::cout << filetype << std::endl;
+		if(filetype<0)
+			type = FileTypeManager::get().deduceFileTypeFromName(filename.GetFullName());
+		else
+			type = FileTypeManager::get().getFileTypeName(filetype);
+
 		if(!type.IsEmpty())
 		{
 			FileType ftype = FileTypeManager::get().getFileType(type);
@@ -144,16 +150,19 @@ std::list<TextDocument*> CodyApp::queryLoadFile(MainFrame* mainFrame)
 	std::list<TextDocument*> list;
 	
 	wxFileDialog openDialog(mainFrame, "Open files", wxEmptyString, wxEmptyString,
-	"All files (*)|*", wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
+	FileTypeManager::get().getWildcard(), wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE);
 	
 	if(openDialog.ShowModal() == wxID_OK)
 	{
 		wxArrayString filenames;
 		openDialog.GetPaths(filenames);
 
+		// Shift filter reference to make autodetect =-1 and specified as a real 0-based index.
+		int filterIndex = openDialog.GetFilterIndex() -1; 
+		
 		for(size_t n=0; n<filenames.size(); ++n)
 		{
-			TextDocument* doc = loadDocument(filenames[n], mainFrame);
+			TextDocument* doc = loadDocument(filenames[n], mainFrame, filterIndex);
 			if(doc)
 				list.push_back(doc);
 		}

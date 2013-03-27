@@ -43,7 +43,7 @@ public:
 	virtual int OnExit();
 
 	TextDocument* createEmptyDocument(MainFrame* mainFrame = NULL);
-	TextDocument* loadDocument(const wxString& path, MainFrame* mainFrame = NULL);
+	TextDocument* loadDocument(const wxString& path, MainFrame* mainFrame = NULL, int filetype = -1);
 
 	std::list<TextDocument*> queryLoadFile(MainFrame* mainFrame = NULL);
 

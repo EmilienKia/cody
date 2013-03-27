@@ -334,14 +334,25 @@ wxString FileTypeManager::deduceFileTypeFromName(const wxString& name)const
 	return "";
 }
 
+wxString FileTypeManager::getFileTypeName(int index)const
+{
+	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
+	{
+		if(index-- == 0)
+			return it->first;
+	}
+	
+	return "";
+}
+
 wxString FileTypeManager::getWildcard()const
 {
-	wxString wildcard = "All files (autodetect)|*|";
+	wxString wildcard = "All files (autodetect)|*";
 
 	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
     {
 		const FileType& type = it->second;
-		wildcard += type.getFileFilter() + "|" + type.getFilePattern() + "|";
+		wildcard += "|" + type.getFileFilter() + "|" + type.getFilePattern();
 	}
 
 	return wildcard;

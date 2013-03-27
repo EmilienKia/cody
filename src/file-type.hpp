@@ -116,6 +116,7 @@ public:
 
 	FileType getFileType(const wxString& type)const;
 	wxString deduceFileTypeFromName(const wxString& name)const;
+	wxString getFileTypeName(int index)const;
 
 	wxString getWildcard()const;
 	
