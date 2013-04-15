@@ -123,15 +123,17 @@ BookmarkList& TextDocument::getBookmarks()
 	return BookmarkProvider::get(getFile());
 }
 
-void TextDocument::setDocumentType(const FileType& type)
+void TextDocument::setDocumentType(int doctype)
 {
-	_type = type;
+	_docType = doctype;
 
+	// Update frame styles
 	TextFrame* frame = getFrame();
 	if(frame)
 	{
-		frame->applyFileTypeStyle(type);
+		frame->applyFileTypeStyle();
 	}	
 }
+
 
 

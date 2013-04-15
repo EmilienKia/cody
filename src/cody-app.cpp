@@ -67,11 +67,10 @@ bool CodyApp::OnInit()
 		wxStandardPaths::Get().GetUserLocalDataDir() + wxFileName::GetPathSeparator() + "cody.conf",
 	    wxStandardPaths::Get().GetDataDir() + wxFileName::GetPathSeparator() + "cody.conf");
 
-	// Load theme and style
-	EditorThemeManager::get().readFromConfig(_config);
+	reloadConfig();
 	
-	// Load file type descriptions
-	FileTypeManager::get().readFromConfig(_config);
+	// Reserve wxWindowID
+	FileTypeManager::get().getFirstWindowID();
 	
 	// Load history from conf
 	_fileHistory.Load(*_config);
@@ -92,6 +91,15 @@ int CodyApp::OnExit()
 	_config = NULL;
 	
 	return wxApp::OnExit();
+}
+
+void CodyApp::reloadConfig()
+{
+	// Load theme and style
+	EditorThemeManager::get().readFromConfig(_config);
+	
+	// Load file type descriptions
+	FileTypeManager::get().readFromConfig(_config);	
 }
 
 wxConfig* CodyApp::getConfig()
@@ -125,18 +133,10 @@ TextDocument* CodyApp::loadDocument(const wxString& path, MainFrame* mainFrame, 
 		_fileHistory.AddFileToHistory(filepath);
 		_fileHistory.Save(*_config);
 
-		wxString type;
-std::cout << filetype << std::endl;
 		if(filetype<0)
-			type = FileTypeManager::get().deduceFileTypeFromName(filename.GetFullName());
-		else
-			type = FileTypeManager::get().getFileTypeName(filetype);
-
-		if(!type.IsEmpty())
-		{
-			FileType ftype = FileTypeManager::get().getFileType(type);
-			doc->setDocumentType(ftype);
-		}
+			filetype = FileTypeManager::get().deduceFileTypeFromName(filename.GetFullName());
+		
+		doc->setDocumentType(filetype);
 	}
 
 	if(mainFrame)

@@ -54,6 +54,35 @@ public:
 };
 */
 
+enum FILE_TYPE
+{
+	FT_UNKNOWN = -1,
+	FT_NONE = 0,
+	FT_TEXT = FT_NONE,
+	FT_PYTHON,
+	FT_SCONS,
+	FT_CPP,
+	FT_CSHARP,
+	FT_RC,
+	FT_VALA,
+	FT_JAVA,
+	FT_JAVAFX,
+	FT_JAVASCRIPT,
+	FT_IDL,
+	FT_FLASH,
+	FT_CH,
+	FT_GO,
+	FT_PIKE,
+	FT_PROPERTIES,
+	FT_ERROR,
+	FT_MAKEFILE,
+	FT_WINBATCH,
+	FT_DIFF,
+
+	
+	FT_COUNT
+};
+
 
 class FileType
 {
@@ -90,6 +119,9 @@ public:
 
 	const Optional<wxString>& getStyleDef(size_t n)const{return _styleDef[n];}
 	Optional<wxString>& getStyleDef(size_t n){return _styleDef[n];}
+
+	const Optional<wxString>& getAppliedStyle(size_t n)const{return _appliedStyle[n];}
+	Optional<wxString>& getAppliedStyle(size_t n){return _appliedStyle[n];}
 	
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
 	
@@ -98,7 +130,7 @@ protected:
 	wxArrayString _patterns;
 	int _lexer;
 
-	EditorStyle        _styleDef;
+	EditorStyle        _styleDef, _appliedStyle;
 	Optional<wxString> _keywords[wxSTC_KEYWORDSET_MAX];
 	
 	static int lexerFromName(const wxString& lexerName);
@@ -111,19 +143,34 @@ class FileTypeManager
 private:
 	static FileTypeManager s_manager;
 	static FileType        s_nullFileType;
+
+	static wxString        s_fileTypeID[FT_COUNT];
+	static wxWindowID	   s_firstFileTypeWindowID;
+	
 public:
 	static FileTypeManager& get();
 
-	FileType getFileType(const wxString& type)const;
-	wxString deduceFileTypeFromName(const wxString& name)const;
-	wxString getFileTypeName(int index)const;
+	static wxString fileTypeIDFromNum(int num);
+	static int numFromFileTypeID(const wxString& type);
+	
+	const FileType& getFileType(const wxString& type)const;
+	const FileType& getFileType(int type)const;
+	
+	int deduceFileTypeFromName(const wxString& name)const;
+
+	FileType expandFileTypeStyle(const FileType& type)const;
 
 	wxString getWildcard()const;
+
+	wxWindowID getFirstWindowID()const;
 	
 	void readFromConfig(wxConfig* config);
 	bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
+
 protected:
-	FileTypeMap _fileTypeMap;
+	void expandFileTypeStyles();
+	
+	FileType    _fileTypes[FT_COUNT];
 };
 
 

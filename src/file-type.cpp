@@ -29,6 +29,8 @@ cody is free software: you can redistribute it and/or modify it
 
 #include "decls.hpp"
 
+
+
 //
 // StyleDef
 //
@@ -90,6 +92,8 @@ StyleDef StyleDef::fromString(const wxString& str)
 
 	return def;
 }*/
+
+
 
 //
 // FileType
@@ -168,10 +172,54 @@ _styleDef(type._styleDef)
 FileTypeManager FileTypeManager::s_manager;
 FileType        FileTypeManager::s_nullFileType;
 
+wxWindowID	    FileTypeManager::s_firstFileTypeWindowID = 0;
+
+wxString        FileTypeManager::s_fileTypeID[FT_COUNT] = 
+{
+	/* FT_NONE */       "txt",
+	/* FT_PYTHON */     "python",
+	/* FT_SCONS */      "scons",
+	/* FT_CPP */        "cpp",
+	/* FT_CSHARP */     "csharp",
+	/* FT_RC */         "rc",
+	/* FT_VALA */       "vala",
+	/* FT_JAVA */       "java",
+	/* FT_JAVAFX */     "javafx",
+	/* FT_JAVASCRIPT */ "javascript",
+	/* FT_IDL */        "idl",
+	/* FT_FLASH */      "flash",
+	/* FT_CH */         "ch",
+	/* FT_GO */         "go",
+	/* FT_PIKE */       "pike",
+	/* FT_PROPERTIES */ "props",
+	/* FT_ERROR */      "error",
+	/* FT_MAKEFILE */   "make",
+	/* FT_WINBATCH */   "winbatch",
+	/* FT_DIFF */       "diff"	
+};
 
 FileTypeManager& FileTypeManager::get()
 {
 	return s_manager;
+}
+
+
+wxString FileTypeManager::fileTypeIDFromNum(int num)
+{
+	if(num>=0 && num<FT_COUNT)
+		return s_fileTypeID[num];
+	else
+		return "";
+}
+
+int FileTypeManager::numFromFileTypeID(const wxString& type)
+{
+	for(int n=0; n<FT_COUNT; ++n)
+	{
+		if(type==s_fileTypeID[n])
+			return n;
+	}
+	return FT_UNKNOWN;
 }
 
 
@@ -244,7 +292,7 @@ bool FileTypeManager::readFromConfig(wxConfig* config, wxString absPath, FileTyp
 			std::cout << " - " << str << " : " << config->Read(str, "<<none>>") << std::endl;
 		}
 	}*/
-
+	
 	config->SetPath(oldPath);
 	return true;
 }
@@ -256,40 +304,56 @@ void FileTypeManager::readFromConfig(wxConfig* config)
 	bool expand = config->IsExpandingEnvVars();
 	config->SetExpandEnvVars(false);
 
-	_fileTypeMap.clear();
-	
-	// Iterate over configured file types
-	wxString name;
-	long index;
-	if(config->GetFirstGroup(name, index))
+	// Read all types
+	for(int num=0; num<FT_COUNT; ++num)
 	{
-		FileType filetype;
-		if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
-			_fileTypeMap[filetype.getID()] = filetype;
-		
-		while(config->GetNextGroup(name, index))
+		_fileTypes[num] = FileType();
+		wxString type = fileTypeIDFromNum(num);
+		if(!readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + type, _fileTypes[num]))
 		{
-			FileType filetype;
-			if(readFromConfig(config, wxString(CONFPATH_FILETYPE_ROOT) + "/" + name, filetype))
-				_fileTypeMap[filetype.getID()] = filetype;
+			std::cerr << "Error while loading file type '" << type << "'" << std::endl;
 		}
 	}
+
+	expandFileTypeStyles();
 	
 	config->SetPath(oldPath);
 	config->SetExpandEnvVars(expand);
 }
 
-FileType FileTypeManager::getFileType(const wxString& type)const
+const FileType& FileTypeManager::getFileType(const wxString& type)const
+{
+	return getFileType(numFromFileTypeID(type));
+}
+
+const FileType& FileTypeManager::getFileType(int type)const
+{
+	if(type>=0 && type<FT_COUNT)
+		return _fileTypes[type];
+	return s_nullFileType;
+}
+
+int FileTypeManager::deduceFileTypeFromName(const wxString& name)const
+{
+	for(int i=0; i<FT_COUNT; ++i)
+	{
+		const FileType& type = getFileType(i);
+		for(size_t n=0; n<type.getPatterns().GetCount(); ++n)
+		{
+			if(name.Matches(type.getPatterns()[n]))
+			   return i;
+		}
+	}
+	return -1;
+}
+
+FileType FileTypeManager::expandFileTypeStyle(const FileType& type)const
 {
 	FileType res;
 	EditorStyle style;
 
-	// Find file type from its ID
-	FileTypeMap::const_iterator it=_fileTypeMap.find(type);
-	if(it!=_fileTypeMap.end())
-	{
-		res = it->second;
-	}
+	// Copy current type to result
+	res = type;	
 	
 	// Get its default style if any. 
 	if(!res.getDefaultStyle().IsEmpty())
@@ -320,41 +384,58 @@ FileType FileTypeManager::getFileType(const wxString& type)const
 	return res;
 }
 
-wxString FileTypeManager::deduceFileTypeFromName(const wxString& name)const
+void FileTypeManager::expandFileTypeStyles()
 {
-	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
-	{
-		const FileType& type = it->second;
-		for(size_t n=0; n<type.getPatterns().GetCount(); ++n)
+	for(int i=0; i<FT_COUNT; ++i)
+    {
+		FileType& type = _fileTypes[i];
+		EditorStyle& style = type._appliedStyle;
+		
+		// Get its default style if any. 
+		if(!type.getDefaultStyle().IsEmpty())
 		{
-			if(name.Matches(type.getPatterns()[n]))
-			   return it->first;
+			style = EditorThemeManager::get().getStyle(type.getDefaultStyle());
 		}
-	}
-	return "";
+		else
+		{
+			style = EditorThemeManager::get().getStyle("default");
+		}
+		
+		// Override styles with file-specific styles
+		for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+		{
+			Optional<wxString>& st = type.getStyleDef(n);
+			if(st)
+			{
+				style[n] = *style[n] + "," + *st;
+			}
+		}
+
+		// Substitue variables variables
+		EditorThemeManager::get().expandStyle(style);
+	}	
 }
 
-wxString FileTypeManager::getFileTypeName(int index)const
-{
-	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
-	{
-		if(index-- == 0)
-			return it->first;
-	}
-	
-	return "";
-}
 
 wxString FileTypeManager::getWildcard()const
 {
 	wxString wildcard = "All files (autodetect)|*";
 
-	for(FileTypeMap::const_iterator it=_fileTypeMap.begin(); it!=_fileTypeMap.end(); ++it)
+	for(int i=0; i<FT_COUNT; ++i)
     {
-		const FileType& type = it->second;
+		const FileType& type = getFileType(i);
 		wildcard += "|" + type.getFileFilter() + "|" + type.getFilePattern();
 	}
 
 	return wildcard;
+}
+
+wxWindowID FileTypeManager::getFirstWindowID()const
+{
+	if(s_firstFileTypeWindowID==0)
+	{	
+		s_firstFileTypeWindowID = wxIdManager::ReserveId(FT_COUNT);
+	}
+	return s_firstFileTypeWindowID;
 }
 

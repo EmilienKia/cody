@@ -51,6 +51,7 @@ protected:
 	void CommonInit();
 	void InitRibbon();
 	void InitAcceleratorTable();
+	void InitFileTypeMenu();
 
 	void UpdateTitle();
 
@@ -64,6 +65,7 @@ private:
 	BookmarkPanel* _bookmark;
 
 	wxMenu*        _recentFileMenu;
+	wxMenu*        _fileTypeMenu;
 
 	void onRibbonButtonClicked(wxEvent& event);
 	
@@ -124,6 +126,10 @@ private:
 	void onDisplayWrapLongLines(wxCommandEvent& event);
 	void onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event);
 
+	void onSelectLanguages(wxRibbonButtonBarEvent& event);
+	void onSelectLanguage(wxCommandEvent& event);
+	void onUpdateSelectLanguage(wxUpdateUIEvent& event);
+	
 	void onSplitView(wxCommandEvent& event);
 	void onUpdateSplitView(wxUpdateUIEvent& event);
 	void onSwapView(wxCommandEvent& event);

@@ -180,17 +180,25 @@ void TextFrame::initAfterLoading()
 	UpdateMarkerPages();
 }
 
-void TextFrame::applyFileTypeStyle(const FileType& type)
+void TextFrame::applyFileTypeStyle()
 {
+	const FileType& type = FileTypeManager::get().getFileType(getDocument()->getDocumentType());
+	
+	// Clear actual
+	_mainText->StyleClearAll();
+	_secondText->StyleClearAll();
+	
 	// Lexer
 	_mainText->SetLexer(type.getLexer());
+	_secondText->SetLexer(type.getLexer());
 	
 	// Styles
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
-		if(type.getStyleDef(n))
+		if(type.getAppliedStyle(n))
 		{
-			_mainText->StyleSetSpec(n, type.getStyleDef(n));
+			_mainText->StyleSetSpec(n, type.getAppliedStyle(n));
+			_secondText->StyleSetSpec(n, type.getAppliedStyle(n));
 		}
 	}
 
@@ -200,6 +208,7 @@ void TextFrame::applyFileTypeStyle(const FileType& type)
 		if(type.getKeywords(n))
 		{
 			_mainText->SetKeyWords(n, type.getKeywords(n));
+			_secondText->SetKeyWords(n, type.getKeywords(n));
 		}
 	}
 }

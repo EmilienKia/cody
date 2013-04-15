@@ -57,6 +57,7 @@ void MainFrame::CommonInit()
                                 //| wxRIBBON_BAR_SHOW_TOGGLE_BUTTON
                                 //| wxRIBBON_BAR_SHOW_HELP_BUTTON
                                 );
+	InitFileTypeMenu();
 	InitRibbon();
 	InitAcceleratorTable();
 	
@@ -183,6 +184,11 @@ void MainFrame::InitRibbon()
 			bar->AddToggleButton(XRCID("Display long lines"), "Long line", RibbonIcon("view-long-lines"));
 		}
 		{
+			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Language");
+			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+			bar->AddDropdownButton(XRCID("Select language"), "Languages", RibbonIcon("view-long-lines"));
+		}
+		{
 			wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "View");
 			wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
 			bar->AddToggleButton(XRCID("Split view"), "Split", RibbonIcon("view-split"));
@@ -225,6 +231,21 @@ void MainFrame::InitAcceleratorTable()
 	
 	wxAcceleratorTable accel(number, entries);
 	SetAcceleratorTable(accel);
+}
+
+void MainFrame::InitFileTypeMenu()
+{
+	_fileTypeMenu = new wxMenu;
+
+	wxWindowID baseid = FileTypeManager::get().getFirstWindowID();
+	
+	for(int i=0; i<FT_COUNT; ++i)
+	{
+		_fileTypeMenu->AppendCheckItem(baseid+i, FileTypeManager::get().getFileType(i).getName());
+	}
+
+	Connect(baseid, baseid+FT_COUNT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MainFrame::onSelectLanguage));
+	Connect(baseid, baseid+FT_COUNT, wxEVT_UPDATE_UI, wxUpdateUIEventHandler(MainFrame::onUpdateSelectLanguage));
 }
 
 void MainFrame::UpdateTitle()
@@ -376,6 +397,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_UPDATE_UI(XRCID("Display long lines"), MainFrame::onUpdateDisplayLongLines)
 	EVT_MENU(XRCID("Display wrap long lines"), MainFrame::onDisplayWrapLongLines)
 	EVT_UPDATE_UI(XRCID("Display wrap long lines"), MainFrame::onUpdateDisplayWrapLongLines)
+
+	EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(XRCID("Select language"), MainFrame::onSelectLanguages)
 
 	EVT_MENU(XRCID("Split view"), MainFrame::onSplitView)
 	EVT_UPDATE_UI(XRCID("Split view"), MainFrame::onUpdateSplitView)
@@ -958,3 +981,27 @@ void MainFrame::onUpdateSwapView(wxUpdateUIEvent& event)
 	}
 }
 
+void MainFrame::onSelectLanguages(wxRibbonButtonBarEvent& event)
+{
+	event.PopupMenu(_fileTypeMenu);
+}
+
+void MainFrame::onSelectLanguage(wxCommandEvent& event)
+{
+	int id = event.GetId() - FileTypeManager::get().getFirstWindowID();
+	TextDocument* doc = getCurrentDocument();
+	if(doc)
+	{
+		doc->setDocumentType(id);
+	}
+}
+
+void MainFrame::onUpdateSelectLanguage(wxUpdateUIEvent& event)
+{
+	int id = event.GetId() - FileTypeManager::get().getFirstWindowID();
+	TextDocument* doc = getCurrentDocument();
+	if(doc)
+	{
+		event.Check(doc->getDocumentType()==id);
+	}
+}

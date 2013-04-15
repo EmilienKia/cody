@@ -55,6 +55,8 @@ public:
 	wxConfig* getConfig();
 	wxFileHistory& getFileHistory();
 
+	void reloadConfig();
+	
 	void preferences();
 
 	std::set<TextDocument*>& getDocuments(){return _documents;}

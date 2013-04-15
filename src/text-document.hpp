@@ -59,12 +59,16 @@ public:
 
 	BookmarkList& getBookmarks();
 
+	int getDocumentType()const{return _docType;}
+	void setDocumentType(int doctype);
 	void setDocumentType(const FileType& type);
 	
 protected:
 	wxString _title, _file;
 	bool _modified;
 
+	int _docType;
+	
 	FileType _type;
 	
 	TextFrame* _frame;
