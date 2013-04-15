@@ -62,6 +62,9 @@ public:
 	std::set<TextDocument*>& getDocuments(){return _documents;}
 
 protected:
+	virtual void OnInitCmdLine(wxCmdLineParser& parser);
+	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+	
 	MainFrame* _frame;
 
 	std::set<TextDocument*> _documents;

@@ -23,6 +23,7 @@ cody is free software: you can redistribute it and/or modify it
 
 #include <wx/aboutdlg.h>
 #include <wx/artprov.h>
+#include <wx/cmdline.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/xrc/xmlres.h>
@@ -49,8 +50,14 @@ BEGIN_EVENT_TABLE(CodyApp, wxApp)
 END_EVENT_TABLE()
 
 
+static wxArrayString s_filesToLoad;
+
+
 bool CodyApp::OnInit()
 {
+	if(!wxApp::OnInit())
+		return false;
+		
 	// Init all image handlers
 	wxInitAllImageHandlers();
 
@@ -77,12 +84,21 @@ bool CodyApp::OnInit()
 
 	// Create the first main frame
 	_frame = new MainFrame();
-	_frame->Show(TRUE);
+	_frame->Show(true);
 
-	// Create an empty document
-	createEmptyDocument(_frame);
-
-	return TRUE;
+	if(s_filesToLoad.GetCount()>0)
+	{
+		// Load required files
+		for(size_t n=0; n<s_filesToLoad.GetCount(); ++n)
+			loadDocument(s_filesToLoad[n]);
+	}
+	else
+	{
+		// Create an empty document
+		createEmptyDocument(_frame);
+	}
+	
+	return true;
 }
 
 int CodyApp::OnExit()
@@ -100,6 +116,23 @@ void CodyApp::reloadConfig()
 	
 	// Load file type descriptions
 	FileTypeManager::get().readFromConfig(_config);	
+}
+
+void CodyApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+	wxApp::OnInitCmdLine(parser);
+
+	parser.AddParam("files to load", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL|wxCMD_LINE_PARAM_MULTIPLE);
+}
+
+bool CodyApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+	for(size_t n=0; n<parser.GetParamCount(); ++n)
+	{
+		s_filesToLoad.Add(parser.GetParam(n));
+	}
+	
+	return wxApp::OnCmdLineParsed(parser);
 }
 
 wxConfig* CodyApp::getConfig()
