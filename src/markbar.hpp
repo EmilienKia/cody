@@ -24,6 +24,7 @@
 #include <wx/control.h>
 
 #include <list>
+#include <vector>
 
 #define MB_HORIZONTAL	wxHORIZONTAL
 #define MB_VERTICAL		wxVERTICAL
