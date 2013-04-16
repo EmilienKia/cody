@@ -1,0 +1,61 @@
+
+Compiling Cody for Windows
+==========================
+
+Note that actually Cody just has been compiled for Windows and not tested yet.
+
+
+Cross compiling using mingw-w64:
+================================
+
+1- Installing mingw-w64 and related tools:
+------------------------------------------
+
+Debian or related:
+------------------
+  apt-get install mingw-w64 binutils-mingw-w64
+
+
+2- Installing pthread for mingw-w64:
+------------------------------------
+
+On Debian Sid or Ubuntu Raring:
+-------------------------------
+See http://packages.debian.org/fr/sid/libpthreads-mingw-w64 or http://packages.ubuntu.com/raring/libpthreads-mingw-w64
+
+  apt-get install libpthreads-mingw-w64
+
+
+From PPA:
+---------
+See https://bugs.launchpad.net/ubuntu/+source/mingw-w64/+bug/1022397 and https://launchpad.net/~mingw-packages/+archive/ppa
+
+  add-apt-repository ppa:mingw-packages/ppa && sudo apt-get update
+
+
+From sources:
+-------------
+See http://sourceforge.net/apps/trac/mingw-w64/wiki/Compile%20pthreads :
+
+  cvs -d :pserver:anoncvs@sourceware.org:/cvs/pthreads-win32 checkout pthreads
+  cd pthreads
+  make -f GNUmakefile CROSS=x86_64-w64-mingw32- clean GCE
+  sudo make -f GNUmakefile CROSS=x86_64-w64-mingw32- DESTROOT=/usr/x86_64-w64-mingw32 install
+
+
+3- Compiling wxWidgets:
+-----------------------
+Compiling wxWidgets (actually from trunk:)
+
+  svn co http://svn.wxwidgets.org/svn/wx/wxWidgets/trunk wx
+  cd wx
+  ./configure --prefix=/usr/x86_64-w64-mingw32 --host=x86_64-w64-mingw32
+  sudo make install
+  
+
+4- Compiling Cody:
+------------------
+  
+  ./configure --prefix=/usr/x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --with-wx-config=/usr/x86_64-w64-mingw32/bin/wx-config
+
+
