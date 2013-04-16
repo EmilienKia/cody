@@ -23,7 +23,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <map>
 
 #include <wx/config.h>
-
+#include <wx/fileconf.h>
 #include <wx/stc/stc.h>
 
 #include "template-tools.hpp"
@@ -164,8 +164,8 @@ public:
 
 	wxWindowID getFirstWindowID()const;
 	
-	void readFromConfig(wxConfig* config);
-	bool readFromConfig(wxConfig* config, wxString absPath, FileType& filetype);
+	void readFromConfig(wxFileConfig* config);
+	bool readFromConfig(wxFileConfig* config, wxString absPath, FileType& filetype);
 
 protected:
 	void expandFileTypeStyles();

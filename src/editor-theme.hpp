@@ -21,6 +21,7 @@ cody is free software: you can redistribute it and/or modify it
 #define _EDITOR_THEME_HPP_
 
 #include <wx/stc/stc.h>
+#include <wx/fileconf.h>
 
 #include <map>
 
@@ -41,7 +42,7 @@ public:
 	wxString getID()const{return get("id");}
 	wxString getName()const{return get("name");}
 
-	static EditorTheme readFromConfig(wxConfig* config, const wxString& path);
+	static EditorTheme readFromConfig(wxFileConfig* config, const wxString& path);
 };
 
 
@@ -88,14 +89,14 @@ public:
 	EditorStyle getExpandedStyle(const wxString& name)const;
 	
 	
-	void readFromConfig(wxConfig* config);
+	void readFromConfig(wxFileConfig* config);
 	
 protected:
 	wxString _theme;
 	std::map<wxString, EditorTheme> _themes;
 	std::map<wxString, EditorStyle> _styles;
 
-	void readEditorStyleFromConfig(wxConfig* config, const wxString& name);
+	void readEditorStyleFromConfig(wxFileConfig* config, const wxString& name);
 };
 
 

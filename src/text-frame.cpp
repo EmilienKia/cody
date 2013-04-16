@@ -160,7 +160,7 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
 
 void TextFrame::ApplyGlobalConfig()
 {
-	wxConfig* conf = wxGetApp().getConfig();
+	wxFileConfig* conf = wxGetApp().getConfig();
 	
 	showCaretLine(conf->ReadBool(CONFPATH_EDITOR_SHOWCARETLINE, CONFDEFAULT_EDITOR_SHOWCARETLINE));
 	showWhiteSpaces(conf->ReadBool(CONFPATH_EDITOR_SHOWWHITESPACES, CONFDEFAULT_EDITOR_SHOWWHITESPACES));

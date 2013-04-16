@@ -25,7 +25,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <map>
 
 #include <wx/filehistory.h>
-#include <wx/config.h>
+#include <wx/fileconf.h>
 
 #include "file-type.hpp"
 
@@ -52,7 +52,7 @@ public:
 	void closeDocument(TextDocument* doc);
 	void closeAllFrameDocuments(MainFrame* mainFrame = NULL);
 
-	wxConfig* getConfig();
+	wxFileConfig* getConfig();
 	wxFileHistory& getFileHistory();
 
 	void reloadConfig();
@@ -70,7 +70,7 @@ protected:
 	std::set<TextDocument*> _documents;
 
 	wxFileHistory _fileHistory;
-	wxConfig* _config;
+	wxFileConfig* _config;
 
 private:
 	void onAbout(wxRibbonButtonBarEvent& event);

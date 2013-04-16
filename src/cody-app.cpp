@@ -135,7 +135,7 @@ bool CodyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	return wxApp::OnCmdLineParsed(parser);
 }
 
-wxConfig* CodyApp::getConfig()
+wxFileConfig* CodyApp::getConfig()
 {
 	return _config;
 }

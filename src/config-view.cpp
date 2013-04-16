@@ -21,6 +21,7 @@ cody is free software: you can redistribute it and/or modify it
 #endif
 #include <wx/wx.h>
 
+#include <wx/fileconf.h>
 #include <wx/statbox.h>
 
 #include "config-view.hpp"
@@ -70,7 +71,7 @@ void ConfigView::Initialize()
 {
 	wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
 
-	wxConfig* conf = wxGetApp().getConfig();
+	wxFileConfig* conf = wxGetApp().getConfig();
 	wxCheckBox *cb;
 
 	{

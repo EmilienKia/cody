@@ -223,7 +223,7 @@ int FileTypeManager::numFromFileTypeID(const wxString& type)
 }
 
 
-bool FileTypeManager::readFromConfig(wxConfig* config, wxString absPath, FileType& filetype)
+bool FileTypeManager::readFromConfig(wxFileConfig* config, wxString absPath, FileType& filetype)
 {
 	wxString oldPath = config->GetPath();
 	config->SetPath(absPath);
@@ -297,7 +297,7 @@ bool FileTypeManager::readFromConfig(wxConfig* config, wxString absPath, FileTyp
 	return true;
 }
 
-void FileTypeManager::readFromConfig(wxConfig* config)
+void FileTypeManager::readFromConfig(wxFileConfig* config)
 {
 	wxString oldPath = config->GetPath();
 	config->SetPath(CONFPATH_FILETYPE_ROOT);

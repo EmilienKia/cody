@@ -55,7 +55,7 @@ void EditorTheme::set(const wxString& name, const wxString& value)
 	(*this)[name] = value;
 }
 
-EditorTheme EditorTheme::readFromConfig(wxConfig* config, const wxString& path)
+EditorTheme EditorTheme::readFromConfig(wxFileConfig* config, const wxString& path)
 {
 	EditorTheme theme;
 	wxString oldPath = config->GetPath();
@@ -240,7 +240,7 @@ EditorStyle EditorThemeManager::getExpandedStyle(const wxString& name)const
 	return res;
 }
 
-void EditorThemeManager::readFromConfig(wxConfig* config)
+void EditorThemeManager::readFromConfig(wxFileConfig* config)
 {
 	wxString oldPath = config->GetPath();
 	bool expand = config->IsExpandingEnvVars();
@@ -302,7 +302,7 @@ void EditorThemeManager::readFromConfig(wxConfig* config)
 	config->SetPath(oldPath);
 }
 
-void EditorThemeManager::readEditorStyleFromConfig(wxConfig* config, const wxString& name)
+void EditorThemeManager::readEditorStyleFromConfig(wxFileConfig* config, const wxString& name)
 {
 	wxString oldPath = config->GetPath();
 	config->SetPath(wxString(CONFPATH_EDITOR_STYLE_ROOT) + "/" + name);
