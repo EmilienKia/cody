@@ -50,6 +50,7 @@ Compiling wxWidgets (actually from trunk:)
   svn co http://svn.wxwidgets.org/svn/wx/wxWidgets/trunk wx
   cd wx
   ./configure --prefix=/usr/x86_64-w64-mingw32 --host=x86_64-w64-mingw32
+  ./configure --prefix=/usr/x86_64-w64-mingw32 --host=x86_64-w64-mingw32 --enable-monolithic --disable-shared LDFLAGS="-static-libgcc -static-libstdc++"
   sudo make install
   
 
