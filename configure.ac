@@ -29,8 +29,8 @@ else
     AC_MSG_ERROR([wxWidgets is required. Try --with-wx-config.])
 fi
  
-WX_CPPFLAGS="`$WXCONFIG --cppflags core,adv,ribbon,stc,xrc`"
-WX_CXXFLAGS="`$WXCONFIG --cxxflags core,adv,ribbon,stc,xrc`"
+WX_CPPFLAGS="`$WXCONFIG --cppflags core,adv,aui,ribbon,stc,xrc`"
+WX_CXXFLAGS="`$WXCONFIG --cxxflags core,adv,aui,ribbon,stc,xrc`"
 WX_LIBS="`$WXCONFIG --libs core,adv,aui,ribbon,stc,xrc`"
  
 AC_SUBST(WX_CPPFLAGS)
