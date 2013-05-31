@@ -135,8 +135,8 @@ protected:
 	
 	static int lexerFromName(const wxString& lexerName);
 	static wxString lexerToName(int lexer);
-
 };
+
 
 class FileTypeManager
 {

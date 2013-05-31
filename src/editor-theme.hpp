@@ -49,6 +49,7 @@ public:
 
 class EditorStyle
 {
+	friend class EditorThemeManager;
 public:
 	EditorStyle(){}	
 	EditorStyle(const EditorStyle& style);	
@@ -58,10 +59,14 @@ public:
 	void     set(size_t idx, const wxString& value = "");
 
 	Optional<wxString>& operator[](size_t idx);
-	const Optional<wxString>& operator[](size_t idx)const; 
-	
+	const Optional<wxString>& operator[](size_t idx)const;
+
+	wxString getStyleName(unsigned short nb)const{return *_styleName[nb];}
+	void setStyleName(unsigned short nb, const wxString& name){_styleName[nb] = name;}
+
 protected:
 	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
+	Optional<wxString> _styleName[wxSTC_STYLE_LASTPREDEFINED];
 };
 
 
@@ -82,7 +87,6 @@ public:
 	wxString expandCurrentThemeProperty(const wxString& name)const;
 	wxString getThemeExpandedValue(const wxString& value)const;
 
-
 	const EditorStyle& getStyle(const wxString& name)const;
 
 	void expandStyle(EditorStyle& style)const;
@@ -90,6 +94,10 @@ public:
 	
 	
 	void readFromConfig(wxFileConfig* config);
+
+	
+	std::map<wxString, EditorTheme>& getThemes(){return _themes;}
+	std::map<wxString, EditorStyle>& getStyles(){return _styles;}
 	
 protected:
 	wxString _theme;

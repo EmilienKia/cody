@@ -308,9 +308,18 @@ void EditorThemeManager::readEditorStyleFromConfig(wxFileConfig* config, const w
 	config->SetPath(wxString(CONFPATH_EDITOR_STYLE_ROOT) + "/" + name);
 
 	EditorStyle style;
-
-	// Style definitions (0 - 39)
 	wxString str;
+
+	// Style names
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(config->Read(wxString::Format("stylename.%lu", n), &str))
+		{
+			style.setStyleName(n, str);
+		}
+	}
+	
+	// Style definitions (0 - 39)
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
 		if(config->Read(wxString::Format("style.%lu", n), &str))

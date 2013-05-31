@@ -17,34 +17,27 @@ cody is free software: you can redistribute it and/or modify it
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONFIG_VIEW_HPP_
-#define _CONFIG_VIEW_HPP_
+#ifndef _CONFIG_STYLE_HPP_
+#define _CONFIG_STYLE_HPP_
 
-class ConfigView: public wxPanel 
+class ConfigStyle: public wxPanel 
 {
 	wxDECLARE_EVENT_TABLE();
 public:
-	ConfigView(wxWindow* parent, wxWindowID id = wxID_ANY);
+	ConfigStyle(wxWindow* parent, wxWindowID id = wxID_ANY);
 protected:
 
 private:
 	void Initialize();
 
-	
-	
-	void onCheckShowCaretLine(wxCommandEvent& event);
-	void onCheckShowWhiteSpaces(wxCommandEvent& event);
-	void onCheckShowIndentGuides(wxCommandEvent& event);
-	void onCheckShowEndOfLines(wxCommandEvent& event);
-	void onCheckWrapLongLines(wxCommandEvent& event);
+	void fillThemeList();
+	void fillStyleList();
 
-	void onCheckMarginLineNumbers(wxCommandEvent& event);
-	void onCheckMarginMarkers(wxCommandEvent& event);
-	void onCheckMarginFolders(wxCommandEvent& event);
-	void onCheckMarginLongLines(wxCommandEvent& event);
+	int getLanguageSelection();
+	int getStyleSelection();
 	
+	void onSelectLanguage(wxCommandEvent& event);
 };
 
-
-#endif // _CONFIG_VIEW_HPP_
+#endif // _CONFIG_STYLE_HPP_
 

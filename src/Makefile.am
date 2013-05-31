@@ -37,7 +37,9 @@ cody_SOURCES = \
 	file-type.hpp \
 	template-tools.hpp \
 	editor-theme.cpp \
-	editor-theme.hpp
+	editor-theme.hpp \
+	config-style.cpp \
+	config-style.hpp
 
 cody_LDFLAGS = 
 

@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<resource>
+  <object class="wxPanel" name="ConfigStyle">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxStaticText" name="ThemeLabel">
+              <label>Theme:</label>
+            </object>
+            <option>0</option>
+            <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+            <border>4</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxChoice" name="ThemeChoice"/>
+            <option>0</option>
+            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <object class="sizeritem">
+                <object class="wxStaticText" name="LanguageLabel">
+                  <label>Language:</label>
+                </object>
+                <option>0</option>
+                <flag>wxBOTTOM|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxListBox" name="LanguageList"/>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
+              </object>
+              <orient>wxVERTICAL</orient>
+            </object>
+            <option>0</option>
+            <flag>wxRIGHT|wxEXPAND</flag>
+            <border>8</border>
+          </object>
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="StyleLabel">
+                          <label>Style:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxListBox" name="StyleList"/>
+                        <option>1</option>
+                        <flag>wxEXPAND</flag>
+                        <minsize>192,-1</minsize>
+                      </object>
+                      <orient>wxVERTICAL</orient>
+                    </object>
+                    <option>0</option>
+                    <flag>wxRIGHT|wxEXPAND</flag>
+                    <border>4</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticBox" name="StyleSettingsBox">
+                      <label>Style settings</label>
+                    </object>
+                    <option>1</option>
+                    <flag>wxEXPAND</flag>
+                  </object>
+                  <orient>wxHORIZONTAL</orient>
+                </object>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticBox" name="KeyWordsBox">
+                  <label>Keywords</label>
+                </object>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxStaticBox" name="FileExtensionsBox">
+                  <label>File extensions</label>
+                </object>
+                <option>0</option>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>4</border>
+              </object>
+              <orient>wxVERTICAL</orient>
+            </object>
+            <option>1</option>
+            <flag>wxEXPAND</flag>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>4</border>
+      </object>
+    </object>
+  </object>
+</resource>

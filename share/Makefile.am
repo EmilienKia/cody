@@ -6,6 +6,6 @@ SUBDIRS = \
 	
 sharedir = $(datadir)/@PACKAGE@
 
-share_DATA = cody.conf
+share_DATA = cody.conf cody.xrc
 
 

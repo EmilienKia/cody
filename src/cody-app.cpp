@@ -29,10 +29,12 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/xrc/xmlres.h>
 #include <wx/ribbon/buttonbar.h>
 #include <wx/stdpaths.h>
+#include <wx/xrc/xmlres.h>
 
 #include "cody-app.hpp"
 
 #include "config-view.hpp"
+#include "config-style.hpp"
 #include "editor-theme.hpp"
 #include "fdartprov.hpp"
 #include "file-type.hpp"
@@ -64,6 +66,10 @@ bool CodyApp::OnInit()
 	// Plug additionnal art providers
 	wxArtProvider::Push(new wxFreedesktopArtProvider("/usr/share/icons/gnome"));
 	wxArtProvider::Push(new wxFreedesktopArtProvider(wxStandardPaths::Get().GetDataDir()+"/icons/hicolor"));
+
+	// Init resource system and load resource file  
+	wxXmlResource::Get()->InitAllHandlers();
+	wxXmlResource::Get()->LoadFile(wxStandardPaths::Get().GetDataDir() + wxFileName::GetPathSeparator() + "cody.xrc");
 	
 	// Ensure that user local data dir is created
 	if(!wxDir::Exists(wxStandardPaths::Get().GetUserLocalDataDir()))
@@ -296,6 +302,7 @@ void CodyApp::preferences()
 	wxNotebook* notebook = new wxNotebook(&dialog, wxID_ANY);
 
 	notebook->AddPage(new ConfigView(notebook), "View");
+	notebook->AddPage(new ConfigStyle(notebook), "Editor style");
 	
 	gsz->Add(notebook, 1, wxEXPAND|wxALL, 4);
 	gsz->Add(dialog.CreateButtonSizer(wxCLOSE), 0, wxEXPAND|wxALL, 4);
