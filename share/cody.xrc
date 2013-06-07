@@ -72,12 +72,134 @@
                     <border>4</border>
                   </object>
                   <object class="sizeritem">
-                    <object class="wxStaticBox" name="StyleSettingsBox">
-                      <label>Style settings</label>
+                    <object class="wxBoxSizer">
+                      <orient>wxVERTICAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxFontPickerCtrl" name="FontPicker">
+                          <label>Font</label>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBoxSizer">
+                          <object class="sizeritem">
+                            <object class="wxStaticText" name="ForegroundLabel">
+                              <label>Foreground:</label>
+                            </object>
+                            <option>0</option>
+                            <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                            <border>4</border>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxColourPickerCtrl" name="ForegroundColor">
+                              <label>Foreground color</label>
+                              <style>wxCLRP_USE_TEXTCTRL</style>
+                            </object>
+                            <option>1</option>
+                            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                          </object>
+                          <orient>wxHORIZONTAL</orient>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBoxSizer">
+                          <object class="sizeritem">
+                            <object class="wxStaticText" name="BackgroundLabel">
+                              <label>Background:</label>
+                            </object>
+                            <option>0</option>
+                            <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
+                            <border>4</border>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxColourPickerCtrl" name="BackgroundColor">
+                              <label>Background color</label>
+                              <style>wxCLRP_USE_TEXTCTRL</style>
+                            </object>
+                            <option>1</option>
+                            <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                          </object>
+                          <orient>wxHORIZONTAL</orient>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBoxSizer">
+                          <object class="sizeritem">
+                            <object class="wxToggleButton" name="BoldButton">
+                              <label>B</label>
+                              <font>
+                                <size>9</size>
+                                <style>normal</style>
+                                <weight>bold</weight>
+                                <underlined>0</underlined>
+                                <family>roman</family>
+                                <face>DejaVu Serif</face>
+                                <encoding>UTF-8</encoding>
+                              </font>
+                            </object>
+                            <option>0</option>
+                            <flag>wxEXPAND</flag>
+                          </object>
+                          <object class="spacer">
+                            <size>0</size>
+                            <option>1</option>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxToggleButton" name="ItalicButton">
+                              <label>I</label>
+                              <font>
+                                <size>9</size>
+                                <style>italic</style>
+                                <weight>normal</weight>
+                                <underlined>0</underlined>
+                                <family>roman</family>
+                                <face>DejaVu Serif</face>
+                                <encoding>UTF-8</encoding>
+                              </font>
+                            </object>
+                            <option>0</option>
+                            <flag>wxEXPAND</flag>
+                          </object>
+                          <object class="spacer">
+                            <size>0</size>
+                            <option>1</option>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxToggleButton" name="UnderlineButton">
+                              <label>U</label>
+                              <font>
+                                <size>9</size>
+                                <style>normal</style>
+                                <weight>normal</weight>
+                                <underlined>1</underlined>
+                                <family>roman</family>
+                                <face>DejaVu Serif</face>
+                                <encoding>UTF-8</encoding>
+                              </font>
+                            </object>
+                            <option>0</option>
+                            <flag>wxEXPAND</flag>
+                          </object>
+                          <orient>wxHORIZONTAL</orient>
+                        </object>
+                        <option>0</option>
+                        <flag>wxALL|wxEXPAND</flag>
+                        <border>4</border>
+                      </object>
                     </object>
                     <option>1</option>
-                    <flag>wxEXPAND</flag>
+                    <flag>wxALL|wxEXPAND</flag>
+                    <border>4</border>
                   </object>
+                  
                   <orient>wxHORIZONTAL</orient>
                 </object>
                 <option>1</option>

@@ -182,7 +182,8 @@ void TextFrame::initAfterLoading()
 
 void TextFrame::applyFileTypeStyle()
 {
-	const FileType& type = FileTypeManager::get().getFileType(getDocument()->getDocumentType());
+	const FileType& type = getDocument()->getDocFileType();
+	const FileType& deftype = FileTypeManager::get().getFileType(FT_DEFAULT);
 	
 	// Clear actual
 	_mainText->StyleClearAll();
@@ -193,12 +194,20 @@ void TextFrame::applyFileTypeStyle()
 	_secondText->SetLexer(type.getLexer());
 	
 	// Styles
-	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	for(size_t n=0; n<wxSTC_STYLE_DEFAULT; ++n)
 	{
 		if(type.getAppliedStyle(n))
 		{
-			_mainText->StyleSetSpec(n, type.getAppliedStyle(n));
-			_secondText->StyleSetSpec(n, type.getAppliedStyle(n));
+			_mainText->StyleSetSpec(n, *type.getAppliedStyle(n));
+			_secondText->StyleSetSpec(n, *type.getAppliedStyle(n));
+		}
+	}
+	for(size_t n=wxSTC_STYLE_DEFAULT; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(deftype.getAppliedStyle(n))
+		{
+			_mainText->StyleSetSpec(n, *deftype.getAppliedStyle(n));
+			_secondText->StyleSetSpec(n, *deftype.getAppliedStyle(n));
 		}
 	}
 
@@ -211,6 +220,16 @@ void TextFrame::applyFileTypeStyle()
 			_secondText->SetKeyWords(n, type.getKeywords(n));
 		}
 	}
+}
+
+void TextFrame::applyFileTypeStyle(unsigned short stylenum)
+{
+	const FileType& type = (stylenum<wxSTC_STYLE_DEFAULT) ?
+			getDocument()->getDocFileType() :
+			FileTypeManager::get().getFileType(FT_DEFAULT);
+
+	_mainText->StyleSetSpec(stylenum, type.getAppliedStyle(stylenum));
+	_secondText->StyleSetSpec(stylenum, type.getAppliedStyle(stylenum));
 }
 
 MainFrame* TextFrame::getMainFrame()

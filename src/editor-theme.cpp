@@ -22,6 +22,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/wx.h>
 
 #include <wx/config.h>
+#include <wx/tokenzr.h>
 
 #include "editor-theme.hpp"
 
@@ -78,6 +79,115 @@ EditorTheme EditorTheme::readFromConfig(wxFileConfig* config, const wxString& pa
 }
 
 
+
+
+//
+// StyleDef
+//
+
+StyleDef::StyleDef()
+{
+}
+
+StyleDef::StyleDef(const StyleDef& style):
+font(style.font),
+size(style.size),
+weight(style.weight),
+fore(style.fore),
+back(style.back),
+italic(style.italic),
+bold(style.bold),
+eolfilled(style.eolfilled),
+charcase(style.charcase)
+{
+}
+
+wxString StyleDef::toString()const
+{
+	wxArrayString arr;
+	wxString res;
+
+	if(bold.set()){ if(*bold) arr.Add("bold"); else arr.Add("notbold"); }
+	if(italic.set()){ if(*italic) arr.Add("italic"); else arr.Add("notitalic"); }
+	if(eolfilled.set()){ if(*eolfilled) arr.Add("eolfilled"); else arr.Add("noteolfilled"); }
+	if(font){arr.Add(wxString("font:")+*font); }
+	if(size){arr.Add(wxString::Format("size:%d", *size)); }
+	if(weight){arr.Add(wxString::Format("weight:%d", *weight)); }
+	if(charcase){arr.Add(wxString("case:")+*charcase); }
+	if(fore){arr.Add(wxString("fore:")+(*fore).GetAsString(wxC2S_HTML_SYNTAX));}
+	if(back){arr.Add(wxString("back:")+(*back).GetAsString(wxC2S_HTML_SYNTAX));}
+
+	if(arr.GetCount()>0)
+	{
+		res = arr[0];
+		for(size_t n=1; n<arr.GetCount(); ++n)
+		{
+			res += ",";
+			res += arr[n];
+		}
+	}
+	return res;
+}
+
+StyleDef StyleDef::fromString(const wxString& str)
+{
+	StyleDef def;
+	
+	wxStringTokenizer tkz(str, ",");
+	while(tkz.HasMoreTokens())
+	{
+		wxString token = tkz.GetNextToken();
+		if(token=="bold")
+			*def.bold = true;
+		else if(token=="notbold")
+			*def.bold = false;
+		else if(token=="italic" || token=="italics")
+			*def.italic = true;
+		else if(token=="notitalic" || token=="notitalics")
+			*def.italic = false;
+		else if(token=="eolfilled")
+			*def.eolfilled = true;
+		else if(token=="noteolfilled")
+			*def.eolfilled = false;
+		else
+		{
+			wxString name = token.BeforeFirst(':');
+			wxString value = token.AfterFirst(':');
+			if(name=="font")
+				def.font = value;
+			else if(name=="size")
+			{
+				long val;
+				if(value.ToLong(&val))
+					def.size = (int)val;
+			}
+			else if(name=="weight")
+			{
+				long val;
+				if(value.ToLong(&val))
+					def.weight = (int)val;
+			}
+			else if(name=="case" || name=="charcase")
+			{
+				if(value.Length()>=1)
+					def.charcase = value[0];
+			}
+			else if(name=="fore")
+			{
+				def.fore = wxColour(value);
+			}
+			else if(name=="back")
+			{
+				def.back = wxColour(value);
+			}
+		}
+	}
+
+	return def;
+}
+
+
+
 //
 // EditorStyle
 //
@@ -86,13 +196,15 @@ EditorStyle::EditorStyle(const EditorStyle& style)
 {
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 		_styleDef[n] = style._styleDef[n];
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+		_styleName[n] = style._styleName[n];
 }
-
+/*
 bool EditorStyle::has(size_t idx)const
 {
 	if(idx >= wxSTC_STYLE_LASTPREDEFINED)
 		return false;
-	return _styleDef[idx]; 
+	return _styleDef[idx].set();
 }
 
 Optional<wxString> EditorStyle::get(size_t idx)const
@@ -117,6 +229,37 @@ const Optional<wxString>& EditorStyle::operator[](size_t idx)const
 {
 	return _styleDef[idx];
 }
+*/
+EditorStyle EditorStyle::readFromConfig(wxFileConfig* config, const wxString& path)
+{
+	wxString oldPath = config->GetPath();
+	config->SetPath(wxString(CONFPATH_EDITOR_STYLE_ROOT) + "/" + path);
+
+	EditorStyle style;
+	wxString str;
+
+	// Style names
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(config->Read(wxString::Format("stylename.%lu", n), &str))
+		{
+			style.setStyleName(n, str);
+		}
+	}
+	
+	// Style definitions (0 - 39)
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		if(config->Read(wxString::Format("style.%lu", n), &str))
+		{
+			style.setStyle(n, str);
+		}
+	}
+		
+	config->SetPath(oldPath);
+	return style;
+}
+
 
 //
 // EditorThemeManager
@@ -217,8 +360,8 @@ void EditorThemeManager::expandStyle(EditorStyle& style)const
 {
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
-		if(style.has(n))
-		   style.set(n, getThemeExpandedValue(style.get(n)));
+		if(style.hasStyle(n))
+		   style.setStyle(n, getThemeExpandedValue(style.getStyle(n)));
 	}
 }
 
@@ -231,10 +374,10 @@ EditorStyle EditorThemeManager::getExpandedStyle(const wxString& name)const
 
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
-		if(style.has(n))
-		   res.set(n, getThemeExpandedValue(style.get(n)));
-		else if(def.has(n))
-		   res.set(n, getThemeExpandedValue(def.get(n)));
+		if(style.hasStyle(n))
+		   res.setStyle(n, getThemeExpandedValue(style.getStyle(n)));
+		else if(def.hasStyle(n))
+		   res.setStyle(n, getThemeExpandedValue(def.getStyle(n)));
 	}
 	
 	return res;
@@ -288,10 +431,10 @@ void EditorThemeManager::readFromConfig(wxFileConfig* config)
 	EditorStyle style;
 	if(config->GetFirstGroup(name, index))
 	{
-		readEditorStyleFromConfig(config, name);
+		_styles[name] = EditorStyle::readFromConfig(config, name);
 		while(config->GetNextGroup(name, index))
 		{
-			readEditorStyleFromConfig(config, name);
+			_styles[name] = EditorStyle::readFromConfig(config, name);
 		}
 	}
 	
@@ -301,37 +444,5 @@ void EditorThemeManager::readFromConfig(wxFileConfig* config)
 	config->SetExpandEnvVars(expand);
 	config->SetPath(oldPath);
 }
-
-void EditorThemeManager::readEditorStyleFromConfig(wxFileConfig* config, const wxString& name)
-{
-	wxString oldPath = config->GetPath();
-	config->SetPath(wxString(CONFPATH_EDITOR_STYLE_ROOT) + "/" + name);
-
-	EditorStyle style;
-	wxString str;
-
-	// Style names
-	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
-	{
-		if(config->Read(wxString::Format("stylename.%lu", n), &str))
-		{
-			style.setStyleName(n, str);
-		}
-	}
-	
-	// Style definitions (0 - 39)
-	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
-	{
-		if(config->Read(wxString::Format("style.%lu", n), &str))
-		{
-			style.set(n, str);
-		}
-	}
-	
-	_styles[name] = style;
-	
-	config->SetPath(oldPath);
-}
-
 
 

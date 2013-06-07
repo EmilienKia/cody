@@ -135,5 +135,9 @@ void TextDocument::setDocumentType(int doctype)
 	}	
 }
 
+const FileType& TextDocument::getDocFileType()const
+{
+	return FileTypeManager::get().getFileType(getDocumentType());
+}
 
 

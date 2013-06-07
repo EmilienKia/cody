@@ -47,6 +47,7 @@ public:
 	void initAfterLoading();
 
 	void applyFileTypeStyle();
+	void applyFileTypeStyle(unsigned short stylenum);
 		
 	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
 	wxStyledTextCtrl* getCurrentTextCtrl()const{return _currentText!=NULL?_currentText:_mainText;}

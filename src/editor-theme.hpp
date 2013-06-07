@@ -47,6 +47,30 @@ public:
 
 
 
+
+class StyleDef
+{
+public:
+	StyleDef();
+	StyleDef(const StyleDef& style);
+	
+	Optional<wxString> font; // Font name
+	Optional<int>	   size; // Font size (in point ?)
+	Optional<int>	   weight; // Font weight (1..999: 100=light, 400=normal, 700=bold)
+	Optional<wxColour> fore; // Foreground color
+	Optional<wxColour> back; // Background color
+	Optional<bool>	   italic; // Is font in italic
+	Optional<bool>	   bold; // Is font in bold
+	Optional<bool>	   eolfilled; // Are EOL filled
+	Optional<char>	   charcase; // Case modification ('m', 'u', or 'l' for mixed, upper or lower case)
+
+	wxString toString()const;
+	
+	static StyleDef fromString(const wxString& str);
+};
+
+
+
 class EditorStyle
 {
 	friend class EditorThemeManager;
@@ -54,16 +78,16 @@ public:
 	EditorStyle(){}	
 	EditorStyle(const EditorStyle& style);	
 
-	bool     has(size_t idx)const;
-	Optional<wxString> get(size_t idx)const;
-	void     set(size_t idx, const wxString& value = "");
+	bool hasStyle(unsigned short idx)const{return _styleDef[idx].set();}
+	const Optional<wxString>& getStyle(unsigned short idx)const{return _styleDef[idx];}
+	void setStyle(unsigned short idx, const wxString& name){_styleDef[idx] = name;}
+	
+	bool hasStyleName(unsigned short idx)const{return _styleName[idx].set();}
+	const Optional<wxString>& getStyleName(unsigned short idx)const{return _styleName[idx];}
+	void setStyleName(unsigned short idx, const wxString& name){_styleName[idx] = name;}
 
-	Optional<wxString>& operator[](size_t idx);
-	const Optional<wxString>& operator[](size_t idx)const;
-
-	wxString getStyleName(unsigned short nb)const{return *_styleName[nb];}
-	void setStyleName(unsigned short nb, const wxString& name){_styleName[nb] = name;}
-
+	static EditorStyle readFromConfig(wxFileConfig* config, const wxString& path);
+	
 protected:
 	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
 	Optional<wxString> _styleName[wxSTC_STYLE_LASTPREDEFINED];
@@ -103,8 +127,6 @@ protected:
 	wxString _theme;
 	std::map<wxString, EditorTheme> _themes;
 	std::map<wxString, EditorStyle> _styles;
-
-	void readEditorStyleFromConfig(wxFileConfig* config, const wxString& name);
 };
 
 

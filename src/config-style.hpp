@@ -20,6 +20,11 @@ cody is free software: you can redistribute it and/or modify it
 #ifndef _CONFIG_STYLE_HPP_
 #define _CONFIG_STYLE_HPP_
 
+class wxFontPickerCtrl;
+class wxColourPickerCtrl;
+class wxToggleButton;
+
+
 class ConfigStyle: public wxPanel 
 {
 	wxDECLARE_EVENT_TABLE();
@@ -31,12 +36,24 @@ private:
 	void Initialize();
 
 	void fillThemeList();
+	void fillLanguageList();
 	void fillStyleList();
+	void fillStyleGroup();
 
 	int getLanguageSelection();
 	int getStyleSelection();
+
+	void enableStylePanel(bool enabled=true);
 	
 	void onSelectLanguage(wxCommandEvent& event);
+	void onSelectStyle(wxCommandEvent& event);
+
+	wxFontPickerCtrl *fontPicker;
+	wxColourPickerCtrl *foreColPicker;
+	wxColourPickerCtrl *backColPicker;
+	wxToggleButton *boldButton;
+	wxToggleButton *italicButton;
+	wxToggleButton *underlineButton;
 };
 
 #endif // _CONFIG_STYLE_HPP_

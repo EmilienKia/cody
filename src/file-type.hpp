@@ -36,28 +36,13 @@ typedef std::map<wxString, FileType> FileTypeMap;
 
 class FileTypeManager;
 
-/*
-class StyleDef
-{
-public:
-	Optional<wxString> font; // Font name
-	Optional<int>	   size; // Font size (in point ?)
-	Optional<int>	   weight; // Font weight (1..999: 100=light, 400=normal, 700=bold)
-	Optional<wxColour> fore; // Foreground color
-	Optional<wxColour> back; // Background color
-	Optional<bool>	   italic; // Is font in italic
-	Optional<bool>	   bold; // Is font in bold
-	Optional<bool>	   eolfilled; // Are EOL filled
-	Optional<char>	   charcase; // Case modification ('m', 'u', or 'l' for mixed, upper or lower case)
 
-	static StyleDef fromString(const wxString& str);
-};
-*/
 
 enum FILE_TYPE
 {
 	FT_UNKNOWN = -1,
 	FT_NONE = 0,
+	FT_DEFAULT = FT_NONE,
 	FT_TEXT = FT_NONE,
 	FT_PYTHON,
 	FT_SCONS,
@@ -117,6 +102,8 @@ public:
 	wxString getLexerName()const{return lexerToName(_lexer);}
 	void setLexerName(const wxString& lexerName){setLexer(lexerFromName(lexerName));}
 
+
+	
 	const Optional<wxString>& getStyleDef(size_t n)const{return _styleDef[n];}
 	Optional<wxString>& getStyleDef(size_t n){return _styleDef[n];}
 
@@ -124,13 +111,22 @@ public:
 	Optional<wxString>& getAppliedStyle(size_t n){return _appliedStyle[n];}
 	
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
-	
+
+	const EditorStyle& getEditorStyle()const;
+	const Optional<wxString>& getEditorStyle(size_t n)const;
+	const Optional<wxString>& getEditorStyleName(size_t n)const;
+
+
+	void expandFileTypeStyles();
+	void expandFileTypeStyle(size_t n);
 protected:
 	wxString _name, _id, _fileFilter, _defStyle, _filePattern;
 	wxArrayString _patterns;
 	int _lexer;
 
-	EditorStyle        _styleDef, _appliedStyle;
+	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
+	Optional<wxString> _appliedStyle[wxSTC_STYLE_LASTPREDEFINED];
+	
 	Optional<wxString> _keywords[wxSTC_KEYWORDSET_MAX];
 	
 	static int lexerFromName(const wxString& lexerName);
@@ -158,7 +154,7 @@ public:
 	
 	int deduceFileTypeFromName(const wxString& name)const;
 
-	FileType expandFileTypeStyle(const FileType& type)const;
+//	FileType expandFileTypeStyle(const FileType& type)const;
 
 	wxString getWildcard()const;
 

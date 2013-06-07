@@ -32,70 +32,6 @@ cody is free software: you can redistribute it and/or modify it
 
 
 //
-// StyleDef
-//
-
-/*
-StyleDef StyleDef::fromString(const wxString& str)
-{
-	StyleDef def;
-	
-	wxStringTokenizer tkz(str, ",");
-	while(tkz.HasMoreTokens())
-	{
-		wxString token = tkz.GetNextToken();
-		if(token=="bold")
-			*def.bold = true;
-		else if(token=="notbold")
-			*def.bold = false;
-		else if(token=="italic" || token=="italics")
-			*def.italic = true;
-		else if(token=="notitalic" || token=="notitalics")
-			*def.italic = false;
-		if(token=="eolfilled")
-			*def.eolfilled = true;
-		else if(token=="noteolfilled")
-			*def.eolfilled = false;
-		else
-		{
-			wxString name = token.BeforeFirst(':');
-			wxString value = token.AfterFirst(':');
-			if(name=="font")
-				def.font = value;
-			else if(name=="size")
-			{
-				long val;
-				if(value.ToLong(&val))
-					def.size = (int)val;
-			}
-			else if(name=="weight")
-			{
-				long val;
-				if(value.ToLong(&val))
-					def.weight = (int)val;
-			}
-			else if(name=="case" || name=="charcase")
-			{
-				if(value.Length()>=1)
-					def.charcase = value[0];
-			}
-			else if(name=="fore")
-			{
-				def.fore = wxColour(value);
-			}
-			else if(name=="back")
-			{
-				def.back = wxColour(value);
-			}
-		}
-	}
-
-	return def;
-}*/
-
-
-
-//
 // FileType
 //
 
@@ -162,6 +98,60 @@ _styleDef(type._styleDef)
 {
 	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
 		_keywords[n] = type._keywords[n];
+}
+
+const EditorStyle& FileType::getEditorStyle()const
+{
+	return EditorThemeManager::get().getStyle(_defStyle);
+}
+
+const Optional<wxString>& FileType::getEditorStyle(size_t n)const
+{
+	return getEditorStyle().getStyle(n);
+}
+
+const Optional<wxString>& FileType::getEditorStyleName(size_t n)const
+{
+	return getEditorStyle().getStyleName(n);
+}
+
+void FileType::expandFileTypeStyles()
+{
+	const EditorStyle &defStyle = EditorThemeManager::get().getStyle("default");
+	const EditorStyle &refStyle = EditorThemeManager::get().getStyle(getDefaultStyle());
+
+	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+	{
+		wxString res;
+	
+		if(defStyle.hasStyle(n))
+			res = *defStyle.getStyle(n);
+		if(refStyle.hasStyle(n))
+			res += "," + *refStyle.getStyle(n);
+
+		if(_styleDef[n].set())
+			res += "," + *_styleDef[n];
+	
+		_appliedStyle[n] = EditorThemeManager::get().getThemeExpandedValue(res);
+	}
+}
+
+void FileType::expandFileTypeStyle(size_t n)
+{
+	const EditorStyle &defStyle = EditorThemeManager::get().getStyle("default");
+	const EditorStyle &refStyle = EditorThemeManager::get().getStyle(getDefaultStyle());
+
+	wxString res;
+	
+	if(defStyle.hasStyle(n))
+		res = *defStyle.getStyle(n);
+	if(refStyle.hasStyle(n))
+		res += "," + *defStyle.getStyle(n);
+
+	if(_styleDef[n].set())
+		res += "," + *_styleDef[n];
+
+	_appliedStyle[n] = EditorThemeManager::get().getThemeExpandedValue(res);
 }
 
 
@@ -292,7 +282,7 @@ bool FileTypeManager::readFromConfig(wxFileConfig* config, wxString absPath, Fil
 			std::cout << " - " << str << " : " << config->Read(str, "<<none>>") << std::endl;
 		}
 	}*/
-	
+
 	config->SetPath(oldPath);
 	return true;
 }
@@ -314,7 +304,7 @@ void FileTypeManager::readFromConfig(wxFileConfig* config)
 			std::cerr << "Error while loading file type '" << type << "'" << std::endl;
 		}
 	}
-
+	
 	expandFileTypeStyles();
 	
 	config->SetPath(oldPath);
@@ -346,7 +336,7 @@ int FileTypeManager::deduceFileTypeFromName(const wxString& name)const
 	}
 	return -1;
 }
-
+/*
 FileType FileTypeManager::expandFileTypeStyle(const FileType& type)const
 {
 	FileType res;
@@ -383,37 +373,14 @@ FileType FileTypeManager::expandFileTypeStyle(const FileType& type)const
 	
 	return res;
 }
-
+*/
 void FileTypeManager::expandFileTypeStyles()
 {
 	for(int i=0; i<FT_COUNT; ++i)
     {
 		FileType& type = _fileTypes[i];
-		EditorStyle& style = type._appliedStyle;
-		
-		// Get its default style if any. 
-		if(!type.getDefaultStyle().IsEmpty())
-		{
-			style = EditorThemeManager::get().getStyle(type.getDefaultStyle());
-		}
-		else
-		{
-			style = EditorThemeManager::get().getStyle("default");
-		}
-		
-		// Override styles with file-specific styles
-		for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
-		{
-			Optional<wxString>& st = type.getStyleDef(n);
-			if(st)
-			{
-				style[n] = *style[n] + "," + *st;
-			}
-		}
-
-		// Substitue variables variables
-		EditorThemeManager::get().expandStyle(style);
-	}	
+		type.expandFileTypeStyles();
+	}
 }
 
 

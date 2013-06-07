@@ -121,7 +121,7 @@ void CodyApp::reloadConfig()
 	EditorThemeManager::get().readFromConfig(_config);
 	
 	// Load file type descriptions
-	FileTypeManager::get().readFromConfig(_config);	
+	FileTypeManager::get().readFromConfig(_config);
 }
 
 void CodyApp::OnInitCmdLine(wxCmdLineParser& parser)
