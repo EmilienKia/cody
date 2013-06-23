@@ -151,6 +151,9 @@ public:
 	
 	const FileType& getFileType(const wxString& type)const;
 	const FileType& getFileType(int type)const;
+
+	void resetFileTypeStyle(int type, int style);
+	void setFileTypeStyle(int type, int style, const wxString& stylestr);
 	
 	int deduceFileTypeFromName(const wxString& name)const;
 
@@ -165,6 +168,7 @@ public:
 
 protected:
 	void expandFileTypeStyles();
+	void applyToAllDocuments();
 	
 	FileType    _fileTypes[FT_COUNT];
 };

@@ -89,14 +89,20 @@ StyleDef::StyleDef()
 {
 }
 
+StyleDef::StyleDef(const wxString& str)
+{
+	*this = StyleDef::fromString(str);
+}
+
 StyleDef::StyleDef(const StyleDef& style):
 font(style.font),
 size(style.size),
-weight(style.weight),
+//weight(style.weight),
 fore(style.fore),
 back(style.back),
 italic(style.italic),
 bold(style.bold),
+underline(style.underline),
 eolfilled(style.eolfilled),
 charcase(style.charcase)
 {
@@ -109,10 +115,11 @@ wxString StyleDef::toString()const
 
 	if(bold.set()){ if(*bold) arr.Add("bold"); else arr.Add("notbold"); }
 	if(italic.set()){ if(*italic) arr.Add("italic"); else arr.Add("notitalic"); }
+	if(underline.set()){ if(*underline) arr.Add("underline"); else arr.Add("notunderline"); }
 	if(eolfilled.set()){ if(*eolfilled) arr.Add("eolfilled"); else arr.Add("noteolfilled"); }
 	if(font){arr.Add(wxString("font:")+*font); }
 	if(size){arr.Add(wxString::Format("size:%d", *size)); }
-	if(weight){arr.Add(wxString::Format("weight:%d", *weight)); }
+//	if(weight){arr.Add(wxString::Format("weight:%d", *weight)); }
 	if(charcase){arr.Add(wxString("case:")+*charcase); }
 	if(fore){arr.Add(wxString("fore:")+(*fore).GetAsString(wxC2S_HTML_SYNTAX));}
 	if(back){arr.Add(wxString("back:")+(*back).GetAsString(wxC2S_HTML_SYNTAX));}
@@ -145,6 +152,10 @@ StyleDef StyleDef::fromString(const wxString& str)
 			*def.italic = true;
 		else if(token=="notitalic" || token=="notitalics")
 			*def.italic = false;
+		else if(token=="underline" || token=="underlines")
+			*def.italic = true;
+		else if(token=="notunderline" || token=="notunderlines")
+			*def.italic = false;
 		else if(token=="eolfilled")
 			*def.eolfilled = true;
 		else if(token=="noteolfilled")
@@ -161,12 +172,12 @@ StyleDef StyleDef::fromString(const wxString& str)
 				if(value.ToLong(&val))
 					def.size = (int)val;
 			}
-			else if(name=="weight")
+/*			else if(name=="weight")
 			{
 				long val;
 				if(value.ToLong(&val))
 					def.weight = (int)val;
-			}
+			}*/
 			else if(name=="case" || name=="charcase")
 			{
 				if(value.Length()>=1)

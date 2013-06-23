@@ -20,8 +20,13 @@ cody is free software: you can redistribute it and/or modify it
 #ifndef _CONFIG_STYLE_HPP_
 #define _CONFIG_STYLE_HPP_
 
+#include "editor-theme.hpp"
+
+class wxChoice;
 class wxFontPickerCtrl;
+class wxFontPickerEvent;
 class wxColourPickerCtrl;
+class wxColourPickerEvent;
 class wxToggleButton;
 
 
@@ -44,10 +49,26 @@ private:
 	int getStyleSelection();
 
 	void enableStylePanel(bool enabled=true);
+
+	void saveCurrentStyleDef();
+
 	
 	void onSelectLanguage(wxCommandEvent& event);
 	void onSelectStyle(wxCommandEvent& event);
 
+	void onSelectFont(wxFontPickerEvent& event);
+	void onSelectBackground(wxColourPickerEvent& event);
+	void onSelectForeground(wxColourPickerEvent& event);
+	void onToggleBold(wxCommandEvent& event);
+	void onToggleItalic(wxCommandEvent& event);
+	void onToggleUnderline(wxCommandEvent& event);
+	
+	StyleDef currentStyleDef;
+	
+	wxChoice* themeChoice;
+	wxListBox* languageList;
+	wxListBox* styleList;
+	
 	wxFontPickerCtrl *fontPicker;
 	wxColourPickerCtrl *foreColPicker;
 	wxColourPickerCtrl *backColPicker;

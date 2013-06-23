@@ -52,15 +52,17 @@ class StyleDef
 {
 public:
 	StyleDef();
+	StyleDef(const wxString& str);
 	StyleDef(const StyleDef& style);
 	
 	Optional<wxString> font; // Font name
 	Optional<int>	   size; // Font size (in point ?)
-	Optional<int>	   weight; // Font weight (1..999: 100=light, 400=normal, 700=bold)
+	// Optional<int>	   weight; // Font weight (1..999: 100=light, 400=normal, 700=bold) // Not used, only bold or not
 	Optional<wxColour> fore; // Foreground color
 	Optional<wxColour> back; // Background color
 	Optional<bool>	   italic; // Is font in italic
 	Optional<bool>	   bold; // Is font in bold
+	Optional<bool>	   underline; // Is font in underline
 	Optional<bool>	   eolfilled; // Are EOL filled
 	Optional<char>	   charcase; // Case modification ('m', 'u', or 'l' for mixed, upper or lower case)
 

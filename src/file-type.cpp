@@ -28,7 +28,9 @@ cody is free software: you can redistribute it and/or modify it
 #include "file-type.hpp"
 
 #include "decls.hpp"
-
+#include "cody-app.hpp"
+#include "text-document.hpp"
+#include "text-frame.hpp"
 
 
 //
@@ -374,6 +376,40 @@ FileType FileTypeManager::expandFileTypeStyle(const FileType& type)const
 	return res;
 }
 */
+
+void FileTypeManager::resetFileTypeStyle(int type, int style)
+{
+	if(type>FT_UNKNOWN && type<FT_COUNT && style>=0 && style<wxSTC_STYLE_LASTPREDEFINED)
+	{
+		_fileTypes[type].getStyleDef(style).clear();
+
+		wxGetApp().getConfig()->DeleteEntry(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/style.%d",
+		                              fileTypeIDFromNum(type), style));
+		
+		// TODO save it to properties
+		expandFileTypeStyles();
+		//TODO optimize !
+		//_fileTypes[type].expandFileTypeStyle(style);
+		applyToAllDocuments();
+	}
+}
+
+void FileTypeManager::setFileTypeStyle(int type, int style, const wxString& stylestr)
+{
+	if(type>FT_UNKNOWN && type<FT_COUNT && style>=0 && style<wxSTC_STYLE_LASTPREDEFINED)
+	{
+		_fileTypes[type].getStyleDef(style).set(stylestr);
+
+		wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/style.%d",
+		                              fileTypeIDFromNum(type), style), stylestr);
+		
+		expandFileTypeStyles();
+		//TODO optimize !
+		//_fileTypes[type].expandFileTypeStyle(style);
+		applyToAllDocuments();
+	}
+}
+
 void FileTypeManager::expandFileTypeStyles()
 {
 	for(int i=0; i<FT_COUNT; ++i)
@@ -383,6 +419,15 @@ void FileTypeManager::expandFileTypeStyles()
 	}
 }
 
+void FileTypeManager::applyToAllDocuments()
+{
+	std::set<TextDocument*>& docs = wxGetApp().getDocuments();
+	for(std::set<TextDocument*>::iterator it=docs.begin(); it!=docs.end(); ++it)
+	{
+		TextDocument* doc = *it;
+		doc->getFrame()->applyFileTypeStyle();
+	}
+}
 
 wxString FileTypeManager::getWildcard()const
 {

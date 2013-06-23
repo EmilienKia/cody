@@ -57,6 +57,12 @@ public:
 wxBEGIN_EVENT_TABLE(ConfigStyle, wxPanel)
 	EVT_LISTBOX(XRCID("LanguageList"), ConfigStyle::onSelectLanguage)
 	EVT_LISTBOX(XRCID("StyleList"), ConfigStyle::onSelectStyle)
+	EVT_FONTPICKER_CHANGED(XRCID("FontPicker"), ConfigStyle::onSelectFont)
+	EVT_COLOURPICKER_CHANGED(XRCID("BackgroundColor"), ConfigStyle::onSelectBackground)
+	EVT_COLOURPICKER_CHANGED(XRCID("ForegroundColor"), ConfigStyle::onSelectForeground)
+	EVT_TOGGLEBUTTON(XRCID("BoldButton"), ConfigStyle::onToggleBold)
+	EVT_TOGGLEBUTTON(XRCID("ItalicButton"), ConfigStyle::onToggleItalic)
+	EVT_TOGGLEBUTTON(XRCID("UnderlineButton"), ConfigStyle::onToggleUnderline)
 wxEND_EVENT_TABLE()
 
 ConfigStyle::ConfigStyle(wxWindow* parent, wxWindowID id):
@@ -68,6 +74,10 @@ wxPanel()
 
 void ConfigStyle::Initialize()
 {
+	themeChoice     = XRCCTRL(*this, "ThemeChoice", wxChoice);
+	languageList    = XRCCTRL(*this, "LanguageList", wxListBox);
+	styleList      = XRCCTRL(*this, "StyleList", wxListBox);
+	
 	fontPicker      = XRCCTRL(*this, "FontPicker", wxFontPickerCtrl);
 	foreColPicker   = XRCCTRL(*this, "ForegroundColor", wxColourPickerCtrl);
 	backColPicker   = XRCCTRL(*this, "BackgroundColor", wxColourPickerCtrl);
@@ -81,48 +91,37 @@ void ConfigStyle::Initialize()
 
 void ConfigStyle::fillThemeList()
 {
-	wxChoice* choice = XRCCTRL(*this, "ThemeChoice", wxChoice);
-	if(choice)
-	{
-		for(std::map<wxString, EditorTheme>::iterator it=EditorThemeManager::get().getThemes().begin();
-														it!=EditorThemeManager::get().getThemes().end(); ++it)
-			choice->Append(it->second.getName());
+	for(std::map<wxString, EditorTheme>::iterator it=EditorThemeManager::get().getThemes().begin();
+													it!=EditorThemeManager::get().getThemes().end(); ++it)
+		themeChoice->Append(it->second.getName());
 
-		if(!choice->IsEmpty())
-			choice->SetSelection(0);
-	}
+	if(!themeChoice->IsEmpty())
+		themeChoice->SetSelection(0);
 }
 
 void ConfigStyle::fillLanguageList()
 {
-	wxListBox* lbox = XRCCTRL(*this, "LanguageList", wxListBox);
-	if(lbox)
+	languageList->Clear();
+	for(size_t n=0; n<FT_COUNT; ++n)
 	{
-		lbox->Clear();
-		for(size_t n=0; n<FT_COUNT; ++n)
-		{
-			lbox->Append(FileTypeManager::get().getFileType(n).getName());
-		}
+		languageList->Append(FileTypeManager::get().getFileType(n).getName());
 	}
 }
 
 void ConfigStyle::fillStyleList()
 {
-	wxListBox* lbox = XRCCTRL(*this, "StyleList", wxListBox);
 	int lang = getLanguageSelection();
-	if(lbox)
+	styleList->Clear();
+	if(lang!=wxNOT_FOUND)
 	{
-		lbox->Clear();
-		if(lang!=wxNOT_FOUND)
+		const FileType& type = FileTypeManager::get().getFileType(lang);
+		for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 		{
-			const FileType& type = FileTypeManager::get().getFileType(lang);
-			for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+			const Optional<wxString>& name = type.getEditorStyleName(n);
+			if(name.set())
 			{
-				const Optional<wxString>& name = type.getEditorStyleName(n);
-				if(name.set())
-				{
-					lbox->Append(*name, new StyleClientData(lang, n));
-				}
+				styleList->Append(*name, new StyleClientData(lang, n));
+				
 			}
 		}
 	}
@@ -139,17 +138,129 @@ void ConfigStyle::fillStyleGroup()
 
 	if(style!=wxNOT_FOUND)
 	{
-std::cout << lang << " - " << style << std::endl;
+		const FileType& deftype = FileTypeManager::get().getFileType(FT_DEFAULT);
+		const FileType& type = FileTypeManager::get().getFileType(lang);
+		wxString str = type.getAppliedStyle(style);
+
+std::cout << lang << " - " << style << " : " << str << std::endl;
+
+		currentStyleDef = StyleDef::fromString(str);
+
+		StyleDef defCurStyleDef = StyleDef::fromString(type.getAppliedStyle(0));
+		StyleDef defDefStyleDef = StyleDef::fromString(deftype.getAppliedStyle(0));
+
+		wxFont font;
+		
+		if(currentStyleDef.font.set())
+		{
+			wxString face = *currentStyleDef.font;
+			if(face.Length()>0 && face[0]=='!')
+				face.Remove(0,1);
+			if(!face.IsEmpty())
+				font.SetFaceName(face);
+		}
+		// Validating font face.
+		if(!font.IsOk() || font.GetFaceName().IsEmpty())
+		{
+			// Test for current language default style font
+			wxString face = *defCurStyleDef.font;
+			if(face.Length()>0 && face[0]=='!')
+				face.Remove(0,1);
+			if(!face.IsEmpty())
+				font.SetFaceName(face);
+			else
+			{
+				// Test for default language default style font
+				face = *defDefStyleDef.font;
+				if(face.Length()>0 && face[0]=='!')
+					face.Remove(0,1);
+				if(!face.IsEmpty())
+					font.SetFaceName(face);
+				else
+				{
+					// Test for theme default font
+					face = EditorThemeManager::get().expandCurrentThemeProperty("font.base");
+					if(face.Length()>0 && face[0]=='!')
+						face.Remove(0,1);
+					if(!face.IsEmpty())
+						font.SetFaceName(face);
+					else
+					{
+						// Get system default font face name
+						wxFont sysfont =  wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+						font.SetFaceName(sysfont.GetFaceName());
+					}
+				}
+			}
+		}		
+		if(currentStyleDef.size.set())
+		{
+			font.SetPointSize(*currentStyleDef.size);
+		}
+		else
+		{
+			// TODO
+		}
+		
+		if(currentStyleDef.italic.set())
+		{
+			italicButton->SetValue(*currentStyleDef.italic);
+			font.SetStyle(*currentStyleDef.italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);
+		}
+		else
+		{
+			// TODO
+		}
+		
+		if(currentStyleDef.bold.set())
+		{
+			boldButton->SetValue(*currentStyleDef.bold);
+			font.SetWeight(*currentStyleDef.bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
+		}
+		else
+		{
+			// TODO
+		}
+		
+		if(currentStyleDef.underline.set())
+		{
+			underlineButton->SetValue(*currentStyleDef.underline);
+			font.SetUnderlined(*currentStyleDef.underline);
+		}
+		else
+		{
+			// TODO
+		}
+		fontPicker->SetSelectedFont(font);
+
+		// Validating foreground
+		if(currentStyleDef.fore.set())
+		{
+			foreColPicker->SetColour(*currentStyleDef.fore);
+		}
+		else
+		{
+			// TODO
+		}
+		
+		// Validating background
+		if(currentStyleDef.back.set())
+		{
+			backColPicker->SetColour(*currentStyleDef.back);
+		}
+		else
+		{
+			// TODO
+		}
+		
 		enableStylePanel(true);
 	}
 	else if(lang!=wxNOT_FOUND)
 	{
-std::cout << lang << std::endl;
 		enableStylePanel(false);
 	}
 	else
 	{
-std::cout << "none" << std::endl;
 		enableStylePanel(false);
 	}
 }
@@ -166,24 +277,83 @@ void ConfigStyle::enableStylePanel(bool enabled)
 
 int ConfigStyle::getLanguageSelection()
 {
-	wxListBox* lbox = XRCCTRL(*this, "LanguageList", wxListBox);
-	if(lbox)
-		return lbox->GetSelection();
-	else
-		return wxNOT_FOUND;
+	return languageList->GetSelection();
 }
 
 int ConfigStyle::getStyleSelection()
 {
-	wxListBox* lbox = XRCCTRL(*this, "StyleList", wxListBox);
 	int sel;
 	wxClientData *data;
-	if(lbox && (sel=lbox->GetSelection())!=wxNOT_FOUND && (data=lbox->GetClientObject(sel))!=NULL)
+	if((sel=styleList->GetSelection())!=wxNOT_FOUND && (data=styleList->GetClientObject(sel))!=NULL)
 	{
 		return ((StyleClientData*)data)->styleID;
 	}
 	else
 		return wxNOT_FOUND;
+}
+
+void ConfigStyle::onSelectFont(wxFontPickerEvent& event)
+{
+	wxFont font = event.GetFont();
+
+	// Look for bold, italic and underline changes
+	italicButton->SetValue(font.GetStyle()==wxFONTSTYLE_ITALIC || font.GetStyle()==wxFONTSTYLE_SLANT);
+	boldButton->SetValue(font.GetWeight()==wxFONTWEIGHT_BOLD);
+	underlineButton->SetValue(font.GetUnderlined());
+
+	// Apply font changes to style def
+	currentStyleDef.italic.set(font.GetStyle()==wxFONTSTYLE_ITALIC || font.GetStyle()==wxFONTSTYLE_SLANT);
+	currentStyleDef.bold.set(font.GetWeight()==wxFONTWEIGHT_BOLD);
+	currentStyleDef.underline.set(font.GetUnderlined());
+	currentStyleDef.font.set(font.GetFaceName());
+	currentStyleDef.size.set(font.GetPointSize());
+
+	// Apply style def to global style defs
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::onSelectBackground(wxColourPickerEvent& event)
+{
+	currentStyleDef.back.set(event.GetColour());
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::onSelectForeground(wxColourPickerEvent& event)
+{
+	currentStyleDef.fore.set(event.GetColour());
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::onToggleBold(wxCommandEvent& event)
+{
+	currentStyleDef.bold.set(event.IsChecked());
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::onToggleItalic(wxCommandEvent& event)
+{
+	currentStyleDef.italic.set(event.IsChecked());
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::onToggleUnderline(wxCommandEvent& event)
+{
+	currentStyleDef.underline.set(event.IsChecked());
+	saveCurrentStyleDef();
+}
+
+void ConfigStyle::saveCurrentStyleDef()
+{
+	int lang = getLanguageSelection();
+	int style = wxNOT_FOUND;
+	if(lang!=wxNOT_FOUND)
+	{
+		style = getStyleSelection();
+	}
+	if(style!=wxNOT_FOUND)
+	{
+		FileTypeManager::get().setFileTypeStyle(lang, style, currentStyleDef.toString());
+	}	
 }
 
 void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
