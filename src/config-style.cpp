@@ -149,88 +149,126 @@ std::cout << lang << " - " << style << " : " << str << std::endl;
 		StyleDef defCurStyleDef = StyleDef::fromString(type.getAppliedStyle(0));
 		StyleDef defDefStyleDef = StyleDef::fromString(deftype.getAppliedStyle(0));
 
-		wxFont font;
+		wxFont font, sysFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
 		
+		// Validate font face
+		wxString face;
 		if(currentStyleDef.font.set())
 		{
-			wxString face = *currentStyleDef.font;
-			if(face.Length()>0 && face[0]=='!')
-				face.Remove(0,1);
-			if(!face.IsEmpty())
-				font.SetFaceName(face);
+			face = *currentStyleDef.font;
 		}
-		// Validating font face.
-		if(!font.IsOk() || font.GetFaceName().IsEmpty())
+		if(face.IsEmpty())
 		{
 			// Test for current language default style font
-			wxString face = *defCurStyleDef.font;
-			if(face.Length()>0 && face[0]=='!')
-				face.Remove(0,1);
-			if(!face.IsEmpty())
-				font.SetFaceName(face);
-			else
+			face = *defCurStyleDef.font;
+			if(face.IsEmpty())
 			{
 				// Test for default language default style font
 				face = *defDefStyleDef.font;
-				if(face.Length()>0 && face[0]=='!')
-					face.Remove(0,1);
-				if(!face.IsEmpty())
-					font.SetFaceName(face);
-				else
+				if(face.IsEmpty())
 				{
 					// Test for theme default font
 					face = EditorThemeManager::get().expandCurrentThemeProperty("font.base");
-					if(face.Length()>0 && face[0]=='!')
-						face.Remove(0,1);
-					if(!face.IsEmpty())
-						font.SetFaceName(face);
-					else
+					if(face.IsEmpty())
 					{
 						// Get system default font face name
-						wxFont sysfont =  wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
-						font.SetFaceName(sysfont.GetFaceName());
+						face = sysFont.GetFaceName();
 					}
 				}
 			}
-		}		
+		}
+		if(face.Length()>0 && face[0]=='!')
+			face.Remove(0,1);
+		if(!face.IsEmpty())
+			font.SetFaceName(face);
+
+		// Validate font size	
 		if(currentStyleDef.size.set())
 		{
 			font.SetPointSize(*currentStyleDef.size);
 		}
+		else if(defCurStyleDef.size.set())
+		{
+			font.SetPointSize(*defCurStyleDef.size);
+		}
+		else if(defDefStyleDef.size.set())
+		{
+			font.SetPointSize(*defDefStyleDef.size);
+		}
 		else
 		{
-			// TODO
+			font.SetPointSize(sysFont.GetPointSize());
 		}
-		
+
+		// Validate italic state
 		if(currentStyleDef.italic.set())
 		{
 			italicButton->SetValue(*currentStyleDef.italic);
 			font.SetStyle(*currentStyleDef.italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);
 		}
+		else if(defCurStyleDef.italic.set())
+		{
+			italicButton->SetValue(*defCurStyleDef.italic);
+			font.SetStyle(*defCurStyleDef.italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);
+		}
+		else if(defDefStyleDef.italic.set())
+		{
+			italicButton->SetValue(*defDefStyleDef.italic);
+			font.SetStyle(*defDefStyleDef.italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);
+		}
 		else
 		{
-			// TODO
+			bool italic = sysFont.GetStyle()==wxFONTSTYLE_ITALIC||sysFont.GetStyle()==wxFONTSTYLE_SLANT; 
+			italicButton->SetValue(italic);
+			font.SetStyle(italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);			
 		}
-		
+
+		// Validate bold state
 		if(currentStyleDef.bold.set())
 		{
 			boldButton->SetValue(*currentStyleDef.bold);
 			font.SetWeight(*currentStyleDef.bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
 		}
+		else if(defCurStyleDef.bold.set())
+		{
+			boldButton->SetValue(*defCurStyleDef.bold);
+			font.SetWeight(*defCurStyleDef.bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
+		}
+		else if(defDefStyleDef.bold.set())
+		{
+			boldButton->SetValue(*defDefStyleDef.bold);
+			font.SetWeight(*defDefStyleDef.bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
+		}
 		else
 		{
-			// TODO
+			bool bold = sysFont.GetWeight()==wxFONTWEIGHT_BOLD; 
+			boldButton->SetValue(bold);
+			font.SetWeight(bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
 		}
-		
+
+		// Validate underline state
 		if(currentStyleDef.underline.set())
 		{
 			underlineButton->SetValue(*currentStyleDef.underline);
 			font.SetUnderlined(*currentStyleDef.underline);
 		}
+		else if(defCurStyleDef.underline.set())
+		{
+			underlineButton->SetValue(*defCurStyleDef.underline);
+			font.SetUnderlined(*defCurStyleDef.underline);
+		}
+		else if(defDefStyleDef.underline.set())
+		{
+			underlineButton->SetValue(*defDefStyleDef.underline);
+			font.SetUnderlined(*defDefStyleDef.underline);
+		}
 		else
 		{
-			// TODO
+			bool underline = sysFont.GetUnderlined(); 
+			underlineButton->SetValue(underline);
+			font.SetUnderlined(underline);
 		}
+		// Set the full font info to font picker
 		fontPicker->SetSelectedFont(font);
 
 		// Validating foreground
@@ -238,9 +276,17 @@ std::cout << lang << " - " << style << " : " << str << std::endl;
 		{
 			foreColPicker->SetColour(*currentStyleDef.fore);
 		}
+		else if(defCurStyleDef.fore.set())
+		{
+			foreColPicker->SetColour(*defCurStyleDef.fore);
+		}
+		else if(defDefStyleDef.fore.set())
+		{
+			foreColPicker->SetColour(*defDefStyleDef.fore);
+		}
 		else
 		{
-			// TODO
+			foreColPicker->SetColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 		}
 		
 		// Validating background
@@ -248,9 +294,17 @@ std::cout << lang << " - " << style << " : " << str << std::endl;
 		{
 			backColPicker->SetColour(*currentStyleDef.back);
 		}
+		else if(defCurStyleDef.back.set())
+		{
+			backColPicker->SetColour(*defCurStyleDef.back);
+		}
+		else if(defDefStyleDef.back.set())
+		{
+			backColPicker->SetColour(*defDefStyleDef.back);
+		}
 		else
 		{
-			// TODO
+			backColPicker->SetColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
 		}
 		
 		enableStylePanel(true);
