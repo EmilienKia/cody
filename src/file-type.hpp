@@ -107,8 +107,8 @@ public:
 	const Optional<wxString>& getStyleDef(size_t n)const{return _styleDef[n];}
 	Optional<wxString>& getStyleDef(size_t n){return _styleDef[n];}
 
-	const Optional<wxString>& getAppliedStyle(size_t n)const{return _appliedStyle[n];}
-	Optional<wxString>& getAppliedStyle(size_t n){return _appliedStyle[n];}
+	const StyleDef& getAppliedStyle(size_t n)const{return _appliedStyle[n];}
+	StyleDef& getAppliedStyle(size_t n){return _appliedStyle[n];}
 	
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
 
@@ -125,7 +125,7 @@ protected:
 	int _lexer;
 
 	Optional<wxString> _styleDef[wxSTC_STYLE_LASTPREDEFINED];
-	Optional<wxString> _appliedStyle[wxSTC_STYLE_LASTPREDEFINED];
+	StyleDef           _appliedStyle[wxSTC_STYLE_LASTPREDEFINED];
 	
 	Optional<wxString> _keywords[wxSTC_KEYWORDSET_MAX];
 	

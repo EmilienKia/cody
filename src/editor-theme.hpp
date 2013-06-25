@@ -66,11 +66,13 @@ public:
 	Optional<bool>	   eolfilled; // Are EOL filled
 	Optional<char>	   charcase; // Case modification ('m', 'u', or 'l' for mixed, upper or lower case)
 
-	wxString toString()const;
+	void override(const StyleDef& style);
+
+	wxFont getFont()const;
 	
+	wxString toString()const;
 	static StyleDef fromString(const wxString& str);
 };
-
 
 
 class EditorStyle
@@ -82,7 +84,7 @@ public:
 
 	bool hasStyle(unsigned short idx)const{return _styleDef[idx].set();}
 	const Optional<wxString>& getStyle(unsigned short idx)const{return _styleDef[idx];}
-	void setStyle(unsigned short idx, const wxString& name){_styleDef[idx] = name;}
+	void setStyle(unsigned short idx, const wxString& style){_styleDef[idx] = style;}
 	
 	bool hasStyleName(unsigned short idx)const{return _styleName[idx].set();}
 	const Optional<wxString>& getStyleName(unsigned short idx)const{return _styleName[idx];}

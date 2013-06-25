@@ -196,19 +196,11 @@ void TextFrame::applyFileTypeStyle()
 	// Styles
 	for(size_t n=0; n<wxSTC_STYLE_DEFAULT; ++n)
 	{
-		if(type.getAppliedStyle(n))
-		{
-			_mainText->StyleSetSpec(n, *type.getAppliedStyle(n));
-			_secondText->StyleSetSpec(n, *type.getAppliedStyle(n));
-		}
+		applyFileTypeStyle(n, type.getAppliedStyle(n));
 	}
 	for(size_t n=wxSTC_STYLE_DEFAULT; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
-		if(deftype.getAppliedStyle(n))
-		{
-			_mainText->StyleSetSpec(n, *deftype.getAppliedStyle(n));
-			_secondText->StyleSetSpec(n, *deftype.getAppliedStyle(n));
-		}
+		applyFileTypeStyle(n, deftype.getAppliedStyle(n));
 	}
 
 	// Keywords
@@ -228,9 +220,35 @@ void TextFrame::applyFileTypeStyle(unsigned short stylenum)
 			getDocument()->getDocFileType() :
 			FileTypeManager::get().getFileType(FT_DEFAULT);
 
-	_mainText->StyleSetSpec(stylenum, type.getAppliedStyle(stylenum));
-	_secondText->StyleSetSpec(stylenum, type.getAppliedStyle(stylenum));
+	applyFileTypeStyle(stylenum, type.getAppliedStyle(stylenum));
 }
+
+void TextFrame::applyFileTypeStyle(unsigned int stylenum, const StyleDef& style)
+{
+	wxFont font = style.getFont();
+	if(font.IsOk())
+	{
+		_mainText->StyleSetFont(stylenum, font);
+		_secondText->StyleSetFont(stylenum, font);
+	}
+	if(style.fore.set() && style.fore->IsOk())
+	{
+		_mainText->StyleSetForeground(stylenum, *style.fore);
+		_secondText->StyleSetForeground(stylenum, *style.fore);
+	}
+	if(style.back.set() && style.back->IsOk())
+	{
+		_mainText->StyleSetBackground(stylenum, *style.back);
+		_secondText->StyleSetBackground(stylenum, *style.back);
+	}
+	if(style.eolfilled.set())
+	{
+		_mainText->StyleSetEOLFilled(stylenum, *style.eolfilled);
+		_secondText->StyleSetEOLFilled(stylenum, *style.eolfilled);
+	}
+	// TODO charcase
+}
+
 
 MainFrame* TextFrame::getMainFrame()
 {

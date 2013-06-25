@@ -122,19 +122,13 @@ void FileType::expandFileTypeStyles()
 	const EditorStyle &defStyle = EditorThemeManager::get().getStyle("default");
 	const EditorStyle &refStyle = EditorThemeManager::get().getStyle(getDefaultStyle());
 
+	
 	for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
-		wxString res;
-	
-		if(defStyle.hasStyle(n))
-			res = *defStyle.getStyle(n);
-		if(refStyle.hasStyle(n))
-			res += "," + *refStyle.getStyle(n);
+		wxString res = *defStyle.getStyle(n) + "," + *refStyle.getStyle(n) + "," + *_styleDef[n];
+		res = EditorThemeManager::get().getThemeExpandedValue(res);
 
-		if(_styleDef[n].set())
-			res += "," + *_styleDef[n];
-	
-		_appliedStyle[n] = EditorThemeManager::get().getThemeExpandedValue(res);
+		_appliedStyle[n] = StyleDef(res);
 	}
 }
 
@@ -142,18 +136,11 @@ void FileType::expandFileTypeStyle(size_t n)
 {
 	const EditorStyle &defStyle = EditorThemeManager::get().getStyle("default");
 	const EditorStyle &refStyle = EditorThemeManager::get().getStyle(getDefaultStyle());
-
-	wxString res;
 	
-	if(defStyle.hasStyle(n))
-		res = *defStyle.getStyle(n);
-	if(refStyle.hasStyle(n))
-		res += "," + *defStyle.getStyle(n);
-
-	if(_styleDef[n].set())
-		res += "," + *_styleDef[n];
-
-	_appliedStyle[n] = EditorThemeManager::get().getThemeExpandedValue(res);
+	wxString res = *defStyle.getStyle(n) + "," + *refStyle.getStyle(n) + "," + *_styleDef[n];
+	res = EditorThemeManager::get().getThemeExpandedValue(res);
+	
+	_appliedStyle[n] = StyleDef(res);
 }
 
 
@@ -385,11 +372,10 @@ void FileTypeManager::resetFileTypeStyle(int type, int style)
 
 		wxGetApp().getConfig()->DeleteEntry(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/style.%d",
 		                              fileTypeIDFromNum(type), style));
+
+		// TODO read again this line of conf
 		
-		// TODO save it to properties
-		expandFileTypeStyles();
-		//TODO optimize !
-		//_fileTypes[type].expandFileTypeStyle(style);
+		_fileTypes[type].expandFileTypeStyles();
 		applyToAllDocuments();
 	}
 }
@@ -403,9 +389,8 @@ void FileTypeManager::setFileTypeStyle(int type, int style, const wxString& styl
 		wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/style.%d",
 		                              fileTypeIDFromNum(type), style), stylestr);
 		
-		expandFileTypeStyles();
-		//TODO optimize !
-		//_fileTypes[type].expandFileTypeStyle(style);
+		_fileTypes[type].expandFileTypeStyles();
+
 		applyToAllDocuments();
 	}
 }

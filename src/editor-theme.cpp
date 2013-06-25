@@ -108,6 +108,48 @@ charcase(style.charcase)
 {
 }
 
+void StyleDef::override(const StyleDef& style)
+{
+	if(style.font.set())
+		font = style.font;
+	if(style.size.set())
+		size = style.size;
+	// if(style.weight.set())
+	//   weight = style.weight;
+	if(style.fore.set())
+		fore = style.fore;
+	if(style.back.set())
+		back = style.back;
+	if(style.italic.set())
+		italic = style.italic;
+	if(style.bold.set())
+		bold = style.bold;
+	if(style.underline.set())
+		underline = style.underline;
+	if(style.eolfilled.set())
+		eolfilled = style.eolfilled;
+	if(style.charcase.set())
+		charcase = style.charcase;
+}
+
+wxFont StyleDef::getFont()const
+{
+	wxFont temp = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+
+	if(font.set())
+		temp.SetFaceName(*font);
+	if(size.set())
+		temp.SetPointSize(*size);
+	if(italic.set())
+		temp.SetStyle(*italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);
+	if(bold.set())
+		temp.SetWeight(*bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
+	if(underline.set())
+		temp.SetUnderlined(*underline);
+
+	return temp;
+}
+
 wxString StyleDef::toString()const
 {
 	wxArrayString arr;
@@ -196,6 +238,88 @@ StyleDef StyleDef::fromString(const wxString& str)
 
 	return def;
 }
+
+//
+// Style
+//
+/*
+wxFont Style::defaultFont = wxSystemSettings::GetFont(wxSYS_ANSI_FIXED_FONT);
+
+Style::Style()
+{
+}
+
+Style::Style(const Style& style):
+font(style.font),
+size(style.size),
+italic(style.italic),
+bold(style.bold),
+underline(style.underline),
+fore(style.fore),
+back(style.back),
+eolfilled(style.eolfilled),
+charcase(style.charcase)
+{
+}
+
+wxFont Style::getFont()const
+{
+	
+}
+
+void Style::override(const StyleDef& style)
+{
+	if(style.font.set())
+	{
+		wxString str = style.font;
+		if(str.Length()>0 && str[0]=='!')
+		{
+			str = str.substr(1);
+		}
+		font.SetFaceName(str);
+	}
+	if(style.size.set())
+		font.SetPointSize(style.size);
+
+	if(style.italic.set())
+		font.SetStyle(*style.italic?wxFONTSTYLE_ITALIC:wxFONTSTYLE_NORMAL);		
+	if(style.bold.set())
+		font.SetWeight(*style.bold?wxFONTWEIGHT_BOLD:wxFONTWEIGHT_NORMAL);
+	if(style.underline.set())
+		font.SetUnderlined(*style.underline);
+
+	if(style.fore.set())
+		fore = *style.fore;
+	if(style.back.set())
+		back = *style.back;
+	
+	if(style.eolfilled.set())
+		eolfilled = *style.eolfilled;
+	if(style.charcase.set())
+		charcase = *style.charcase;
+}
+
+wxString Style::toString()const
+{
+	wxArrayString arr;
+	wxString res;
+
+	if(font.IsOk()){arr.Add(wxString("font:")+font.GetNativeFontInfoUserDesc()); }
+	if(fore.IsOk()){arr.Add(wxString("fore:")+fore.GetAsString(wxC2S_HTML_SYNTAX));}
+	if(back.IsOk()){arr.Add(wxString("back:")+back.GetAsString(wxC2S_HTML_SYNTAX));}
+	
+	if(arr.GetCount()>0)
+	{
+		res = arr[0];
+		for(size_t n=1; n<arr.GetCount(); ++n)
+		{
+			res += ",";
+			res += arr[n];
+		}
+	}
+	return res;
+}
+*/
 
 
 
