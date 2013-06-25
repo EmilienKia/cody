@@ -245,7 +245,7 @@ bool FileTypeManager::readFromConfig(wxFileConfig* config, wxString absPath, Fil
 		if(config->Read(wxString::Format("keywords.%lu", n), &str))
 		{
 			filetype._keywords[n] = str;
-		}		
+		}
 	}
 
 	// Default style (if any)
@@ -376,7 +376,7 @@ void FileTypeManager::resetFileTypeStyle(int type, int style)
 		// TODO read again this line of conf
 		
 		_fileTypes[type].expandFileTypeStyles();
-		applyToAllDocuments();
+		applyStyleToAllDocuments();
 	}
 }
 
@@ -391,7 +391,20 @@ void FileTypeManager::setFileTypeStyle(int type, int style, const wxString& styl
 		
 		_fileTypes[type].expandFileTypeStyles();
 
-		applyToAllDocuments();
+		applyStyleToAllDocuments();
+	}
+}
+
+void FileTypeManager::setFileTypeKeywords(int type, int kw, const wxString& keywords)
+{
+	if(type!=wxNOT_FOUND && kw!=wxNOT_FOUND && kw<wxSTC_KEYWORDSET_MAX)
+	{
+		_fileTypes[type].getKeywords(kw) = keywords;
+
+		wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/keywords.%d",
+		                              fileTypeIDFromNum(type), kw), keywords);
+
+		// TODO Update to all documents 
 	}
 }
 
@@ -404,7 +417,7 @@ void FileTypeManager::expandFileTypeStyles()
 	}
 }
 
-void FileTypeManager::applyToAllDocuments()
+void FileTypeManager::applyStyleToAllDocuments()
 {
 	std::set<TextDocument*>& docs = wxGetApp().getDocuments();
 	for(std::set<TextDocument*>::iterator it=docs.begin(); it!=docs.end(); ++it)

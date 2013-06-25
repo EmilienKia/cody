@@ -111,6 +111,7 @@ public:
 	StyleDef& getAppliedStyle(size_t n){return _appliedStyle[n];}
 	
 	const Optional<wxString>& getKeywords(size_t n)const{return _keywords[n];}
+	Optional<wxString>& getKeywords(size_t n){return _keywords[n];}
 
 	const EditorStyle& getEditorStyle()const;
 	const Optional<wxString>& getEditorStyle(size_t n)const;
@@ -154,6 +155,8 @@ public:
 
 	void resetFileTypeStyle(int type, int style);
 	void setFileTypeStyle(int type, int style, const wxString& stylestr);
+
+	void setFileTypeKeywords(int type, int kw, const wxString& keywords);
 	
 	int deduceFileTypeFromName(const wxString& name)const;
 
@@ -168,7 +171,7 @@ public:
 
 protected:
 	void expandFileTypeStyles();
-	void applyToAllDocuments();
+	void applyStyleToAllDocuments();
 	
 	FileType    _fileTypes[FT_COUNT];
 };

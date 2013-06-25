@@ -42,16 +42,21 @@ private:
 
 	void fillThemeList();
 	void fillLanguageList();
+	
 	void fillStyleList();
 	void fillStyleGroup();
 
-	int getLanguageSelection();
-	int getStyleSelection();
+	void fillKeywordList();
+	void fillKeywordContent();
+
+	int getLanguageSelection()const;
+	int getStyleSelection()const;
+	int getKeywordSelection()const;
 
 	void enableStylePanel(bool enabled=true);
 
 	void saveCurrentStyleDef();
-
+	void saveCurrentKeywords();
 	
 	void onSelectLanguage(wxCommandEvent& event);
 	void onSelectStyle(wxCommandEvent& event);
@@ -62,9 +67,12 @@ private:
 	void onToggleBold(wxCommandEvent& event);
 	void onToggleItalic(wxCommandEvent& event);
 	void onToggleUnderline(wxCommandEvent& event);
+
+	void onSelectKeyword(wxCommandEvent& event);
+	void onUpdateKeyword(wxCommandEvent& event);
 	
 	StyleDef currentStyleDef;
-	
+
 	wxChoice* themeChoice;
 	wxListBox* languageList;
 	wxListBox* styleList;
@@ -75,6 +83,11 @@ private:
 	wxToggleButton *boldButton;
 	wxToggleButton *italicButton;
 	wxToggleButton *underlineButton;
+
+	wxStyledTextCtrl *styleSample;
+
+	wxListBox* keywordList;
+	wxTextCtrl* keywordContent;
 };
 
 #endif // _CONFIG_STYLE_HPP_

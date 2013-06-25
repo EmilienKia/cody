@@ -26,6 +26,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/fontpicker.h>
 #include <wx/statbox.h>
 #include <wx/tglbtn.h>
+#include <wx/tokenzr.h>
 #include <wx/xrc/xmlres.h>
 
 #include "config-style.hpp"
@@ -56,6 +57,7 @@ public:
 
 wxBEGIN_EVENT_TABLE(ConfigStyle, wxPanel)
 	EVT_LISTBOX(XRCID("LanguageList"), ConfigStyle::onSelectLanguage)
+
 	EVT_LISTBOX(XRCID("StyleList"), ConfigStyle::onSelectStyle)
 	EVT_FONTPICKER_CHANGED(XRCID("FontPicker"), ConfigStyle::onSelectFont)
 	EVT_COLOURPICKER_CHANGED(XRCID("BackgroundColor"), ConfigStyle::onSelectBackground)
@@ -63,6 +65,10 @@ wxBEGIN_EVENT_TABLE(ConfigStyle, wxPanel)
 	EVT_TOGGLEBUTTON(XRCID("BoldButton"), ConfigStyle::onToggleBold)
 	EVT_TOGGLEBUTTON(XRCID("ItalicButton"), ConfigStyle::onToggleItalic)
 	EVT_TOGGLEBUTTON(XRCID("UnderlineButton"), ConfigStyle::onToggleUnderline)
+
+	EVT_LISTBOX(XRCID("KeywordList"), ConfigStyle::onSelectKeyword)
+	EVT_TEXT(XRCID("KeywordContent"), ConfigStyle::onUpdateKeyword)
+
 wxEND_EVENT_TABLE()
 
 ConfigStyle::ConfigStyle(wxWindow* parent, wxWindowID id):
@@ -76,7 +82,7 @@ void ConfigStyle::Initialize()
 {
 	themeChoice     = XRCCTRL(*this, "ThemeChoice", wxChoice);
 	languageList    = XRCCTRL(*this, "LanguageList", wxListBox);
-	styleList      = XRCCTRL(*this, "StyleList", wxListBox);
+	styleList       = XRCCTRL(*this, "StyleList", wxListBox);
 	
 	fontPicker      = XRCCTRL(*this, "FontPicker", wxFontPickerCtrl);
 	foreColPicker   = XRCCTRL(*this, "ForegroundColor", wxColourPickerCtrl);
@@ -84,6 +90,13 @@ void ConfigStyle::Initialize()
 	boldButton      = XRCCTRL(*this, "BoldButton", wxToggleButton);
 	italicButton    = XRCCTRL(*this, "ItalicButton", wxToggleButton);
 	underlineButton = XRCCTRL(*this, "UnderlineButton", wxToggleButton);
+
+	keywordList     = XRCCTRL(*this, "KeywordList", wxListBox);
+	keywordContent  = XRCCTRL(*this, "KeywordContent", wxTextCtrl);
+
+	// Add an hidden styled text ctrl
+	styleSample = new wxStyledTextCtrl(this, wxID_ANY);
+	styleSample->Hide();
 	
 	fillThemeList();
 	fillLanguageList();
@@ -162,6 +175,41 @@ void ConfigStyle::fillStyleGroup()
 	}
 }
 
+
+void ConfigStyle::fillKeywordList()
+{
+	keywordList->SetSelection(wxNOT_FOUND);
+	keywordList->Clear();
+
+	wxStringTokenizer tokenizer(styleSample->DescribeKeyWordSets(), "\n");
+	while(tokenizer.HasMoreTokens())
+	{
+		keywordList->Append(tokenizer.GetNextToken());
+	}
+	
+	fillKeywordContent();
+}
+
+void ConfigStyle::fillKeywordContent()
+{
+	int lang = getLanguageSelection();
+	int kw   = getKeywordSelection();
+
+	keywordContent->ChangeValue("");
+	keywordContent->Disable();
+	
+	if(lang!=wxNOT_FOUND && kw!=wxNOT_FOUND && kw<wxSTC_KEYWORDSET_MAX)
+	{
+		const FileType& type = FileTypeManager::get().getFileType(lang);
+		if(type.getKeywords(kw).set())
+		{
+			keywordContent->ChangeValue(*type.getKeywords(kw));
+		}
+		keywordContent->Enable();
+	}
+}
+
+
 void ConfigStyle::enableStylePanel(bool enabled)
 {
 	fontPicker->Enable(enabled);
@@ -172,12 +220,12 @@ void ConfigStyle::enableStylePanel(bool enabled)
 	underlineButton->Enable(enabled);
 }
 
-int ConfigStyle::getLanguageSelection()
+int ConfigStyle::getLanguageSelection()const
 {
 	return languageList->GetSelection();
 }
 
-int ConfigStyle::getStyleSelection()
+int ConfigStyle::getStyleSelection()const
 {
 	int sel;
 	wxClientData *data;
@@ -187,6 +235,11 @@ int ConfigStyle::getStyleSelection()
 	}
 	else
 		return wxNOT_FOUND;
+}
+
+int ConfigStyle::getKeywordSelection()const
+{
+	return keywordList->GetSelection();
 }
 
 void ConfigStyle::onSelectFont(wxFontPickerEvent& event)
@@ -253,14 +306,49 @@ void ConfigStyle::saveCurrentStyleDef()
 	}	
 }
 
+void ConfigStyle::saveCurrentKeywords()
+{
+	int lang = getLanguageSelection();
+	int kw   = getKeywordSelection();
+
+	if(lang!=wxNOT_FOUND && kw!=wxNOT_FOUND && kw<wxSTC_KEYWORDSET_MAX)
+	{
+		wxString str = keywordContent->GetValue();
+		str.Replace("\n", " ");
+		FileTypeManager::get().setFileTypeKeywords(lang, kw, str);
+	}
+}
+
 void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
 {
+	int lang = getLanguageSelection();
+	if(lang!=wxNOT_FOUND)
+	{
+		styleSample->SetLexer(FileTypeManager::get().getFileType(lang).getLexer());
+	}
+	else
+	{
+		styleSample->SetLexer(wxSTC_LEX_NULL);
+	}
+	
 	fillStyleList();
 	fillStyleGroup();
+	
+	fillKeywordList();
 }
 
 void ConfigStyle::onSelectStyle(wxCommandEvent& event)
 {
 	fillStyleGroup();
+}
+
+void ConfigStyle::onSelectKeyword(wxCommandEvent& event)
+{
+	fillKeywordContent();
+}
+
+void ConfigStyle::onUpdateKeyword(wxCommandEvent& event)
+{
+	saveCurrentKeywords();
 }
 
