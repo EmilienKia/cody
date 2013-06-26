@@ -131,7 +131,7 @@ void TextDocument::setDocumentType(int doctype)
 	TextFrame* frame = getFrame();
 	if(frame)
 	{
-		frame->applyFileTypeStyle();
+		frame->applyFileType();
 	}	
 }
 

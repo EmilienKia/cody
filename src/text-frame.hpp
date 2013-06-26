@@ -47,9 +47,15 @@ public:
 	
 	void initAfterLoading();
 
+	void applyFileType();
+	
 	void applyFileTypeStyle();
 	void applyFileTypeStyle(unsigned short stylenum);
-		
+
+	void applyFileTypeKeywords();
+	void applyFileTypeKeywords(unsigned short keywordnum);
+
+	
 	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
 	wxStyledTextCtrl* getCurrentTextCtrl()const{return _currentText!=NULL?_currentText:_mainText;}
 

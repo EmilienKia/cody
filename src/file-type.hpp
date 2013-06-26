@@ -172,6 +172,7 @@ public:
 protected:
 	void expandFileTypeStyles();
 	void applyStyleToAllDocuments();
+	void applyKeywordsToAllDocuments();
 	
 	FileType    _fileTypes[FT_COUNT];
 };

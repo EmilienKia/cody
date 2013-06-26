@@ -180,6 +180,12 @@ void TextFrame::initAfterLoading()
 	UpdateMarkerPages();
 }
 
+void TextFrame::applyFileType()
+{
+	applyFileTypeStyle();
+	applyFileTypeKeywords();
+}
+
 void TextFrame::applyFileTypeStyle()
 {
 	const FileType& type = getDocument()->getDocFileType();
@@ -201,16 +207,6 @@ void TextFrame::applyFileTypeStyle()
 	for(size_t n=wxSTC_STYLE_DEFAULT; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
 	{
 		applyFileTypeStyle(n, deftype.getAppliedStyle(n));
-	}
-
-	// Keywords
-	for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
-	{
-		if(type.getKeywords(n))
-		{
-			_mainText->SetKeyWords(n, type.getKeywords(n));
-			_secondText->SetKeyWords(n, type.getKeywords(n));
-		}
 	}
 }
 
@@ -249,6 +245,32 @@ void TextFrame::applyFileTypeStyle(unsigned int stylenum, const StyleDef& style)
 	// TODO charcase
 }
 
+void TextFrame::applyFileTypeKeywords()
+{
+	const FileType& type = getDocument()->getDocFileType();
+	for(size_t keywordnum=0; keywordnum<wxSTC_KEYWORDSET_MAX; ++keywordnum)
+	{
+		if(type.getKeywords(keywordnum))
+		{
+			_mainText->SetKeyWords(keywordnum, type.getKeywords(keywordnum));
+			_secondText->SetKeyWords(keywordnum, type.getKeywords(keywordnum));
+		}
+	}
+	_mainText->Colourise(0, -1);
+	_secondText->Colourise(0, -1);
+}
+
+void TextFrame::applyFileTypeKeywords(unsigned short keywordnum)
+{
+	const FileType& type = getDocument()->getDocFileType();
+	if(keywordnum<wxSTC_KEYWORDSET_MAX && type.getKeywords(keywordnum))
+	{
+		_mainText->SetKeyWords(keywordnum, type.getKeywords(keywordnum));
+		_secondText->SetKeyWords(keywordnum, type.getKeywords(keywordnum));
+		_mainText->Colourise(0, -1);
+		_secondText->Colourise(0, -1);
+	}
+}
 
 MainFrame* TextFrame::getMainFrame()
 {

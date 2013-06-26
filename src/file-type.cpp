@@ -404,7 +404,8 @@ void FileTypeManager::setFileTypeKeywords(int type, int kw, const wxString& keyw
 		wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/keywords.%d",
 		                              fileTypeIDFromNum(type), kw), keywords);
 
-		// TODO Update to all documents 
+		applyKeywordsToAllDocuments();
+		// TODO optimize it
 	}
 }
 
@@ -424,6 +425,16 @@ void FileTypeManager::applyStyleToAllDocuments()
 	{
 		TextDocument* doc = *it;
 		doc->getFrame()->applyFileTypeStyle();
+	}
+}
+
+void FileTypeManager::applyKeywordsToAllDocuments()
+{
+	std::set<TextDocument*>& docs = wxGetApp().getDocuments();
+	for(std::set<TextDocument*>::iterator it=docs.begin(); it!=docs.end(); ++it)
+	{
+		TextDocument* doc = *it;
+		doc->getFrame()->applyFileTypeKeywords();
 	}
 }
 
