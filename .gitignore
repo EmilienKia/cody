@@ -1,3 +1,23 @@
+#
+# Git-ignored files
+#
+
+
+
+#
+# Compilation and project files
+#
+
+# General autotools chain files
+aclocal.m4
+autom4te.cache/
+configure
+Makefile.in
+Makefile
+mkinstalldirs
+intltool-*.in
+ltmain.sh
+
 # Compiled Object files
 *.slo
 *.lo
@@ -10,3 +30,13 @@
 *.lai
 *.la
 *.a
+
+# Anjuta project files
+.anjuta_sym_db.db
+.anjuta/
+
+# Typical build subdirectories
+Debug/
+Profiling/
+Optimized/
+Release/
