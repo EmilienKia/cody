@@ -117,6 +117,10 @@ public:
 	const Optional<wxString>& getEditorStyle(size_t n)const;
 	const Optional<wxString>& getEditorStyleName(size_t n)const;
 
+	wxString getProperty(const wxString& name)const;
+	void setProperty(const wxString& name, const wxString& value);
+	void resetProperty(const wxString& name);
+	void getPropertyNames(wxArrayString& arr)const;
 
 	void expandFileTypeStyles();
 	void expandFileTypeStyle(size_t n);
@@ -129,6 +133,8 @@ protected:
 	StyleDef           _appliedStyle[wxSTC_STYLE_LASTPREDEFINED];
 	
 	Optional<wxString> _keywords[wxSTC_KEYWORDSET_MAX];
+
+	std::map<wxString, wxString> _properties;
 	
 	static int lexerFromName(const wxString& lexerName);
 	static wxString lexerToName(int lexer);
@@ -158,6 +164,8 @@ public:
 
 	void setFileTypeKeywords(int type, int kw, const wxString& keywords);
 	
+	void setFileTypeProperty(int type, const wxString& name, const wxString& value);
+
 	int deduceFileTypeFromName(const wxString& name)const;
 
 //	FileType expandFileTypeStyle(const FileType& type)const;
@@ -173,6 +181,7 @@ protected:
 	void expandFileTypeStyles();
 	void applyStyleToAllDocuments();
 	void applyKeywordsToAllDocuments();
+	void applyPropertiesToAllDocuments();
 	
 	FileType    _fileTypes[FT_COUNT];
 };

@@ -143,6 +143,38 @@ void FileType::expandFileTypeStyle(size_t n)
 	_appliedStyle[n] = StyleDef(res);
 }
 
+wxString FileType::getProperty(const wxString& name)const
+{
+	std::map<wxString, wxString>::const_iterator it = _properties.find(name);
+	if(it!=_properties.end())
+		return it->second;
+	else
+		return "";
+}
+
+void FileType::setProperty(const wxString& name, const wxString& value)
+{
+	wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/%s",
+			                          getID(), name), value);
+	_properties[name] = value;
+}
+
+
+void FileType::resetProperty(const wxString& name)
+{
+	wxGetApp().getConfig()->DeleteEntry(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/%s",
+			                          getID(), name));
+	_properties[name] = wxGetApp().getConfig()->Read(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/%s",
+	                              getID(), name));
+}
+
+void FileType::getPropertyNames(wxArrayString& arr)const
+{
+	for(std::map<wxString, wxString>::const_iterator it=_properties.begin(); it!=_properties.end(); ++it)
+	{
+		arr.Add(it->first);
+	}
+}
 
 //
 // FileTypeManager
@@ -261,16 +293,25 @@ bool FileTypeManager::readFromConfig(wxFileConfig* config, wxString absPath, Fil
 	}
 
 	// Iterate for all other properties
-/*	long index;
+	std::map<wxString, wxString> tempmap;
+	long index;
 	if(config->GetFirstEntry(str, index))
 	{
-		std::cout << " - " << str << " : " << config->Read(str, "<<none>>") << std::endl;
-		
+		tempmap[str] = config->Read(str);
 		while(config->GetNextEntry(str, index))
 		{
-			std::cout << " - " << str << " : " << config->Read(str, "<<none>>") << std::endl;
+			tempmap[str] = config->Read(str);
 		}
-	}*/
+	}
+	for(std::map<wxString, wxString>::const_iterator it=tempmap.begin(); it!=tempmap.end(); ++it)
+	{
+		wxString name = it->first;
+		if(name!="id" && name!="name" && name!="lexer" && name!="patterns" && name!="filter" && name!="style"
+					  && !name.StartsWith("style.") && !name.StartsWith("keywords."))
+		{
+			filetype._properties[name] = it->second;
+		}
+	}
 
 	config->SetPath(oldPath);
 	return true;
@@ -409,6 +450,20 @@ void FileTypeManager::setFileTypeKeywords(int type, int kw, const wxString& keyw
 	}
 }
 
+void FileTypeManager::setFileTypeProperty(int type, const wxString& name, const wxString& value)
+{
+	if(type!=wxNOT_FOUND && !name.IsEmpty())
+	{
+		_fileTypes[type].setProperty(name, value);
+
+		wxGetApp().getConfig()->Write(wxString::Format(CONFPATH_FILETYPE_ROOT "/%s/%s",
+		                              fileTypeIDFromNum(type), name), value);
+
+		applyPropertiesToAllDocuments();
+		// TODO optimize it
+	}
+}
+
 void FileTypeManager::expandFileTypeStyles()
 {
 	for(int i=0; i<FT_COUNT; ++i)
@@ -435,6 +490,16 @@ void FileTypeManager::applyKeywordsToAllDocuments()
 	{
 		TextDocument* doc = *it;
 		doc->getFrame()->applyFileTypeKeywords();
+	}
+}
+
+void FileTypeManager::applyPropertiesToAllDocuments()
+{
+	std::set<TextDocument*>& docs = wxGetApp().getDocuments();
+	for(std::set<TextDocument*>::iterator it=docs.begin(); it!=docs.end(); ++it)
+	{
+		TextDocument* doc = *it;
+		doc->getFrame()->applyFileTypeProperties();
 	}
 }
 

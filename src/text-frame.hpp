@@ -55,6 +55,8 @@ public:
 	void applyFileTypeKeywords();
 	void applyFileTypeKeywords(unsigned short keywordnum);
 
+	void applyFileTypeProperties();
+	void applyFileTypeProperty(const wxString& propname);
 	
 	wxStyledTextCtrl* getMainTextCtrl()const{return _mainText;}
 	wxStyledTextCtrl* getCurrentTextCtrl()const{return _currentText!=NULL?_currentText:_mainText;}

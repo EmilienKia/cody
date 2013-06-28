@@ -68,6 +68,8 @@ wxBEGIN_EVENT_TABLE(ConfigStyle, wxPanel)
 
 	EVT_LISTBOX(XRCID("KeywordList"), ConfigStyle::onSelectKeyword)
 	EVT_TEXT(XRCID("KeywordContent"), ConfigStyle::onUpdateKeyword)
+	EVT_LISTBOX(XRCID("PropertyList"), ConfigStyle::onSelectProperty)
+	EVT_TEXT(XRCID("PropertyValue"), ConfigStyle::onUpdateProperty)
 
 wxEND_EVENT_TABLE()
 
@@ -93,6 +95,10 @@ void ConfigStyle::Initialize()
 
 	keywordList     = XRCCTRL(*this, "KeywordList", wxListBox);
 	keywordContent  = XRCCTRL(*this, "KeywordContent", wxTextCtrl);
+
+	propertyList     = XRCCTRL(*this, "PropertyList", wxListBox);
+	propertyContent  = XRCCTRL(*this, "PropertyValue", wxTextCtrl);
+	propertyDescription = XRCCTRL(*this, "PropertyDescription", wxStaticText);
 
 	// Add an hidden styled text ctrl
 	styleSample = new wxStyledTextCtrl(this, wxID_ANY);
@@ -209,6 +215,43 @@ void ConfigStyle::fillKeywordContent()
 	}
 }
 
+void ConfigStyle::fillPropertyList()
+{
+	propertyList->SetSelection(wxNOT_FOUND);
+	propertyList->Clear();
+
+	wxStringTokenizer tokenizer(styleSample->PropertyNames(), "\n");
+	while(tokenizer.HasMoreTokens())
+	{
+		propertyList->Append(tokenizer.GetNextToken());
+	}
+
+	fillKeywordContent();
+}
+
+void ConfigStyle::fillPropertyContent()
+{
+	int lang = getLanguageSelection();
+	wxString prop = getPropertySelection();
+
+	propertyContent->ChangeValue("");
+	propertyContent->Disable();
+	propertyDescription->SetLabel("");
+
+	if(lang!=wxNOT_FOUND && !prop.IsEmpty())
+	{
+		const FileType& type = FileTypeManager::get().getFileType(lang);
+		wxString val = type.getProperty(prop);
+		if(val.IsEmpty())
+			val = styleSample->GetProperty(prop);
+		propertyContent->ChangeValue(val);
+		propertyContent->Enable();
+
+		propertyDescription->SetLabel(styleSample->DescribeProperty(prop));
+	}
+	XRCCTRL(*this, "PropertiesPage", wxPanel)->GetSizer()->Layout();
+}
+
 
 void ConfigStyle::enableStylePanel(bool enabled)
 {
@@ -240,6 +283,15 @@ int ConfigStyle::getStyleSelection()const
 int ConfigStyle::getKeywordSelection()const
 {
 	return keywordList->GetSelection();
+}
+
+wxString ConfigStyle::getPropertySelection()const
+{
+	int sel = propertyList->GetSelection();
+	if(sel==wxNOT_FOUND)
+		return "";
+	else
+		return propertyList->GetString(sel);
 }
 
 void ConfigStyle::onSelectFont(wxFontPickerEvent& event)
@@ -319,6 +371,19 @@ void ConfigStyle::saveCurrentKeywords()
 	}
 }
 
+void ConfigStyle::saveCurrentProperty()
+{
+	int lang = getLanguageSelection();
+	wxString prop = getPropertySelection();
+
+	if(lang!=wxNOT_FOUND && !prop.IsEmpty())
+	{
+		wxString str = propertyContent->GetValue();
+		str.Replace("\n", " ");
+		FileTypeManager::get().setFileTypeProperty(lang, prop, str);
+	}
+}
+
 void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
 {
 	int lang = getLanguageSelection();
@@ -335,6 +400,7 @@ void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
 	fillStyleGroup();
 	
 	fillKeywordList();
+	fillPropertyList();
 }
 
 void ConfigStyle::onSelectStyle(wxCommandEvent& event)
@@ -350,5 +416,15 @@ void ConfigStyle::onSelectKeyword(wxCommandEvent& event)
 void ConfigStyle::onUpdateKeyword(wxCommandEvent& event)
 {
 	saveCurrentKeywords();
+}
+
+void ConfigStyle::onSelectProperty(wxCommandEvent& event)
+{
+	fillPropertyContent();
+}
+
+void ConfigStyle::onUpdateProperty(wxCommandEvent& event)
+{
+	saveCurrentProperty();
 }
 

@@ -49,14 +49,19 @@ private:
 	void fillKeywordList();
 	void fillKeywordContent();
 
+	void fillPropertyList();
+	void fillPropertyContent();
+
 	int getLanguageSelection()const;
 	int getStyleSelection()const;
 	int getKeywordSelection()const;
+	wxString getPropertySelection()const;
 
 	void enableStylePanel(bool enabled=true);
 
 	void saveCurrentStyleDef();
 	void saveCurrentKeywords();
+	void saveCurrentProperty();
 	
 	void onSelectLanguage(wxCommandEvent& event);
 	void onSelectStyle(wxCommandEvent& event);
@@ -70,6 +75,9 @@ private:
 
 	void onSelectKeyword(wxCommandEvent& event);
 	void onUpdateKeyword(wxCommandEvent& event);
+
+	void onSelectProperty(wxCommandEvent& event);
+	void onUpdateProperty(wxCommandEvent& event);
 	
 	StyleDef currentStyleDef;
 
@@ -88,6 +96,10 @@ private:
 
 	wxListBox* keywordList;
 	wxTextCtrl* keywordContent;
+
+	wxListBox* propertyList;
+	wxTextCtrl* propertyContent;
+	wxStaticText* propertyDescription;
 };
 
 #endif // _CONFIG_STYLE_HPP_

@@ -25,6 +25,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/srchctrl.h>
 #include <wx/spinctrl.h>
 #include <wx/splitter.h>
+#include <wx/tokenzr.h>
 #include <wx/xrc/xmlres.h>
 
 #include "text-frame.hpp"
@@ -271,6 +272,34 @@ void TextFrame::applyFileTypeKeywords(unsigned short keywordnum)
 		_secondText->Colourise(0, -1);
 	}
 }
+
+void TextFrame::applyFileTypeProperties()
+{
+	const FileType& type = getDocument()->getDocFileType();
+
+	wxArrayString arr;
+	type.getPropertyNames(arr);
+	for(size_t n=0; n<arr.GetCount(); ++n)
+	{
+		wxString propname = arr[n];
+		wxString value = type.getProperty(propname);
+		_mainText->SetProperty(propname, value);
+		_secondText->SetProperty(propname, value);
+	}
+}
+
+void TextFrame::applyFileTypeProperty(const wxString& propname)
+{
+	const FileType& type = getDocument()->getDocFileType();
+
+	if(!propname.IsEmpty())
+	{
+		wxString value = type.getProperty(propname);
+		_mainText->SetProperty(propname, value);
+		_secondText->SetProperty(propname, value);
+	}
+}
+
 
 MainFrame* TextFrame::getMainFrame()
 {
