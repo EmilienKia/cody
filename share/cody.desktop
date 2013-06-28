@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Cody text file editor
+Name[fr]=Éditeur de fichier texte Cody
+GenericName=File editor
+GenericName[fr]=Éditeur de fichiers
+Comment=Cody text file editor
+Comment[FR]=Éditeur de fichier texte Cody
+Exec=cody %F
+Terminal=false
+Categories=TextEditor;Development;IDE;Application;
+
