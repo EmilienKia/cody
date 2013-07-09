@@ -125,11 +125,27 @@ bool TextDocument::reloadFile()
 bool TextDocument::saveFile()
 {
 	wxStyledTextCtrl* txt = getMainCtrl();
-	if(txt && !_file.IsEmpty())
+	if(!txt)
+		return false;
+
+	if(_file.IsEmpty())
 	{
-		return txt->SaveFile(_file);
+		wxString file  = wxSaveFileSelector("", "*", getFile());
+		if(file.IsEmpty())
+			return false;
+
+		_file = file;
 	}
-	return false;
+	if(txt->SaveFile(_file))
+	{
+		txt->SetSavePoint();
+		setModified(false);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool TextDocument::saveFileAs(const wxString& file)

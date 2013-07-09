@@ -213,7 +213,7 @@ bool CodyApp::saveDocumentAs(TextDocument* doc, MainFrame* mainFrame)
 {
 	if(doc==NULL)
 		return false;
-	wxString file = wxSaveFileSelector("Save a file", "*", doc->getFile(), mainFrame);
+	wxString file = wxSaveFileSelector("", "*", doc->getFile(), mainFrame);
 	if(!file.IsEmpty())
 	{
 		return doc->saveFileAs(file);
@@ -232,7 +232,17 @@ void CodyApp::closeDocument(TextDocument* doc)
 		{
 			if(doc->isModified())
 			{
-				// TODO Query then save it.
+				int answer = wxMessageBox(wxString::Format("The document '%s' is not saved, would you like to save it before closing?", doc->getTitle()),
+				                          "Unsaved document", wxYES_NO | wxCANCEL);
+				if(answer == wxYES)
+				{
+					if(!doc->saveFile())
+						return; // Cancelled
+				}
+				else if(answer == wxCANCEL)
+				{
+					return;
+				}
 			}
 			
 			int idx = parent->GetPageIndex(frame);
