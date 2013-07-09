@@ -56,20 +56,36 @@ wxStyledTextCtrl* TextDocument::getMainCtrl()
 	return _frame->getMainTextCtrl();
 }
 
+void TextDocument::setModified(bool modified)
+{
+	if(_modified != modified)
+	{
+		_modified = modified;
+		updateTitle();
+	}
+}
+
 void TextDocument::setTitle(const wxString& title)
 {
 	_title = title;
-	
-	if(getFrame())
-	{
-		getFrame()->setTitle(getTitle());
-	}
+	updateTitle();
 }
 
 void TextDocument::setTitleFromFile(const wxString& file)
 {
 	wxFileName name(file);
 	setTitle(name.GetFullName());
+}
+
+void TextDocument::updateTitle()
+{
+	if(getFrame())
+	{
+		if(isModified())
+			getFrame()->setTitle("* " + getTitle());
+		else
+			getFrame()->setTitle(getTitle());
+	}	
 }
 
 bool TextDocument::loadFile(const wxString& file)
@@ -80,7 +96,9 @@ bool TextDocument::loadFile(const wxString& file)
 		txt->ClearAll();
 		txt->LoadFile(file);
 		txt->ClearSelections();
+		txt->SetSavePoint();
 		_file = file;
+		setModified(false);
 		setTitleFromFile(_file);
 		getFrame()->initAfterLoading();
 		return true;
@@ -96,6 +114,8 @@ bool TextDocument::reloadFile()
 		txt->ClearAll();
 		txt->LoadFile(_file);
 		txt->ClearSelections();
+		txt->SetSavePoint();
+		setModified(false);
 		getFrame()->initAfterLoading();
 		return true;
 	}

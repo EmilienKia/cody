@@ -44,8 +44,8 @@ public:
 
 	void setTitle(const wxString& title = "");
 
-	bool isMosified()const{return _modified;}
-	void setModifed(bool modified = true){_modified = modified;}
+	bool isModified()const{return _modified;}
+	void setModified(bool modified = true);
 
 	TextFrame* getFrame(){return _frame;}
 	void setFrame(TextFrame* frame){_frame = frame;}
@@ -74,6 +74,7 @@ protected:
 	wxAuiNotebook* _parent;
 
 	void setTitleFromFile(const wxString& file);
+	void updateTitle();
 
 };
 

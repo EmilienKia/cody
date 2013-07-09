@@ -616,6 +616,7 @@ void TextFrame::OnTextModified(wxStyledTextEvent& event)
 			lines = event.GetLinesAdded(),
 			linecount = txt->GetLineCount();
 
+		getDocument()->setModified(txt->IsModified());
 		
 		if(lines!=0)
 		{

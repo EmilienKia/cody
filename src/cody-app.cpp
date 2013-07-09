@@ -230,7 +230,7 @@ void CodyApp::closeDocument(TextDocument* doc)
 
 		if(parent && frame)
 		{
-			if(doc->isMosified())
+			if(doc->isModified())
 			{
 				// TODO Query then save it.
 			}
