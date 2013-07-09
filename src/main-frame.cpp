@@ -414,7 +414,17 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 
 	EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::onPageClosing)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::onPageChanged)
+
+	EVT_CLOSE(MainFrame::onClose)
 END_EVENT_TABLE()
+
+void MainFrame::onClose(wxCloseEvent& event)
+{
+	if(!wxGetApp().closeAllFrameDocuments(this) && event.CanVeto())
+		event.Veto();
+	else
+		event.Skip();
+}
 
 void MainFrame::onNewDocument(wxCommandEvent& WXUNUSED(event))
 {

@@ -68,7 +68,9 @@ private:
 	wxMenu*        _fileTypeMenu;
 
 	void onRibbonButtonClicked(wxEvent& event);
-	
+
+	void onClose(wxCloseEvent& event);
+
 	void onPageClosing(wxAuiNotebookEvent& event);
 	void onPageChanged(wxAuiNotebookEvent& event);
 

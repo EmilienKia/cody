@@ -221,7 +221,7 @@ bool CodyApp::saveDocumentAs(TextDocument* doc, MainFrame* mainFrame)
 	return false;
 }
 
-void CodyApp::closeDocument(TextDocument* doc)
+bool CodyApp::closeDocument(TextDocument* doc)
 {
 	if(doc)
 	{
@@ -237,11 +237,11 @@ void CodyApp::closeDocument(TextDocument* doc)
 				if(answer == wxYES)
 				{
 					if(!doc->saveFile())
-						return; // Cancelled
+						return false; // Cancelled
 				}
 				else if(answer == wxCANCEL)
 				{
-					return;
+					return false;
 				}
 			}
 			
@@ -257,9 +257,10 @@ void CodyApp::closeDocument(TextDocument* doc)
 		_documents.erase(doc);
 		delete doc;
 	}
+	return true;
 }
 
-void CodyApp::closeAllFrameDocuments(MainFrame* mainFrame)
+bool CodyApp::closeAllFrameDocuments(MainFrame* mainFrame)
 {
 	if(!mainFrame)
 		mainFrame = _frame;
@@ -272,9 +273,11 @@ void CodyApp::closeAllFrameDocuments(MainFrame* mainFrame)
 		TextDocument* doc = *it;
 		if(doc->getParent()==notebook)
 		{
-			closeDocument(doc);
+			if(!closeDocument(doc))
+				return false;
 		}
 	}
+	return true;
 }
 
 void CodyApp::onAbout(wxRibbonButtonBarEvent& event)

@@ -49,8 +49,8 @@ public:
 
 	bool saveDocumentAs(TextDocument* doc, MainFrame* mainFrame = NULL);
 
-	void closeDocument(TextDocument* doc);
-	void closeAllFrameDocuments(MainFrame* mainFrame = NULL);
+	bool closeDocument(TextDocument* doc);
+	bool closeAllFrameDocuments(MainFrame* mainFrame = NULL);
 
 	wxFileConfig* getConfig();
 	wxFileHistory& getFileHistory();
