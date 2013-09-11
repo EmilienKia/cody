@@ -30,42 +30,106 @@ class wxRibbonButtonBarEvent;
 class wxStyledTextCtrl;
 class BookmarkPanel;
 
-
+/**
+ * Top-level Cody window (aka main frame) class.
+ * Embed a ribbon, a notebook for document frames and any tool panels.
+ */
 class MainFrame: public wxFrame 
 {
 	friend class CodyApp;
 	DECLARE_EVENT_TABLE();
 	
 public:
+	/**
+	 * Default constructor.
+	 * No need to pass any parameter as all is specified directly.
+	 */
 	MainFrame();
 
+	/**
+	 * Get the current text control.
+	 * Aka the most recently focused text control of current text frame. 
+	 * @return The current text control, @null if none.
+	 */
 	wxStyledTextCtrl* getCurrentTextCtrl();
+
+	/**
+	 * Get the currently focused text frame.
+	 * @return The current text frame, @null if none.
+	 */
 	TextFrame* getCurrentTextFrame();
+
+	/**
+	 * Get the document attached to the current text frame.
+	 * @return The document attached to the current text frame, @null if no current text frame.
+	 */
 	TextDocument* getCurrentDocument();
+
+	/**
+	 * Retrieve the bookmark panel of this frame.
+	 * @return The bookmark panel.
+	 */
 	BookmarkPanel* getBookmarkPanel(){return _bookmark;}
-	
+
+	/**
+	 * Function called when the frame is to be deleted.
+	 * Part of wxWidgets framework.
+	 * @return @true if the frame will be destroyed correctly.
+	 */
 	virtual bool Destroy();
 
-	void toggleBookmarkPanel();	
+	/**
+	 * Toggle (on/off - show/hide) the bookmark panel.
+	 */
+	void toggleBookmarkPanel();
+	
 protected:
+	
+	/**
+	 * Initialize content of frame.
+	 * Create children widgets and initialize them.
+	 * Call other Init...() functions.
+	 */
 	void CommonInit();
+	
+	/**
+	 * Init ribbon bar.
+	 * Fill it with all tabs and buttons.
+	 */
 	void InitRibbon();
+	
+	/**
+	 * Setup the accelerator table with all shortcuts.
+	 * Needed to be done manually because wxWidgets RibbonBar does not support accelerators yet.
+	 */
 	void InitAcceleratorTable();
+
+	/**
+	 * Create and fill "file type" menu from file type database.
+	 * Connect all related handlers.
+	 */
 	void InitFileTypeMenu();
 
+	/**
+	 * Update the frame title bar content from currently selected document.
+	 */
 	void UpdateTitle();
 
+	/**
+	 * Retrieve the notebook which embed text frames.
+	 * @return The text frame notebook.
+	 */
 	wxAuiNotebook* getNotebook(){return _notebook;}
 
 private:
-	wxPanel*	   _panel;
-	wxAuiManager   _manager;
-	wxRibbonBar*   _ribbon;
-	wxAuiNotebook* _notebook;
-	BookmarkPanel* _bookmark;
+	wxPanel*	   _panel;    ///< Unique frame child. Used to embed all widgets managed by AuiManager.
+	wxAuiManager   _manager;  ///< Aui manager, used to manage widgets positions and decorations.
+	wxRibbonBar*   _ribbon;   ///< Ribbon widget.
+	wxAuiNotebook* _notebook; ///< Notebook which embed text frames.
+	BookmarkPanel* _bookmark; ///< Bookmark panel.
 
-	wxMenu*        _recentFileMenu;
-	wxMenu*        _fileTypeMenu;
+	wxMenu*        _recentFileMenu; ///< More recent file list menu. 
+	wxMenu*        _fileTypeMenu;   ///< File type list menu.
 
 	void onRibbonButtonClicked(wxEvent& event);
 
