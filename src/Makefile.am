@@ -47,3 +47,7 @@ cody_LDADD = \
 	 \
 	$(WX_LIBS)
 
+if HAVE_ASTYLE
+astyle:
+	astyle --indent=spaces=4 --lineend=linux --style=ansi *.hpp *.cpp
+endif

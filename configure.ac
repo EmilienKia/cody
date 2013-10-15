@@ -55,6 +55,11 @@ AM_GLIB_GNU_GETTEXT
 
 LT_INIT
 
+dnl ***************************************************************************
+dnl Look for some tools
+dnl ***************************************************************************
+AC_CHECK_PROG(ASTYLE,astyle,yes,no)
+AM_CONDITIONAL([HAVE_ASTYLE], [test "$ASTYLE" = yes])
 
 
 
