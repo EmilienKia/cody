@@ -1,7 +1,7 @@
 /* -*- Mode: C++; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * cody
- * Copyright (C) Émilien Kia 2012 <emilien.kia@gmail.com>
+ * Copyright (C) 2012-2013 Émilien KIA <emilien.kia@gmail.com>
  * 
 cody is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
