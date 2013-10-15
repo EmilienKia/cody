@@ -2,17 +2,17 @@
 /*
  * cody
  * Copyright (C) 2012-2013 Émilien KIA <emilien.kia@gmail.com>
- * 
+ *
 cody is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * cody is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,52 +29,76 @@ class wxStyledTextCtrl;
 
 #include "file-type.hpp"
 
-class TextDocument: public wxObject 
+class TextDocument: public wxObject
 {
 public:
-	TextDocument(const wxString& title = "");
+    TextDocument(const wxString& title = "");
 
-	bool loadFile(const wxString& file);
-	bool reloadFile();
-	bool saveFile();
-	bool saveFileAs(const wxString& file);
+    bool loadFile(const wxString& file);
+    bool reloadFile();
+    bool saveFile();
+    bool saveFileAs(const wxString& file);
 
-	wxString getFile()const{return _file;}
-	wxString getTitle()const{return _title;}
+    wxString getFile()const
+    {
+        return _file;
+    }
+    wxString getTitle()const
+    {
+        return _title;
+    }
 
-	void setTitle(const wxString& title = "");
+    void setTitle(const wxString& title = "");
 
-	bool isModified()const{return _modified;}
-	void setModified(bool modified = true);
+    bool isModified()const
+    {
+        return _modified;
+    }
+    void setModified(bool modified = true);
 
-	TextFrame* getFrame(){return _frame;}
-	void setFrame(TextFrame* frame){_frame = frame;}
+    TextFrame* getFrame()
+    {
+        return _frame;
+    }
+    void setFrame(TextFrame* frame)
+    {
+        _frame = frame;
+    }
 
-	wxAuiNotebook* getParent(){return _parent;}
-	void setParent(wxAuiNotebook* parent){_parent = parent;}
+    wxAuiNotebook* getParent()
+    {
+        return _parent;
+    }
+    void setParent(wxAuiNotebook* parent)
+    {
+        _parent = parent;
+    }
 
-	TextFrame* createFrame(wxAuiNotebook* parent);
+    TextFrame* createFrame(wxAuiNotebook* parent);
 
-	wxStyledTextCtrl* getMainCtrl();
+    wxStyledTextCtrl* getMainCtrl();
 
-	BookmarkList& getBookmarks();
+    BookmarkList& getBookmarks();
 
-	int getDocumentType()const{return _docType;}
-	void setDocumentType(int doctype);
-	void setDocumentType(const FileType& type);
-	const FileType& getDocFileType()const;
-	
+    int getDocumentType()const
+    {
+        return _docType;
+    }
+    void setDocumentType(int doctype);
+    void setDocumentType(const FileType& type);
+    const FileType& getDocFileType()const;
+
 protected:
-	wxString _title, _file;
-	bool _modified;
+    wxString _title, _file;
+    bool _modified;
 
-	int _docType;
-	
-	TextFrame* _frame;
-	wxAuiNotebook* _parent;
+    int _docType;
 
-	void setTitleFromFile(const wxString& file);
-	void updateTitle();
+    TextFrame* _frame;
+    wxAuiNotebook* _parent;
+
+    void setTitleFromFile(const wxString& file);
+    void updateTitle();
 
 };
 

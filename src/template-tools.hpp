@@ -24,38 +24,83 @@ template <typename T>
 class Optional
 {
 public:
-	typedef T value_type;
-	typedef T& reference;
-	typedef const T& const_reference;
-	typedef T* pointer;
-	typedef const T& const_pointer;
+    typedef T value_type;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef T* pointer;
+    typedef const T& const_pointer;
 
-	Optional():_set(false){}
-	Optional(const T& elem):_set(true),_elem(elem){}
-	Optional(const Optional<T>& elem):_set(elem._set),_elem(elem._elem){}
+    Optional():_set(false) {}
+    Optional(const T& elem):_set(true),_elem(elem) {}
+    Optional(const Optional<T>& elem):_set(elem._set),_elem(elem._elem) {}
 
-	bool set()const{return _set;}
-	void set(const T& elem){_elem=elem; _set=true;}
-	void clear(){_set=false; _elem = T();}
-	
-	T& operator=(const T& elem){_elem=elem; _set=true; return *this;}
-	Optional<T>& operator=(const Optional<T>& elem){_elem=elem._elem; _set=elem._set; return *this;}
+    bool set()const
+    {
+        return _set;
+    }
+    void set(const T& elem)
+    {
+        _elem=elem;
+        _set=true;
+    }
+    void clear()
+    {
+        _set=false;
+        _elem = T();
+    }
 
-	bool operator!()const{return !_set;}
-	operator bool()const{return _set;}
-	
-	T& operator*(){return _elem;}
-	const T& operator*()const{return _elem;}
+    T& operator=(const T& elem)
+    {
+        _elem=elem;
+        _set=true;
+        return *this;
+    }
+    Optional<T>& operator=(const Optional<T>& elem)
+    {
+        _elem=elem._elem;
+        _set=elem._set;
+        return *this;
+    }
 
-	T* operator -> (){return &_elem;} 
-	const T* operator -> ()const{return &_elem;} 
+    bool operator!()const
+    {
+        return !_set;
+    }
+    operator bool()const
+    {
+        return _set;
+    }
 
-	operator T& (){return _elem;}
-	operator const T& ()const{return _elem;}
-	
+    T& operator*()
+    {
+        return _elem;
+    }
+    const T& operator*()const
+    {
+        return _elem;
+    }
+
+    T* operator -> ()
+    {
+        return &_elem;
+    }
+    const T* operator -> ()const
+    {
+        return &_elem;
+    }
+
+    operator T& ()
+    {
+        return _elem;
+    }
+    operator const T& ()const
+    {
+        return _elem;
+    }
+
 private:
-	bool _set;
-	T    _elem;
+    bool _set;
+    T    _elem;
 };
 
 #endif // _TEMPLATE_TOOLS_HPP_
