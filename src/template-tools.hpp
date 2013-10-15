@@ -1,3 +1,4 @@
+/* -*- Mode: C++; indent-tabs-mode: s; c-basic-offset: 4; tab-width: 4 -*-  */
 /*
  * template-tools.hpp.h
  *
