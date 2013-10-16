@@ -18,6 +18,9 @@ mkinstalldirs
 intltool-*.in
 ltmain.sh
 
+# Bakefile related files
+.bakefile_gen.state
+
 # Compiled Object files
 *.slo
 *.lo
@@ -31,6 +34,9 @@ ltmain.sh
 *.la
 *.a
 
+# Python compiled files
+*.pyc
+
 # Anjuta project files
 .anjuta_sym_db.db
 .anjuta/
@@ -40,3 +46,8 @@ Debug/
 Profiling/
 Optimized/
 Release/
+
+# MSVC project related files
+*.ncb
+*.suo
+*.vcproj.*.user
