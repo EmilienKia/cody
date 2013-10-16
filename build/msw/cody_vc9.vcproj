@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Static ANSI Release Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_msw"
+			IntermediateDirectory="vc9_msw\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -55,8 +55,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_msw\cody\"
+				ProgramDataBaseFileName="vc9_msw\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -77,12 +77,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30_aui.lib wxmsw30_ribbon.lib wxmsw30_stc.lib wxscintilla.lib wxmsw30_xrc.lib wxmsw30_html.lib wxmsw30_adv.lib wxbase30_xml.lib wxmsw30_core.lib wxbase30.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_msw\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_msw\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -97,7 +97,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_msw\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -112,8 +112,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Release Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_msw"
+			IntermediateDirectory="vc9_msw\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -144,8 +144,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_msw\cody\"
+				ProgramDataBaseFileName="vc9_msw\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -166,12 +166,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintilla.lib      wxmsw30.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_msw\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_msw\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -186,7 +186,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_msw\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -201,8 +201,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswd"
+			IntermediateDirectory="vc9_mswd\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -235,8 +235,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswd\cody\"
+				ProgramDataBaseFileName="vc9_mswd\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -257,13 +257,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30d_aui.lib wxmsw30d_ribbon.lib wxmsw30d_stc.lib wxscintillad.lib wxmsw30d_xrc.lib wxmsw30d_html.lib wxmsw30d_adv.lib wxbase30d_xml.lib wxmsw30d_core.lib wxbase30d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswd\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswd\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -278,7 +278,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswd\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -293,8 +293,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static ANSI Debug Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswd"
+			IntermediateDirectory="vc9_mswd\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -327,8 +327,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswd\cody\"
+				ProgramDataBaseFileName="vc9_mswd\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -349,13 +349,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintillad.lib      wxmsw30d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswd\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswd\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -370,7 +370,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswd\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -385,8 +385,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswu"
+			IntermediateDirectory="vc9_mswu\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -418,8 +418,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswu\cody\"
+				ProgramDataBaseFileName="vc9_mswu\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -440,12 +440,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30u_aui.lib wxmsw30u_ribbon.lib wxmsw30u_stc.lib wxscintilla.lib wxmsw30u_xrc.lib wxmsw30u_html.lib wxmsw30u_adv.lib wxbase30u_xml.lib wxmsw30u_core.lib wxbase30u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswu\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswu\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -460,7 +460,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswu\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -475,8 +475,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Release Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswu"
+			IntermediateDirectory="vc9_mswu\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -508,8 +508,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswu\cody\"
+				ProgramDataBaseFileName="vc9_mswu\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -530,12 +530,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintilla.lib      wxmsw30u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswu\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswu\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -550,7 +550,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswu\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -565,8 +565,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswud"
+			IntermediateDirectory="vc9_mswud\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -600,8 +600,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswud\cody\"
+				ProgramDataBaseFileName="vc9_mswud\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -622,13 +622,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30ud_aui.lib wxmsw30ud_ribbon.lib wxmsw30ud_stc.lib wxscintillad.lib wxmsw30ud_xrc.lib wxmsw30ud_html.lib wxmsw30ud_adv.lib wxbase30ud_xml.lib wxmsw30ud_core.lib wxbase30ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswud\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswud\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -643,7 +643,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswud\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -658,8 +658,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static Unicode Debug Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswud"
+			IntermediateDirectory="vc9_mswud\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -693,8 +693,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswud\cody\"
+				ProgramDataBaseFileName="vc9_mswud\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -715,13 +715,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintillad.lib      wxmsw30ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswud\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_lib"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswud\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -736,7 +736,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswud\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -751,8 +751,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_msw"
+			IntermediateDirectory="vc9_msw\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -783,8 +783,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_msw\cody\"
+				ProgramDataBaseFileName="vc9_msw\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -805,12 +805,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30_aui.lib wxmsw30_ribbon.lib wxmsw30_stc.lib wxscintilla.lib wxmsw30_xrc.lib wxmsw30_html.lib wxmsw30_adv.lib wxbase30_xml.lib wxmsw30_core.lib wxbase30.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_msw\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_msw\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -825,7 +825,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_msw\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -840,8 +840,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Release Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_msw"
+			IntermediateDirectory="vc9_msw\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -872,8 +872,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_msw\cody\"
+				ProgramDataBaseFileName="vc9_msw\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -894,12 +894,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintilla.lib      wxmsw30.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregex.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_msw\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_msw\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -914,7 +914,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_msw\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -929,8 +929,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswd"
+			IntermediateDirectory="vc9_mswd\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -963,8 +963,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswd\cody\"
+				ProgramDataBaseFileName="vc9_mswd\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -985,13 +985,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30d_aui.lib wxmsw30d_ribbon.lib wxmsw30d_stc.lib wxscintillad.lib wxmsw30d_xrc.lib wxmsw30d_html.lib wxmsw30d_adv.lib wxbase30d_xml.lib wxmsw30d_core.lib wxbase30d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswd\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswd\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1006,7 +1006,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswd\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1021,8 +1021,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL ANSI Debug Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswd"
+			IntermediateDirectory="vc9_mswd\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1055,8 +1055,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswd\cody\"
+				ProgramDataBaseFileName="vc9_mswd\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1077,13 +1077,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintillad.lib      wxmsw30d.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexd.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswd\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswd\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1098,7 +1098,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswd\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1113,8 +1113,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswu"
+			IntermediateDirectory="vc9_mswu\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1146,8 +1146,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswu\cody\"
+				ProgramDataBaseFileName="vc9_mswu\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -1168,12 +1168,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30u_aui.lib wxmsw30u_ribbon.lib wxmsw30u_stc.lib wxscintilla.lib wxmsw30u_xrc.lib wxmsw30u_html.lib wxmsw30u_adv.lib wxbase30u_xml.lib wxmsw30u_core.lib wxbase30u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswu\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswu\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1188,7 +1188,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswu\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1203,8 +1203,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Release Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswu"
+			IntermediateDirectory="vc9_mswu\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1236,8 +1236,8 @@
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswu\cody\"
+				ProgramDataBaseFileName="vc9_mswu\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="0"
@@ -1258,12 +1258,12 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintilla.lib      wxmsw30u.lib wxtiff.lib wxjpeg.lib wxpng.lib wxzlib.lib wxregexu.lib wxexpat.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswu\cody.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswu\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1278,7 +1278,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswu\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1293,8 +1293,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Multilib|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswud"
+			IntermediateDirectory="vc9_mswud\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1328,8 +1328,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswud\cody\"
+				ProgramDataBaseFileName="vc9_mswud\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1350,13 +1350,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxmsw30ud_aui.lib wxmsw30ud_ribbon.lib wxmsw30ud_stc.lib wxscintillad.lib wxmsw30ud_xrc.lib wxmsw30ud_html.lib wxmsw30ud_adv.lib wxbase30ud_xml.lib wxmsw30ud_core.lib wxbase30ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswud\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswud\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1371,7 +1371,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswud\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -1386,8 +1386,8 @@
 		</Configuration>
 		<Configuration
 			Name="DLL Unicode Debug Monolithic|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\cody"
+			OutputDirectory="vc9_mswud"
+			IntermediateDirectory="vc9_mswud\cody"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -1421,8 +1421,8 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
-				ObjectFile="$(SolutionDir)$(ConfigurationName)\cody\"
-				ProgramDataBaseFileName="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ObjectFile="vc9_mswud\cody\"
+				ProgramDataBaseFileName="vc9_mswud\cody.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -1443,13 +1443,13 @@
 				Name="VCLinkerTool"
 				AdditionalOptions=""
 				AdditionalDependencies="wxscintillad.lib      wxmsw30ud.lib wxtiffd.lib wxjpegd.lib wxpngd.lib wxzlibd.lib wxregexud.lib wxexpatd.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody.exe"
+				OutputFile="vc9_mswud\cody.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(WXWIN)\lib\vc_dll"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)$(ConfigurationName)\cody.pdb"
+				ProgramDatabaseFile="vc9_mswud\cody.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -1464,7 +1464,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\cody_vc9.bsc"
+				OutputFile="vc9_mswud\cody_vc9.bsc"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

@@ -63,23 +63,25 @@ TARGET_CPU = X86
 ### Variables: ###
 
 COMPILER_PREFIX = vc
+OBJS = vc_msw$(WXLIBPOSTFIX)
 CODY_CXXFLAGS = /MD$(____cody__DEBUGINFO_9) /DWIN32 $(____WX_SHARED_2_p) \
 	$(__WXUNICODE_DEFINE_p) $(__WXDEBUG_DEFINE_p) /D__WXMSW__ \
 	/I$(WX_DIR)$(__WXLIBPATH_FILENAMES)\msw$(WXLIBPOSTFIX) \
 	/I$(WX_DIR)\include /D_WINDOWS $(____cody__OPT_5) $(____cody__DEBUGINFO_6) \
-	$(______cody__DEBUGINFO_8_p) /Fdcody.pdb /GR /EHsc $(CPPFLAGS) $(CXXFLAGS)
+	$(______cody__DEBUGINFO_8_p) /Fd$(OBJS)\cody.pdb /GR /EHsc $(CPPFLAGS) \
+	$(CXXFLAGS)
 CODY_OBJECTS =  \
-	cody_bookmark.obj \
-	cody_cody_app.obj \
-	cody_config_style.obj \
-	cody_config_view.obj \
-	cody_editor_theme.obj \
-	cody_fdartprov.obj \
-	cody_file_type.obj \
-	cody_main_frame.obj \
-	cody_markbar.obj \
-	cody_text_document.obj \
-	cody_text_frame.obj
+	$(OBJS)\cody_bookmark.obj \
+	$(OBJS)\cody_cody_app.obj \
+	$(OBJS)\cody_config_style.obj \
+	$(OBJS)\cody_config_view.obj \
+	$(OBJS)\cody_editor_theme.obj \
+	$(OBJS)\cody_fdartprov.obj \
+	$(OBJS)\cody_file_type.obj \
+	$(OBJS)\cody_main_frame.obj \
+	$(OBJS)\cody_markbar.obj \
+	$(OBJS)\cody_text_document.obj \
+	$(OBJS)\cody_text_frame.obj
 
 ### Conditionally set variables: ###
 
@@ -211,17 +213,21 @@ WXCPU = _ia64
 !endif
 
 
+all: $(OBJS)
+$(OBJS):
+	-if not exist $(OBJS) mkdir $(OBJS)
+
 ### Targets: ###
 
-all: test_for_selected_wxbuild cody.exe
+all: test_for_selected_wxbuild $(OBJS)\cody.exe
 
 clean: 
-	-if exist .\*.obj del .\*.obj
-	-if exist .\*.res del .\*.res
-	-if exist .\*.pch del .\*.pch
-	-if exist cody.exe del cody.exe
-	-if exist cody.ilk del cody.ilk
-	-if exist cody.pdb del cody.pdb
+	-if exist $(OBJS)\*.obj del $(OBJS)\*.obj
+	-if exist $(OBJS)\*.res del $(OBJS)\*.res
+	-if exist $(OBJS)\*.pch del $(OBJS)\*.pch
+	-if exist $(OBJS)\cody.exe del $(OBJS)\cody.exe
+	-if exist $(OBJS)\cody.ilk del $(OBJS)\cody.ilk
+	-if exist $(OBJS)\cody.pdb del $(OBJS)\cody.pdb
 
 test_for_selected_wxbuild: 
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
@@ -235,41 +241,41 @@ test_for_selected_wxbuild:
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
 
-cody.exe: $(CODY_OBJECTS)
-	link /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES_2) $(WXMACHINE_FLAG) /SUBSYSTEM:WINDOWS $(____cody__DEBUGINFO_7) /pdb:"cody.pdb" $(____cody__DEBUGINFO_11) $(LDFLAGS) @<<
+$(OBJS)\cody.exe: $(CODY_OBJECTS)
+	link /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES_2) $(WXMACHINE_FLAG) /SUBSYSTEM:WINDOWS $(____cody__DEBUGINFO_7) /pdb:"$(OBJS)\cody.pdb" $(____cody__DEBUGINFO_11) $(LDFLAGS) @<<
 	$(CODY_OBJECTS)   $(__WXLIB_AUI_NAME_p) $(__WXLIB_RIBBON_NAME_p) $(__WXLIB_STC_NAME_p) wxscintilla$(WX3RDPARTYLIBPOSTFIX).lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib oleacc.lib
 <<
 
-cody_bookmark.obj: ..\..\src\bookmark.cpp
+$(OBJS)\cody_bookmark.obj: ..\..\src\bookmark.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\bookmark.cpp
 
-cody_cody_app.obj: ..\..\src\cody-app.cpp
+$(OBJS)\cody_cody_app.obj: ..\..\src\cody-app.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\cody-app.cpp
 
-cody_config_style.obj: ..\..\src\config-style.cpp
+$(OBJS)\cody_config_style.obj: ..\..\src\config-style.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\config-style.cpp
 
-cody_config_view.obj: ..\..\src\config-view.cpp
+$(OBJS)\cody_config_view.obj: ..\..\src\config-view.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\config-view.cpp
 
-cody_editor_theme.obj: ..\..\src\editor-theme.cpp
+$(OBJS)\cody_editor_theme.obj: ..\..\src\editor-theme.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\editor-theme.cpp
 
-cody_fdartprov.obj: ..\..\src\fdartprov.cpp
+$(OBJS)\cody_fdartprov.obj: ..\..\src\fdartprov.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\fdartprov.cpp
 
-cody_file_type.obj: ..\..\src\file-type.cpp
+$(OBJS)\cody_file_type.obj: ..\..\src\file-type.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\file-type.cpp
 
-cody_main_frame.obj: ..\..\src\main-frame.cpp
+$(OBJS)\cody_main_frame.obj: ..\..\src\main-frame.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\main-frame.cpp
 
-cody_markbar.obj: ..\..\src\markbar.cpp
+$(OBJS)\cody_markbar.obj: ..\..\src\markbar.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\markbar.cpp
 
-cody_text_document.obj: ..\..\src\text-document.cpp
+$(OBJS)\cody_text_document.obj: ..\..\src\text-document.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\text-document.cpp
 
-cody_text_frame.obj: ..\..\src\text-frame.cpp
+$(OBJS)\cody_text_frame.obj: ..\..\src\text-frame.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\text-frame.cpp
 

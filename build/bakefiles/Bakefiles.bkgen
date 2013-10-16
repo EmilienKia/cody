@@ -11,9 +11,11 @@
 
   <!-- Directories where the files go: -->
   <add-flags files="cody.bkl" formats="msvc">
+      -DBUILD_COMPILER_PREFIX=vc
       -o../msw/makefile.vc
   </add-flags>
   <add-flags files="cody.bkl" formats="msvs2008prj">
+      -DBUILD_COMPILER_PREFIX=vc9
       -o../msw/cody_vc9.sln
   </add-flags>
 
