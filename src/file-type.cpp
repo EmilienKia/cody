@@ -95,9 +95,15 @@ FileType::FileType(const FileType& type):
     _fileFilter(type._fileFilter),
     _defStyle(type._defStyle),
     _patterns(type._patterns),
-    _lexer(type._lexer),
-    _styleDef(type._styleDef)
+    _lexer(type._lexer)
 {
+
+    for(size_t n=0; n<wxSTC_STYLE_LASTPREDEFINED; ++n)
+    {
+        _styleDef[n] = type._styleDef[n];
+        _appliedStyle[n] = type._appliedStyle[n];
+    }
+
     for(size_t n=0; n<wxSTC_KEYWORDSET_MAX; ++n)
         _keywords[n] = type._keywords[n];
 }
