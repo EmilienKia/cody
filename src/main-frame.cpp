@@ -448,7 +448,7 @@ void MainFrame::onRecentDocumentMenu(wxRibbonButtonBarEvent& event)
 void MainFrame::onRecentDocument(wxCommandEvent& event)
 {
     int id = event.GetId() - wxID_FILE1;
-    if(id>=0 && id<wxGetApp().getFileHistory().GetCount())
+    if(id>=0 && id<(int)wxGetApp().getFileHistory().GetCount())
     {
         wxString name = wxGetApp().getFileHistory().GetHistoryFile(id);
         if(!name.IsEmpty())

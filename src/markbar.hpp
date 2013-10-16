@@ -123,7 +123,7 @@ protected:
     markerList::iterator find(int index);
     bool InternalIsCategoryShown(int category)const
     {
-        return shownCategories&(1<<category)!=0;
+        return (shownCategories & (1<<category)) != 0;
     }
 
 

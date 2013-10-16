@@ -47,6 +47,7 @@ TextFrame* TextDocument::createFrame(wxAuiNotebook* parent)
     _frame = new TextFrame(parent, this);
     _parent = parent;
     parent->AddPage(_frame, getTitle(), true);
+    return _frame;
 }
 
 wxStyledTextCtrl* TextDocument::getMainCtrl()
