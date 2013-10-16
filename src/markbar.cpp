@@ -85,8 +85,8 @@ wxMarkBar::wxMarkBar(wxWindow *parent, wxWindowID id, const wxPoint &pos, const 
 
 wxMarkBar::wxMarkBar(wxWindow *parent, wxWindowID id, int minValue, int maxValue, const wxPoint &pos, const wxSize &size, long style, const wxString &name):
     wxControl(),
-    min(min),
-    max(max),
+    min(minValue),
+    max(maxValue),
     idxCount(0),
     shownCategories(0),
     focused(markers.end())
@@ -282,7 +282,7 @@ wxMarkBar::markerList::iterator wxMarkBar::find(int index)
 #define WXMARKBAR_CALCPOSITION(clientsize, pos, min, max) (clientsize*(pos-min)/(max-min))
 #define WXMARKBAR_MARK_WIDTH	2
 
-void wxMarkBar::OnPaint(wxPaintEvent& event)
+void wxMarkBar::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
     wxSize sz = GetClientSize();
     wxPaintDC dc(this);
@@ -383,7 +383,7 @@ void wxMarkBar::OnMouseEnter(wxMouseEvent& event)
         SetToolTip(focused->name);
 }
 
-void wxMarkBar::OnMouseLeave(wxMouseEvent& event)
+void wxMarkBar::OnMouseLeave(wxMouseEvent& WXUNUSED(event))
 {
     focused = markers.end();
     UnsetToolTip();
@@ -398,7 +398,7 @@ void wxMarkBar::OnMouseMove(wxMouseEvent& event)
         UnsetToolTip();
 }
 
-void wxMarkBar::OnMouseLeftUp(wxMouseEvent& event)
+void wxMarkBar::OnMouseLeftUp(wxMouseEvent& WXUNUSED(event))
 {
     if(focused!=markers.end())
     {

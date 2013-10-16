@@ -154,7 +154,7 @@ TextDocument* CodyApp::createEmptyDocument(MainFrame* mainFrame)
     TextDocument* doc = new TextDocument("<unnamed>");
     _documents.insert(doc);
 
-    TextFrame* frame = doc->createFrame(mainFrame->getNotebook());
+    doc->createFrame(mainFrame->getNotebook());
 
     return doc;
 }
@@ -280,7 +280,7 @@ bool CodyApp::closeAllFrameDocuments(MainFrame* mainFrame)
     return true;
 }
 
-void CodyApp::onAbout(wxRibbonButtonBarEvent& event)
+void CodyApp::onAbout(wxRibbonButtonBarEvent& WXUNUSED(event))
 {
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName("Cody");
@@ -293,7 +293,7 @@ void CodyApp::onAbout(wxRibbonButtonBarEvent& event)
     wxAboutBox(aboutInfo);
 }
 
-void CodyApp::onExit(wxRibbonButtonBarEvent& event)
+void CodyApp::onExit(wxRibbonButtonBarEvent& WXUNUSED(event))
 {
     _frame->Close();
 }
@@ -303,7 +303,7 @@ wxFileHistory& CodyApp::getFileHistory()
     return _fileHistory;
 }
 
-void CodyApp::onPreferences(wxRibbonButtonBarEvent& event)
+void CodyApp::onPreferences(wxRibbonButtonBarEvent& WXUNUSED(event))
 {
     preferences();
 }

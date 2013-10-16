@@ -489,7 +489,7 @@ void TextFrame::showFastFind(bool shown)
     Layout();
 }
 
-void TextFrame::onCloseFastFind(wxCommandEvent& event)
+void TextFrame::onCloseFastFind(wxCommandEvent& WXUNUSED(event))
 {
     showFastFind(false);
 }
@@ -522,17 +522,17 @@ void TextFrame::showFastFindGoToLine()
     }
 }
 
-void TextFrame::onFastFindText(wxCommandEvent& event)
+void TextFrame::onFastFindText(wxCommandEvent& WXUNUSED(event))
 {
     findNext(0);
 }
 
-void TextFrame::onFastFindNext(wxCommandEvent& event)
+void TextFrame::onFastFindNext(wxCommandEvent& WXUNUSED(event))
 {
     findNext();
 }
 
-void TextFrame::onFastFindPrev(wxCommandEvent& event)
+void TextFrame::onFastFindPrev(wxCommandEvent& WXUNUSED(event))
 {
     findPrev();
 }
@@ -595,7 +595,7 @@ void TextFrame::findPrev(int offset)
     }
 }
 
-void TextFrame::onFastFindLine(wxCommandEvent& event)
+void TextFrame::onFastFindLine(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -801,9 +801,6 @@ void TextFrame::onSelectionChanged()
     // Rem indicators (Scintilla)
     txt->SetIndicatorCurrent(TEXT_INDICATOR_SEARCH);
     txt->IndicatorClearRange(0, len);
-
-    int start = txt->GetSelectionStart();
-    int end = txt->GetSelectionEnd();
 
     wxString sel = txt->GetSelectedText();
     int sellen = sel.Length();

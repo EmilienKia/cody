@@ -73,7 +73,7 @@ EVT_TEXT(XRCID("PropertyValue"), ConfigStyle::onUpdateProperty)
 
 wxEND_EVENT_TABLE()
 
-ConfigStyle::ConfigStyle(wxWindow* parent, wxWindowID id):
+ConfigStyle::ConfigStyle(wxWindow* parent, wxWindowID WXUNUSED(id)):
     wxPanel()
 {
     if(wxXmlResource::Get()->LoadPanel(this, parent, "ConfigStyle"))
@@ -384,7 +384,7 @@ void ConfigStyle::saveCurrentProperty()
     }
 }
 
-void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
+void ConfigStyle::onSelectLanguage(wxCommandEvent& WXUNUSED(event))
 {
     int lang = getLanguageSelection();
     if(lang!=wxNOT_FOUND)
@@ -403,27 +403,27 @@ void ConfigStyle::onSelectLanguage(wxCommandEvent& event)
     fillPropertyList();
 }
 
-void ConfigStyle::onSelectStyle(wxCommandEvent& event)
+void ConfigStyle::onSelectStyle(wxCommandEvent& WXUNUSED(event))
 {
     fillStyleGroup();
 }
 
-void ConfigStyle::onSelectKeyword(wxCommandEvent& event)
+void ConfigStyle::onSelectKeyword(wxCommandEvent& WXUNUSED(event))
 {
     fillKeywordContent();
 }
 
-void ConfigStyle::onUpdateKeyword(wxCommandEvent& event)
+void ConfigStyle::onUpdateKeyword(wxCommandEvent& WXUNUSED(event))
 {
     saveCurrentKeywords();
 }
 
-void ConfigStyle::onSelectProperty(wxCommandEvent& event)
+void ConfigStyle::onSelectProperty(wxCommandEvent& WXUNUSED(event))
 {
     fillPropertyContent();
 }
 
-void ConfigStyle::onUpdateProperty(wxCommandEvent& event)
+void ConfigStyle::onUpdateProperty(wxCommandEvent& WXUNUSED(event))
 {
     saveCurrentProperty();
 }
