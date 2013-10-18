@@ -63,7 +63,7 @@ enum FILE_TYPE
     FT_MAKEFILE,
     FT_WINBATCH,
     FT_DIFF,
-
+    FT_XML,
 
     FT_COUNT
 };

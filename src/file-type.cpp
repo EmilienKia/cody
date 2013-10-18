@@ -46,6 +46,8 @@ int FileType::lexerFromName(const wxString& lexerName)
         return wxSTC_LEX_PYTHON;	// 2
     if(lexerName == "cpp")
         return wxSTC_LEX_CPP;	// 3
+    if(lexerName == "xml")
+        return wxSTC_LEX_XML; // 5
     if(lexerName == "props")
         return wxSTC_LEX_PROPERTIES;	// 9
     if(lexerName == "error")
@@ -56,7 +58,6 @@ int FileType::lexerFromName(const wxString& lexerName)
         return wxSTC_LEX_BATCH;	// 12
     if(lexerName == "diff")
         return wxSTC_LEX_DIFF;	// 16
-
     return 0;
 }
 
@@ -70,6 +71,8 @@ wxString FileType::lexerToName(int lexer)
         return "python";
     case wxSTC_LEX_CPP:  // 3
         return "cpp";
+    case wxSTC_LEX_XML: // 5
+        return "xml";
     case wxSTC_LEX_PROPERTIES:  // 9
         return "props";
     case wxSTC_LEX_ERRORLIST: // 10
@@ -212,7 +215,8 @@ wxString        FileTypeManager::s_fileTypeID[FT_COUNT] =
     /* FT_ERROR */      "error",
     /* FT_MAKEFILE */   "make",
     /* FT_WINBATCH */   "winbatch",
-    /* FT_DIFF */       "diff"
+    /* FT_DIFF */       "diff",
+    /* FT_XML */        "xml",
 };
 
 FileTypeManager& FileTypeManager::get()
