@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<makefile>
+  <requires version="0.2.9"/>
+  <include file="presets/wx.bkl"/>
+  <include file="config.bkl"/>
+    
+  <set-srcdir>../..</set-srcdir>
+  
+  <exe id="cody" template="wxgui,wxlike">
+  
+    <!-- Sources files. -->
+    <sources>
+      src/bookmark.cpp
+      src/cody-app.cpp
+      src/config-style.cpp
+      src/config-view.cpp
+      src/editor-theme.cpp
+      src/fdartprov.cpp
+      src/file-type.cpp
+      src/main-frame.cpp
+      src/markbar.cpp
+      src/text-document.cpp
+      src/text-frame.cpp      
+    </sources>
+    
+    <!-- Header files. -->
+    <headers>
+      src/bookmark.hpp
+      src/cody-app.hpp
+      src/config-style.hpp
+      src/config-view.hpp
+      src/decls.hpp
+      src/editor-theme.hpp
+      src/fdartprov.hpp
+      src/file-type.hpp
+      src/main-frame.hpp
+      src/markbar.hpp
+      src/template-tools.hpp
+      src/text-document.hpp
+      src/text-frame.hpp
+    </headers>
+
+    <!-- WX dependencies. Be sure to keep them in correct order. -->
+    <wx-lib>aui</wx-lib>
+    <wx-lib>ribbon</wx-lib>
+    <wx-lib>stc</wx-lib>
+    <wx-lib>xrc</wx-lib>
+    <wx-lib>html</wx-lib>
+    <wx-lib>adv</wx-lib>
+    <wx-lib>xml</wx-lib>
+    <wx-lib>core</wx-lib>
+    <wx-lib>base</wx-lib>
+
+</exe>
+	
+ 
+</makefile>

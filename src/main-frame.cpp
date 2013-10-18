@@ -435,7 +435,7 @@ void MainFrame::onNewDocument(wxCommandEvent& WXUNUSED(event))
     wxGetApp().createEmptyDocument(this);
 }
 
-void MainFrame::onOpenDocument(wxCommandEvent& event)
+void MainFrame::onOpenDocument(wxCommandEvent& WXUNUSED(event))
 {
     wxGetApp().queryLoadFile(this);
 }
@@ -448,7 +448,7 @@ void MainFrame::onRecentDocumentMenu(wxRibbonButtonBarEvent& event)
 void MainFrame::onRecentDocument(wxCommandEvent& event)
 {
     int id = event.GetId() - wxID_FILE1;
-    if(id>=0 && id<wxGetApp().getFileHistory().GetCount())
+    if(id>=0 && id<(int)wxGetApp().getFileHistory().GetCount())
     {
         wxString name = wxGetApp().getFileHistory().GetHistoryFile(id);
         if(!name.IsEmpty())
@@ -458,7 +458,7 @@ void MainFrame::onRecentDocument(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onRevertDocument(wxCommandEvent& event)
+void MainFrame::onRevertDocument(wxCommandEvent& WXUNUSED(event))
 {
     TextDocument* doc = getCurrentDocument();
     if(doc)
@@ -468,7 +468,7 @@ void MainFrame::onRevertDocument(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onSaveDocument(wxCommandEvent& event)
+void MainFrame::onSaveDocument(wxCommandEvent& WXUNUSED(event))
 {
     TextDocument* doc = getCurrentDocument();
     if(doc)
@@ -482,7 +482,7 @@ void MainFrame::onSaveDocument(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onSaveDocumentAs(wxCommandEvent& event)
+void MainFrame::onSaveDocumentAs(wxCommandEvent& WXUNUSED(event))
 {
     TextDocument* doc = getCurrentDocument();
     if(doc)
@@ -491,7 +491,7 @@ void MainFrame::onSaveDocumentAs(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onCloseDocument(wxCommandEvent& event)
+void MainFrame::onCloseDocument(wxCommandEvent& WXUNUSED(event))
 {
     TextDocument* doc = getCurrentDocument();
     if(doc)
@@ -500,7 +500,7 @@ void MainFrame::onCloseDocument(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onCloseAllDocuments(wxCommandEvent& event)
+void MainFrame::onCloseAllDocuments(wxCommandEvent& WXUNUSED(event))
 {
     wxGetApp().closeAllFrameDocuments(this);
 }
@@ -516,7 +516,7 @@ void MainFrame::onPageClosing(wxAuiNotebookEvent& event)
     }
 }
 
-void MainFrame::onPageChanged(wxAuiNotebookEvent& event)
+void MainFrame::onPageChanged(wxAuiNotebookEvent& WXUNUSED(event))
 {
     if(getBookmarkPanel())
     {
@@ -525,7 +525,7 @@ void MainFrame::onPageChanged(wxAuiNotebookEvent& event)
     UpdateTitle();
 }
 
-void MainFrame::onUndo(wxCommandEvent& event)
+void MainFrame::onUndo(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -534,7 +534,7 @@ void MainFrame::onUndo(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onRedo(wxCommandEvent& event)
+void MainFrame::onRedo(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -543,7 +543,7 @@ void MainFrame::onRedo(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onDelete(wxCommandEvent& event)
+void MainFrame::onDelete(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -552,7 +552,7 @@ void MainFrame::onDelete(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onCut(wxCommandEvent& event)
+void MainFrame::onCut(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -561,7 +561,7 @@ void MainFrame::onCut(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onCopy(wxCommandEvent& event)
+void MainFrame::onCopy(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -570,7 +570,7 @@ void MainFrame::onCopy(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onPaste(wxCommandEvent& event)
+void MainFrame::onPaste(wxCommandEvent& WXUNUSED(event))
 {
     wxStyledTextCtrl* txt = getCurrentTextCtrl();
     if(txt)
@@ -579,7 +579,7 @@ void MainFrame::onPaste(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& event)
+void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -588,7 +588,7 @@ void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& event)
     }
 }
 
-void MainFrame::onFind(wxCommandEvent& event)
+void MainFrame::onFind(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -597,7 +597,7 @@ void MainFrame::onFind(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onFindNext(wxCommandEvent& event)
+void MainFrame::onFindNext(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -606,7 +606,7 @@ void MainFrame::onFindNext(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onFindPrev(wxCommandEvent& event)
+void MainFrame::onFindPrev(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -615,7 +615,7 @@ void MainFrame::onFindPrev(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onGoToLine(wxCommandEvent& event)
+void MainFrame::onGoToLine(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -683,12 +683,12 @@ void MainFrame::onUpdateHasSelection(wxUpdateUIEvent& event)
     }
 }
 
-void MainFrame::onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& event)
+void MainFrame::onBookmarkRibbonBarExtActivated(wxRibbonPanelEvent& WXUNUSED(event))
 {
     toggleBookmarkPanel();
 }
 
-void MainFrame::onToggleBookmark(wxCommandEvent& event)
+void MainFrame::onToggleBookmark(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -697,7 +697,7 @@ void MainFrame::onToggleBookmark(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onPreviousBookmark(wxCommandEvent& event)
+void MainFrame::onPreviousBookmark(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -706,7 +706,7 @@ void MainFrame::onPreviousBookmark(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onNextBookmark(wxCommandEvent& event)
+void MainFrame::onNextBookmark(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -923,7 +923,7 @@ void MainFrame::onUpdateDisplayWrapLongLines(wxUpdateUIEvent& event)
 }
 
 
-void MainFrame::onZoomIn(wxCommandEvent& event)
+void MainFrame::onZoomIn(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -932,7 +932,7 @@ void MainFrame::onZoomIn(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onZoomOut(wxCommandEvent& event)
+void MainFrame::onZoomOut(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -941,7 +941,7 @@ void MainFrame::onZoomOut(wxCommandEvent& event)
     }
 }
 
-void MainFrame::onZoomReset(wxCommandEvent& event)
+void MainFrame::onZoomReset(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
@@ -973,7 +973,7 @@ void MainFrame::onUpdateSplitView(wxUpdateUIEvent& event)
     }
 }
 
-void MainFrame::onSwapView(wxCommandEvent& event)
+void MainFrame::onSwapView(wxCommandEvent& WXUNUSED(event))
 {
     TextFrame* frame = getCurrentTextFrame();
     if(frame)
