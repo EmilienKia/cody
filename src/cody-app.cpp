@@ -64,7 +64,9 @@ bool CodyApp::OnInit()
     wxInitAllImageHandlers();
 
     // Plug additionnal art providers
+#ifdef __UNIX__
     wxArtProvider::Push(new wxFreedesktopArtProvider("/usr/share/icons/gnome"));
+#endif
     wxArtProvider::Push(new wxFreedesktopArtProvider(wxStandardPaths::Get().GetDataDir()+"/icons/hicolor"));
 
     // Init resource system and load resource file
