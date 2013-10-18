@@ -173,27 +173,30 @@ bool BookmarkProvider::load()
         while(!file.Eof())
         {
             line = txt.ReadLine();
-            if(line[0]=='>')
+            if(!line.IsEmpty())
             {
-                line.Remove(0,1);
-                line.Trim();
-                line.Trim(false);
-                if(!line.IsEmpty())
-                {
-                    list = &get(line);
-                }
-            }
-            else if(list!=NULL)
-            {
-                wxString num = line.BeforeFirst(':');
-                Bookmark bm;
-                bm.line = 0;
-                num.ToLong(&bm.line);
-                if(bm.line>0)
-                {
-                    bm.name = line.AfterFirst(':');
-                    list->insert(bm);
-                }
+              if(line[0]=='>')
+              {
+                  line.Remove(0,1);
+                  line.Trim();
+                  line.Trim(false);
+                  if(!line.IsEmpty())
+                  {
+                      list = &get(line);
+                  }
+              }
+              else if(list!=NULL)
+              {
+                  wxString num = line.BeforeFirst(':');
+                  Bookmark bm;
+                  bm.line = 0;
+                  num.ToLong(&bm.line);
+                  if(bm.line>0)
+                  {
+                      bm.name = line.AfterFirst(':');
+                      list->insert(bm);
+                  }
+              }
             }
         }
     }
