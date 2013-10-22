@@ -778,11 +778,35 @@ void TextFrame::setFocusToTextCtrl()
         txt->SetFocus();
 }
 
+void TextFrame::updateBraceHilight(wxStyledTextCtrl* txt)
+{
+  int cur = txt->GetCurrentPos();
+  int ch = txt->GetCharAt(cur);
+
+  if(ch == '[' || ch == ']' || ch == '(' || ch == ')' || ch == '{' || ch == '}' || ch == '<' || ch == '>' )
+  {
+    int pos = txt->BraceMatch(cur);
+    if(pos!=wxNOT_FOUND)
+      txt->BraceHighlight(cur, pos);
+    else
+      txt->BraceBadLight(cur);
+  }
+  else
+    txt->BraceBadLight(-1);
+}
+
 void TextFrame::onUpdateUI(wxStyledTextEvent& event)
 {
     if(event.GetUpdated()==wxSTC_UPDATE_SELECTION)
     {
         onSelectionChanged();
+        wxObject *obj = event.GetEventObject();
+        if(obj)
+        {
+          wxStyledTextCtrl* txt = dynamic_cast<wxStyledTextCtrl*>(obj);
+          if(txt)
+            updateBraceHilight(txt);
+        }
     }
     else if(event.GetUpdated()==wxSTC_UPDATE_V_SCROLL)
     {

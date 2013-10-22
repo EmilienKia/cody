@@ -445,6 +445,8 @@ private:
 
     unsigned int _marginShown;
 
+    void updateBraceHilight(wxStyledTextCtrl* txt);
+
     void updateLineNbMargin();
 
     void onCloseFastFind(wxCommandEvent& event);
