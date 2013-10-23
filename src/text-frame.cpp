@@ -56,6 +56,7 @@ BEGIN_EVENT_TABLE(TextFrame, wxPanel)
 
     EVT_STC_MODIFIED(wxID_ANY, TextFrame::OnTextModified)
     EVT_STC_UPDATEUI(wxID_ANY, TextFrame::onUpdateUI)
+    EVT_STC_MARGINCLICK(wxID_ANY,  TextFrame::OnMarginClick)
 
     MARKBAR_CLICK(wxID_ANY, TextFrame::onMarkerActivated)
 END_EVENT_TABLE()
@@ -150,8 +151,21 @@ void TextFrame::InitTextCtrl(wxStyledTextCtrl* txt)
     txt->SetMarginType(MARGIN_LINE_NB, wxSTC_MARGIN_NUMBER);
     txt->SetMarginType(MARGIN_MARKER, wxSTC_MARGIN_SYMBOL);
     txt->SetMarginMask(MARGIN_MARKER, ~wxSTC_MASK_FOLDERS);
+    txt->SetMarginWidth(MARGIN_MARKER, 16); 
     txt->SetMarginType(MARGIN_FOLD, wxSTC_MARGIN_SYMBOL);
     txt->SetMarginMask(MARGIN_FOLD, wxSTC_MASK_FOLDERS);
+    txt->SetMarginWidth(MARGIN_FOLD, 16); 
+    txt->SetMarginSensitive(MARGIN_FOLD, true);
+
+    // Initialize markers
+    txt->SetFoldFlags(wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER, wxColour(255,255,255), wxColour(0,0,0) );
+    txt->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE, wxColour(255,255,255), wxColour(0,0,0) );
 
     // Initialize long lines
     txt->SetEdgeColumn(80);
@@ -185,6 +199,12 @@ void TextFrame::applyFileType()
 {
     applyFileTypeStyle();
     applyFileTypeKeywords();
+
+    // Force update (folding)
+    _mainText->SetProperty("fold", "1");
+    _secondText->SetProperty("fold", "1");
+    _mainText->Colourise(0,-1);
+    _secondText->Colourise(0,-1);
 }
 
 void TextFrame::applyFileTypeStyle()
@@ -636,6 +656,21 @@ void TextFrame::OnTextModified(wxStyledTextEvent& event)
 
     event.Skip();
 }
+
+void TextFrame::OnMarginClick(wxStyledTextEvent& event)
+{
+  if (event.GetMargin() == MARGIN_FOLD) {
+    wxStyledTextCtrl* txt = getCurrentTextCtrl();
+    if(txt)
+    {
+      int line  = txt->LineFromPosition(event.GetPosition());
+      int levelClick = txt->GetFoldLevel (line);
+      if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0) {
+        txt->ToggleFold (line);
+      }
+    }
+  }
+} 
 
 void TextFrame::toggleBookmark()
 {

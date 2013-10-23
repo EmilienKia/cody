@@ -456,6 +456,7 @@ private:
     void onFastFindLine(wxCommandEvent& event);
 
     void OnTextModified(wxStyledTextEvent& event);
+    void OnMarginClick (wxStyledTextEvent &event);
     void onUpdateUI(wxStyledTextEvent& event);
 
     void onMarkerActivated(wxMarkBarEvent& event);
