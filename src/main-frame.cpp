@@ -46,6 +46,11 @@ MainFrame::MainFrame():
     _recentFileMenu = new wxMenu;
     wxGetApp().getFileHistory().UseMenu(_recentFileMenu);
     wxGetApp().getFileHistory().AddFilesToMenu(_recentFileMenu);
+
+    _eolMenu = new wxMenu;
+    _eolMenu->AppendCheckItem(XRCID("EOL_CR"), "CR");
+    _eolMenu->AppendCheckItem(XRCID("EOL_LF"), "LF (Unix)");
+    _eolMenu->AppendCheckItem(XRCID("EOL_CRLF"), "CR-LF (Windows)");
 }
 
 void MainFrame::CommonInit()
@@ -139,6 +144,11 @@ void MainFrame::InitRibbon()
             bar->AddButton(wxID_CUT, "Cut", RibbonIcon("edit-cut"));
             bar->AddButton(wxID_COPY, "Copy", RibbonIcon("edit-copy"));
             bar->AddButton(wxID_PASTE, "Paste", RibbonIcon("edit-paste"));
+        }
+        {
+            wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Content flow");
+            wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+            bar->AddHybridButton(XRCID("CONVERT_EOL"), "End of lines", RibbonIcon("edit-eol"));
         }
     }
     {
@@ -363,6 +373,14 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_CUT, MainFrame::onCut)
     EVT_MENU(wxID_COPY, MainFrame::onCopy)
     EVT_MENU(wxID_PASTE, MainFrame::onPaste)
+    EVT_MENU(XRCID("CONVERT_EOL"), MainFrame::onEOLConvert)
+    EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(XRCID("CONVERT_EOL"), MainFrame::onEOLMenu)
+    EVT_MENU(XRCID("EOL_CR"), MainFrame::onEOLCR)
+    EVT_UPDATE_UI(XRCID("EOL_CR"), MainFrame::onUpdateEOLCR)
+    EVT_MENU(XRCID("EOL_LF"), MainFrame::onEOLLF)
+    EVT_UPDATE_UI(XRCID("EOL_LF"), MainFrame::onUpdateEOLLF)
+    EVT_MENU(XRCID("EOL_CRLF"), MainFrame::onEOLCRLF)
+    EVT_UPDATE_UI(XRCID("EOL_CRLF"), MainFrame::onUpdateEOLCRLF)
 
     EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
     EVT_MENU(wxID_FIND, MainFrame::onFind)
@@ -577,6 +595,92 @@ void MainFrame::onPaste(wxCommandEvent& WXUNUSED(event))
     {
         txt->Paste();
     }
+}
+
+void MainFrame::onEOLConvert(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->convertEOL(doc->getEOLMode());
+  }
+}
+
+void MainFrame::onEOLMenu(wxRibbonButtonBarEvent& event)
+{
+  event.PopupMenu(_eolMenu);
+}
+
+void MainFrame::onEOLCR(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setEOLMode(TextDocument::EOL_CR);
+  }
+}
+
+void MainFrame::onEOLLF(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setEOLMode(TextDocument::EOL_LF);
+  }
+}
+
+void MainFrame::onEOLCRLF(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setEOLMode(TextDocument::EOL_CRLF);
+  }
+}
+
+void MainFrame::onUpdateEOLCRLF(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getEOLMode()==TextDocument::EOL_CRLF);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onUpdateEOLCR(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getEOLMode()==TextDocument::EOL_CR);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onUpdateEOLLF(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getEOLMode()==TextDocument::EOL_LF);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
 }
 
 void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& WXUNUSED(event))

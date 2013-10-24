@@ -50,7 +50,7 @@ TextFrame* TextDocument::createFrame(wxAuiNotebook* parent)
     return _frame;
 }
 
-wxStyledTextCtrl* TextDocument::getMainCtrl()
+wxStyledTextCtrl* TextDocument::getMainCtrl()const
 {
     if(!_frame)
         return NULL;
@@ -177,4 +177,25 @@ const FileType& TextDocument::getDocFileType()const
     return FileTypeManager::get().getFileType(getDocumentType());
 }
 
+TextDocument::EOLMode TextDocument::getEOLMode() const
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    return (EOLMode) ctrl->GetEOLMode();
+  else
+    return EOL_DEFAULT;
+}
 
+void TextDocument::setEOLMode(TextDocument::EOLMode mode)
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    ctrl->SetEOLMode((int)mode);
+}
+
+void TextDocument::convertEOL(EOLMode mode)
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    ctrl->ConvertEOLs(mode);
+}

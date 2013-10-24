@@ -76,7 +76,7 @@ public:
 
     TextFrame* createFrame(wxAuiNotebook* parent);
 
-    wxStyledTextCtrl* getMainCtrl();
+    wxStyledTextCtrl* getMainCtrl() const;
 
     BookmarkList& getBookmarks();
 
@@ -87,6 +87,23 @@ public:
     void setDocumentType(int doctype);
     void setDocumentType(const FileType& type);
     const FileType& getDocFileType()const;
+
+    enum EOLMode {
+      EOL_CRLF = wxSTC_EOL_CRLF,
+      EOL_CR   = wxSTC_EOL_CR,
+      EOL_LF   = wxSTC_EOL_LF,
+
+#ifdef __WINDOWS__
+      EOL_DEFAULT = EOL_CRLF,
+#else
+      EOL_DEFAULT = EOL_LF
+#endif
+
+    };
+
+    EOLMode getEOLMode() const;
+    void setEOLMode(EOLMode mode);
+    void convertEOL(EOLMode mode);
 
 protected:
     wxString _title, _file;

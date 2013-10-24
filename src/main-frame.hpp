@@ -136,6 +136,7 @@ private:
 
     wxMenu*        _recentFileMenu; ///< More recent file list menu.
     wxMenu*        _fileTypeMenu;   ///< File type list menu.
+    wxMenu*        _eolMenu;        ///< EOL convert menu
 
     void onRibbonButtonClicked(wxEvent& event);
 
@@ -160,6 +161,14 @@ private:
     void onCut(wxCommandEvent& event);
     void onCopy(wxCommandEvent& event);
     void onPaste(wxCommandEvent& event);
+    void onEOLConvert(wxCommandEvent& event);
+    void onEOLMenu(wxRibbonButtonBarEvent& event);
+    void onEOLCR(wxCommandEvent& event);
+    void onEOLLF(wxCommandEvent& event);
+    void onEOLCRLF(wxCommandEvent& event);
+    void onUpdateEOLCRLF(wxUpdateUIEvent& event);
+    void onUpdateEOLCR(wxUpdateUIEvent& event);
+    void onUpdateEOLLF(wxUpdateUIEvent& event);
 
     void onFindRibbonBarExtActivated(wxRibbonPanelEvent& event);
     void onFind(wxCommandEvent& event);
