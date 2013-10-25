@@ -137,6 +137,7 @@ private:
     wxMenu*        _recentFileMenu; ///< More recent file list menu.
     wxMenu*        _fileTypeMenu;   ///< File type list menu.
     wxMenu*        _eolMenu;        ///< EOL convert menu
+    wxMenu*        _indentMenu;     ///< Indentation convert menu
 
     void onRibbonButtonClicked(wxEvent& event);
 
@@ -169,6 +170,21 @@ private:
     void onUpdateEOLCRLF(wxUpdateUIEvent& event);
     void onUpdateEOLCR(wxUpdateUIEvent& event);
     void onUpdateEOLLF(wxUpdateUIEvent& event);
+    void onIndentConvert(wxCommandEvent& event);
+    void onIndentMenu(wxRibbonButtonBarEvent& event);
+    void onIndentUseTabs(wxCommandEvent& event);
+    void onUpdateIndentUseTabs(wxUpdateUIEvent& event);
+    void onIndent2(wxCommandEvent& event);
+    void onUpdateIndent2(wxUpdateUIEvent& event);
+    void onIndent3(wxCommandEvent& event);
+    void onUpdateIndent3(wxUpdateUIEvent& event);
+    void onIndent4(wxCommandEvent& event);
+    void onUpdateIndent4(wxUpdateUIEvent& event);
+    void onIndent8(wxCommandEvent& event);
+    void onUpdateIndent8(wxUpdateUIEvent& event);
+    void onIndentOther(wxCommandEvent& event);
+    void onUpdateIndentOther(wxUpdateUIEvent& event);
+
 
     void onFindRibbonBarExtActivated(wxRibbonPanelEvent& event);
     void onFind(wxCommandEvent& event);

@@ -199,3 +199,38 @@ void TextDocument::convertEOL(EOLMode mode)
   if(ctrl)
     ctrl->ConvertEOLs(mode);
 }
+
+bool TextDocument::useTabs() const
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    return ctrl->GetUseTabs();
+  else
+    return false;
+}
+
+void TextDocument::useTabs(bool use)
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    ctrl->SetUseTabs(use);
+}
+
+int TextDocument::getIndent() const
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+    return ctrl->GetIndent();
+  else
+    return 2;
+}
+
+void TextDocument::setIndent(int indent)
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+  {
+    ctrl->SetIndent(indent);
+    ctrl->SetTabWidth(indent);
+  }
+}

@@ -31,7 +31,7 @@ cody is free software: you can redistribute it and/or modify it
 #include "text-frame.hpp"
 #include "text-document.hpp"
 #include "bookmark.hpp"
-#include "cody-app.hpp"
+#include "dialog-boxes.hpp"
 
 
 #define wxArtIcon(artid, sz) (wxArtProvider::GetBitmap(artid, wxART_OTHER, wxSize(sz,sz)))
@@ -51,6 +51,15 @@ MainFrame::MainFrame():
     _eolMenu->AppendCheckItem(XRCID("EOL_CR"), "CR");
     _eolMenu->AppendCheckItem(XRCID("EOL_LF"), "LF (Unix)");
     _eolMenu->AppendCheckItem(XRCID("EOL_CRLF"), "CR-LF (Windows)");
+
+    _indentMenu = new wxMenu;
+    _indentMenu->AppendCheckItem(XRCID("Indent use tabs"), "Use tabs");
+    _indentMenu->AppendSeparator();
+    _indentMenu->AppendCheckItem(XRCID("Indent tab 2"), "2");
+    _indentMenu->AppendCheckItem(XRCID("Indent tab 3"), "3");
+    _indentMenu->AppendCheckItem(XRCID("Indent tab 4"), "4");
+    _indentMenu->AppendCheckItem(XRCID("Indent tab 8"), "8");
+    _indentMenu->AppendCheckItem(XRCID("Indent tab other"), "Other ...");
 }
 
 void MainFrame::CommonInit()
@@ -149,6 +158,7 @@ void MainFrame::InitRibbon()
             wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Content flow");
             wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
             bar->AddHybridButton(XRCID("CONVERT_EOL"), "End of lines", RibbonIcon("edit-eol"));
+            bar->AddDropdownButton/*AddHybridButton*/(XRCID("Indent convert"), "Indentations", RibbonIcon("edit-indent"));
         }
     }
     {
@@ -381,6 +391,22 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_UPDATE_UI(XRCID("EOL_LF"), MainFrame::onUpdateEOLLF)
     EVT_MENU(XRCID("EOL_CRLF"), MainFrame::onEOLCRLF)
     EVT_UPDATE_UI(XRCID("EOL_CRLF"), MainFrame::onUpdateEOLCRLF)
+    EVT_MENU(XRCID("Indent convert"), MainFrame::onIndentConvert)
+    EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(XRCID("Indent convert"), MainFrame::onIndentMenu)
+    EVT_MENU(XRCID("Indent use tabs"), MainFrame::onIndentUseTabs)
+    EVT_UPDATE_UI(XRCID("Indent use tabs"), MainFrame::onUpdateIndentUseTabs)
+    EVT_MENU(XRCID("Indent tab 2"), MainFrame::onIndent2)
+    EVT_UPDATE_UI(XRCID("Indent tab 2"), MainFrame::onUpdateIndent2)
+    EVT_MENU(XRCID("Indent tab 3"), MainFrame::onIndent3)
+    EVT_UPDATE_UI(XRCID("Indent tab 3"), MainFrame::onUpdateIndent3)
+    EVT_MENU(XRCID("Indent tab 4"), MainFrame::onIndent4)
+    EVT_UPDATE_UI(XRCID("Indent tab 4"), MainFrame::onUpdateIndent4)
+    EVT_MENU(XRCID("Indent tab 8"), MainFrame::onIndent8)
+    EVT_UPDATE_UI(XRCID("Indent tab 8"), MainFrame::onUpdateIndent8)
+    EVT_MENU(XRCID("Indent tab other"), MainFrame::onIndentOther)
+    EVT_UPDATE_UI(XRCID("Indent tab other"), MainFrame::onUpdateIndentOther)
+
+
 
     EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
     EVT_MENU(wxID_FIND, MainFrame::onFind)
@@ -652,6 +678,175 @@ void MainFrame::onUpdateEOLCRLF(wxUpdateUIEvent& event)
     event.Enable(false);
   }
 }
+
+void MainFrame::onIndentConvert(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    //TODO doc->convertIndent(...);
+    wxMessageBox("TODO");
+  }
+}
+
+void MainFrame::onIndentMenu(wxRibbonButtonBarEvent& event)
+{
+  event.PopupMenu(_indentMenu);
+}
+
+void MainFrame::onIndentUseTabs(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->useTabs(!doc->useTabs());
+  }
+}
+
+void MainFrame::onUpdateIndentUseTabs(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->useTabs());
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onIndent2(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setIndent(2);
+  }
+}
+
+void MainFrame::onUpdateIndent2(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getIndent()==2);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onIndent3(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setIndent(3);
+  }
+}
+
+void MainFrame::onUpdateIndent3(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getIndent()==3);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onIndent4(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setIndent(4);
+  }
+}
+
+void MainFrame::onUpdateIndent4(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getIndent()==4);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onIndent8(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    doc->setIndent(8);
+  }
+}
+
+void MainFrame::onUpdateIndent8(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    event.Check(doc->getIndent()==8);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
+void MainFrame::onIndentOther(wxCommandEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    IndentationDialog dialog(this);
+    dialog.useTabs(doc->useTabs());
+    dialog.indents(doc->getIndent());
+    if(dialog.ShowModal()==wxID_OK)
+    {
+      doc->useTabs(dialog.useTabs());
+      doc->setIndent(dialog.indents());
+    }
+  }
+}
+
+
+void MainFrame::onUpdateIndentOther(wxUpdateUIEvent& event)
+{
+  TextDocument* doc = getCurrentDocument();
+  if(doc)
+  {
+    event.Enable(true);
+    int indent = doc->getIndent();
+    event.Check(indent!=2 && indent!=3 && indent!=4 && indent!=8);
+  }
+  else
+  {
+    event.Check(false);
+    event.Enable(false);
+  }
+}
+
 
 void MainFrame::onUpdateEOLCR(wxUpdateUIEvent& event)
 {

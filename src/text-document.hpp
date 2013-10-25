@@ -105,6 +105,12 @@ public:
     void setEOLMode(EOLMode mode);
     void convertEOL(EOLMode mode);
 
+    bool useTabs() const;
+    void useTabs(bool use);
+    int getIndent() const;
+    void setIndent(int indent);
+
+
 protected:
     wxString _title, _file;
     bool _modified;

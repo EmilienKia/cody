@@ -24,6 +24,8 @@ cody_SOURCES = \
 	text-frame.hpp \
 	cody-app.cpp \
 	cody-app.hpp \
+	dialog-boxes.cpp \
+	dialog-boxes.hpp \
 	bookmark.cpp \
 	bookmark.hpp \
 	markbar.cpp \

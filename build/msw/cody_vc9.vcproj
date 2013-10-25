@@ -1504,6 +1504,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\dialog-boxes.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\editor-theme.cpp"
 				>
 			</File>
@@ -1555,6 +1559,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\decls.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\dialog-boxes.hpp"
 				>
 			</File>
 			<File

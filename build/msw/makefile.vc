@@ -75,6 +75,7 @@ CODY_OBJECTS =  \
 	$(OBJS)\cody_cody_app.obj \
 	$(OBJS)\cody_config_style.obj \
 	$(OBJS)\cody_config_view.obj \
+	$(OBJS)\cody_dialog_boxes.obj \
 	$(OBJS)\cody_editor_theme.obj \
 	$(OBJS)\cody_fdartprov.obj \
 	$(OBJS)\cody_file_type.obj \
@@ -257,6 +258,9 @@ $(OBJS)\cody_config_style.obj: ..\..\src\config-style.cpp
 
 $(OBJS)\cody_config_view.obj: ..\..\src\config-view.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\config-view.cpp
+
+$(OBJS)\cody_dialog_boxes.obj: ..\..\src\dialog-boxes.cpp
+	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\dialog-boxes.cpp
 
 $(OBJS)\cody_editor_theme.obj: ..\..\src\editor-theme.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\editor-theme.cpp

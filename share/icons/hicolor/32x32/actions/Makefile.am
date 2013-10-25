@@ -21,9 +21,11 @@ icon_DATA = \
 	edit-copy.png \
 	edit-cut.png \
 	edit-delete.png \
+	edit-eol.png \
 	edit-fast-find.png \
 	edit-find.png \
 	edit-find-replace.png \
+	edit-indent.png \
 	edit-paste.png \
 	edit-redo.png \
 	edit-select-all.png \
