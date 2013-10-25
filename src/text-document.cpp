@@ -234,3 +234,55 @@ void TextDocument::setIndent(int indent)
     ctrl->SetTabWidth(indent);
   }
 }
+
+wxString TextDocument::createIndentation(int indent, int tabSize, bool insertSpaces)
+{
+  wxString indentation;
+  if(!insertSpaces)
+  {
+    while(indent >= tabSize)
+    {
+      indentation.Append("\t");
+      indent -= tabSize;
+    }
+  }
+  while(indent-- > 0)
+  {
+    indentation.Append(" ");
+  }
+  return indentation;
+}
+
+void TextDocument::convertIndent()
+{
+  wxStyledTextCtrl* ctrl = getMainCtrl();
+  if(ctrl)
+  {
+    // Note: this code is largely inspirated from SciTE code by Neil Hodgson <neilh@scintilla.org>
+    bool usetabs = useTabs();
+    int tabsize  = getIndent();
+
+    ctrl->BeginUndoAction();
+
+    int maxLine = ctrl->GetLineCount();
+    for(int line = 0; line< maxLine; ++line)
+    {
+      int lineStart = ctrl->PositionFromLine(line);
+      int indent    = ctrl->GetLineIndentation(line);
+      int indentPos = ctrl->GetLineIndentPosition(line);
+      static const int maxIndentation = 1000;
+      if(indent < maxIndentation)
+      {
+        wxString indentNow    = ctrl->GetRange(lineStart, indentPos);
+        wxString indentWanted = createIndentation(indent, tabsize, !usetabs);
+        if(indentNow != indentWanted)
+        {
+          ctrl->SetTargetStart(lineStart);
+          ctrl->SetTargetEnd(indentPos);
+          ctrl->ReplaceTarget(indentWanted);
+        }
+      }
+    }
+    ctrl->EndUndoAction();
+  }
+}

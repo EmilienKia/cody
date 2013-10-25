@@ -109,6 +109,7 @@ public:
     void useTabs(bool use);
     int getIndent() const;
     void setIndent(int indent);
+    void convertIndent();
 
 
 protected:
@@ -122,6 +123,9 @@ protected:
 
     void setTitleFromFile(const wxString& file);
     void updateTitle();
+
+private:
+    static wxString createIndentation(int indent, int tabSize, bool insertSpaces);
 
 };
 

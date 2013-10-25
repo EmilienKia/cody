@@ -158,7 +158,7 @@ void MainFrame::InitRibbon()
             wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Content flow");
             wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
             bar->AddHybridButton(XRCID("CONVERT_EOL"), "End of lines", RibbonIcon("edit-eol"));
-            bar->AddDropdownButton/*AddHybridButton*/(XRCID("Indent convert"), "Indentations", RibbonIcon("edit-indent"));
+            bar->AddHybridButton(XRCID("Indent convert"), "Indentations", RibbonIcon("edit-indent"));
         }
     }
     {
@@ -684,8 +684,7 @@ void MainFrame::onIndentConvert(wxCommandEvent& event)
   TextDocument* doc = getCurrentDocument();
   if(doc)
   {
-    //TODO doc->convertIndent(...);
-    wxMessageBox("TODO");
+    doc->convertIndent();
   }
 }
 
