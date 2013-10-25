@@ -29,7 +29,7 @@ InstallDir $PROGRAMFILES\Cody
 InstallDirRegKey HKLM "Software\Cody" "Install_Dir"
 
 ; Request application privileges for Windows Vista
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 ;--------------------------------
 ;Interface Settings
