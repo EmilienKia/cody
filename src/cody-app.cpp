@@ -312,7 +312,7 @@ void CodyApp::onPreferences(wxRibbonButtonBarEvent& WXUNUSED(event))
 
 void CodyApp::preferences()
 {
-    wxDialog dialog(_frame, wxID_ANY, "Cody - Preferences");
+    wxDialog dialog(_frame, wxID_ANY, "Cody - Preferences", wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
     wxSizer* gsz = new wxBoxSizer(wxVERTICAL);
     wxNotebook* notebook = new wxNotebook(&dialog, wxID_ANY);
 
