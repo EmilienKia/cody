@@ -36,6 +36,7 @@ private:
     void onCheckShowWhiteSpaces(wxCommandEvent& event);
     void onCheckShowIndentGuides(wxCommandEvent& event);
     void onCheckShowEndOfLines(wxCommandEvent& event);
+    void onChoiceDefaultEndOfLines(wxCommandEvent& event);
     void onCheckWrapLongLines(wxCommandEvent& event);
 
     void onCheckMarginLineNumbers(wxCommandEvent& event);

@@ -37,6 +37,7 @@ enum ConfigViewID
     ConfigView_ShowWhiteSpaces,
     ConfigView_ShowIndentGuides,
     ConfigView_ShowEndOfLines,
+	ConfigView_DefaultEndOfLines,
     ConfigView_WrapLongLines,
 
     ConfigView_MarginLineNumbers,
@@ -53,6 +54,7 @@ EVT_CHECKBOX(ConfigView_ShowCaretLine, ConfigView::onCheckShowCaretLine)
 EVT_CHECKBOX(ConfigView_ShowWhiteSpaces, ConfigView::onCheckShowWhiteSpaces)
 EVT_CHECKBOX(ConfigView_ShowIndentGuides, ConfigView::onCheckShowIndentGuides)
 EVT_CHECKBOX(ConfigView_ShowEndOfLines, ConfigView::onCheckShowEndOfLines)
+EVT_CHOICE(ConfigView_DefaultEndOfLines, ConfigView::onChoiceDefaultEndOfLines)
 EVT_CHECKBOX(ConfigView_WrapLongLines, ConfigView::onCheckWrapLongLines)
 
 EVT_CHECKBOX(ConfigView_MarginLineNumbers, ConfigView::onCheckMarginLineNumbers)
@@ -73,9 +75,11 @@ void ConfigView::Initialize()
 
     wxFileConfig* conf = wxGetApp().getConfig();
     wxCheckBox *cb;
+	wxChoice   *ch;
 
     {
         wxStaticBoxSizer *bsz = new wxStaticBoxSizer(wxVERTICAL, this, "Decorations");
+		wxSizer* sz;
 
         // Caret line
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowCaretLine, "Caret line");
@@ -96,6 +100,13 @@ void ConfigView::Initialize()
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowEndOfLines, "End of lines");
         cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
         bsz->Add(cb, 0, wxALL, 4);
+
+		sz = new wxBoxSizer(wxHORIZONTAL);
+		sz->Add(new wxStaticText(bsz->GetStaticBox(), wxID_ANY, "Default ends of line:"), 0, wxALIGN_CENTRE_VERTICAL);
+		static const wxString choices[]={/*"Autodetect",*/"CRLF", "CR", "LF"};
+		sz->Add(ch = new wxChoice(bsz->GetStaticBox(), ConfigView_DefaultEndOfLines, wxDefaultPosition, wxDefaultSize, 3, choices), 0, wxALIGN_CENTRE_VERTICAL);
+		ch->SetSelection(conf->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
+		bsz->Add(sz, 0, wxALL, 4);
 
         // Wrap long lines
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_WrapLongLines, "Wrap long lines");
@@ -177,6 +188,17 @@ void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
     {
         TextDocument* txt = *it;
         txt->getFrame()->showEOL(checked);
+    }
+}
+
+void ConfigView::onChoiceDefaultEndOfLines(wxCommandEvent& event)
+{
+	int sel = event.GetInt();
+    wxGetApp().getConfig()->Write(CONFPATH_EDITOR_DEFAULTENDOFLINES, sel);
+    for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+    {
+        TextDocument* txt = *it;
+        txt->setEOLMode((TextDocument::EOLMode)sel);
     }
 }
 

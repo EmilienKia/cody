@@ -31,6 +31,9 @@
 #define CONFPATH_EDITOR_SHOWENDOFLINES   "/editor/show-end-of-lines"
 #define CONFDEFAULT_EDITOR_SHOWENDOFLINES   false
 
+#define CONFPATH_EDITOR_DEFAULTENDOFLINES   "/editor/default-end-of-lines"
+#define CONFDEFAULT_EDITOR_DEFAULTENDOFLINES   (TextDocument::EOL_DEFAULT)
+
 #define CONFPATH_EDITOR_WRAPLONGLINES   "/editor/wrap-long-lines"
 #define CONFDEFAULT_EDITOR_WRAPLONGLINES   false
 

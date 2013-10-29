@@ -27,6 +27,7 @@ cody is free software: you can redistribute it and/or modify it
 #include "text-document.hpp"
 
 #include "cody-app.hpp"
+#include "decls.hpp"
 #include "text-frame.hpp"
 #include "bookmark.hpp"
 
@@ -47,6 +48,7 @@ TextFrame* TextDocument::createFrame(wxAuiNotebook* parent)
     _frame = new TextFrame(parent, this);
     _parent = parent;
     parent->AddPage(_frame, getTitle(), true);
+	setEOLMode((TextDocument::EOLMode)wxGetApp().getConfig()->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
     return _frame;
 }
 
@@ -102,6 +104,7 @@ bool TextDocument::loadFile(const wxString& file)
         setModified(false);
         setTitleFromFile(_file);
         getFrame()->initAfterLoading();
+		setEOLMode((TextDocument::EOLMode)wxGetApp().getConfig()->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
         return true;
     }
     return false;
@@ -118,6 +121,7 @@ bool TextDocument::reloadFile()
         txt->SetSavePoint();
         setModified(false);
         getFrame()->initAfterLoading();
+		setEOLMode((TextDocument::EOLMode)wxGetApp().getConfig()->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
         return true;
     }
     return false;
