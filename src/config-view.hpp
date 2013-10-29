@@ -35,6 +35,9 @@ private:
     void onCheckShowCaretLine(wxCommandEvent& event);
     void onCheckShowWhiteSpaces(wxCommandEvent& event);
     void onCheckShowIndentGuides(wxCommandEvent& event);
+    void onSpinDefaultTabSize(wxSpinEvent& event);
+    void onSpinTextDefaultTabSize(wxCommandEvent& event);
+    void onCheckDefaultUseTab(wxCommandEvent& event);
     void onCheckShowEndOfLines(wxCommandEvent& event);
     void onChoiceDefaultEndOfLines(wxCommandEvent& event);
     void onCheckWrapLongLines(wxCommandEvent& event);

@@ -38,7 +38,7 @@ wxDialog(parent, wxID_ANY, "Indentations", wxDefaultPosition, wxDefaultSize, wxD
   sz->Add(_useTabs = new wxCheckBox(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator), 0, wxALIGN_CENTRE_HORIZONTAL|wxALIGN_CENTRE_VERTICAL);
 
   sz->Add(new wxStaticText(this, wxID_ANY, "Tab size:"), 0, wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL);
-  sz->Add(_indents = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 64, 0), 0, wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL);
+  sz->Add(_indents = new wxSpinCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 64, 4), 0, wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL);
 
   gsz->AddStretchSpacer(1);
   gsz->Add(sz, 0, wxALIGN_CENTRE_HORIZONTAL);

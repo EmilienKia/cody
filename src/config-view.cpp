@@ -22,6 +22,7 @@ cody is free software: you can redistribute it and/or modify it
 #include <wx/wx.h>
 
 #include <wx/fileconf.h>
+#include <wx/spinctrl.h>
 #include <wx/statbox.h>
 
 #include "config-view.hpp"
@@ -36,6 +37,8 @@ enum ConfigViewID
     ConfigView_ShowCaretLine = 100,
     ConfigView_ShowWhiteSpaces,
     ConfigView_ShowIndentGuides,
+    ConfigView_DefaultTabSize,
+    ConfigView_DefaultUseTab,
     ConfigView_ShowEndOfLines,
     ConfigView_DefaultEndOfLines,
     ConfigView_WrapLongLines,
@@ -53,6 +56,9 @@ wxBEGIN_EVENT_TABLE(ConfigView, wxPanel)
 EVT_CHECKBOX(ConfigView_ShowCaretLine, ConfigView::onCheckShowCaretLine)
 EVT_CHECKBOX(ConfigView_ShowWhiteSpaces, ConfigView::onCheckShowWhiteSpaces)
 EVT_CHECKBOX(ConfigView_ShowIndentGuides, ConfigView::onCheckShowIndentGuides)
+EVT_SPINCTRL(ConfigView_DefaultTabSize, ConfigView::onSpinDefaultTabSize)
+EVT_TEXT(ConfigView_DefaultTabSize, ConfigView::onSpinTextDefaultTabSize)
+EVT_CHECKBOX(ConfigView_DefaultUseTab, ConfigView::onCheckDefaultUseTab)
 EVT_CHECKBOX(ConfigView_ShowEndOfLines, ConfigView::onCheckShowEndOfLines)
 EVT_CHOICE(ConfigView_DefaultEndOfLines, ConfigView::onChoiceDefaultEndOfLines)
 EVT_CHECKBOX(ConfigView_WrapLongLines, ConfigView::onCheckWrapLongLines)
@@ -96,6 +102,16 @@ void ConfigView::Initialize()
         cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWINDENTGUIDES, CONFDEFAULT_EDITOR_SHOWINDENTGUIDES));
         bsz->Add(cb, 0, wxALL, 4);
 
+        sz = new wxBoxSizer(wxHORIZONTAL);
+        sz->Add(new wxStaticText(bsz->GetStaticBox(), wxID_ANY, "Tab size:"), 0, wxALIGN_CENTRE_VERTICAL);
+        sz->Add(new wxSpinCtrl(bsz->GetStaticBox(), ConfigView_DefaultTabSize, "", wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS,
+          1, 64, conf->ReadLong(CONFPATH_EDITOR_DEFAULTTABSIZE, CONFDEFAULT_EDITOR_DEFAULTTABSIZE)), 0, wxALIGN_CENTRE_VERTICAL);
+        sz->AddSpacer(16);
+        cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_DefaultUseTab, "Use tabs");
+        cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_DEFAULTUSETAB, CONFDEFAULT_EDITOR_DEFAULTUSETAB));
+        sz->Add(cb, 0, wxALIGN_CENTRE_VERTICAL|wxALL, 4);
+        bsz->Add(sz, 0, wxALL, 4);
+        
         // EOL
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowEndOfLines, "End of lines");
         cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
@@ -180,6 +196,39 @@ void ConfigView::onCheckShowIndentGuides(wxCommandEvent& event)
     }
 }
 
+void ConfigView::onSpinDefaultTabSize(wxSpinEvent& event)
+{
+	  int size = event.GetPosition();
+    wxGetApp().getConfig()->Write(CONFPATH_EDITOR_DEFAULTTABSIZE, size);
+    for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+    {
+        TextDocument* txt = *it;
+        txt->setIndent(size);
+    }
+}
+
+void ConfigView::onSpinTextDefaultTabSize(wxCommandEvent& event)
+{
+	  int size = event.GetInt();
+    wxGetApp().getConfig()->Write(CONFPATH_EDITOR_DEFAULTTABSIZE, size);
+    for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+    {
+        TextDocument* txt = *it;
+        txt->setIndent(size);
+    }
+}
+
+void ConfigView::onCheckDefaultUseTab(wxCommandEvent& event)
+{
+    bool checked = event.IsChecked();
+    wxGetApp().getConfig()->Write(CONFPATH_EDITOR_DEFAULTUSETAB, checked);
+    for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
+    {
+        TextDocument* txt = *it;
+        txt->useTabs(checked);
+    }
+}
+
 void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
 {
     bool checked = event.IsChecked();
@@ -193,7 +242,7 @@ void ConfigView::onCheckShowEndOfLines(wxCommandEvent& event)
 
 void ConfigView::onChoiceDefaultEndOfLines(wxCommandEvent& event)
 {
-	int sel = event.GetInt();
+	  int sel = event.GetInt();
     wxGetApp().getConfig()->Write(CONFPATH_EDITOR_DEFAULTENDOFLINES, sel);
     for(std::set<TextDocument*>::iterator it=wxGetApp().getDocuments().begin(); it!=wxGetApp().getDocuments().end(); ++it)
     {

@@ -28,6 +28,12 @@
 #define CONFPATH_EDITOR_SHOWINDENTGUIDES   "/editor/show-indent-guides"
 #define CONFDEFAULT_EDITOR_SHOWINDENTGUIDES   false
 
+#define CONFPATH_EDITOR_DEFAULTTABSIZE   "/editor/default-tab-size"
+#define CONFDEFAULT_EDITOR_DEFAULTTABSIZE   4
+
+#define CONFPATH_EDITOR_DEFAULTUSETAB   "/editor/default-use-tab"
+#define CONFDEFAULT_EDITOR_DEFAULTUSETAB   true
+
 #define CONFPATH_EDITOR_SHOWENDOFLINES   "/editor/show-end-of-lines"
 #define CONFDEFAULT_EDITOR_SHOWENDOFLINES   false
 
