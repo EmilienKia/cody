@@ -37,7 +37,7 @@ enum ConfigViewID
     ConfigView_ShowWhiteSpaces,
     ConfigView_ShowIndentGuides,
     ConfigView_ShowEndOfLines,
-	ConfigView_DefaultEndOfLines,
+    ConfigView_DefaultEndOfLines,
     ConfigView_WrapLongLines,
 
     ConfigView_MarginLineNumbers,
@@ -75,11 +75,11 @@ void ConfigView::Initialize()
 
     wxFileConfig* conf = wxGetApp().getConfig();
     wxCheckBox *cb;
-	wxChoice   *ch;
+    wxChoice   *ch;
 
     {
         wxStaticBoxSizer *bsz = new wxStaticBoxSizer(wxVERTICAL, this, "Decorations");
-		wxSizer* sz;
+	      wxSizer* sz;
 
         // Caret line
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_ShowCaretLine, "Caret line");
@@ -101,12 +101,12 @@ void ConfigView::Initialize()
         cb->SetValue(conf->ReadBool(CONFPATH_EDITOR_SHOWENDOFLINES, CONFDEFAULT_EDITOR_SHOWENDOFLINES));
         bsz->Add(cb, 0, wxALL, 4);
 
-		sz = new wxBoxSizer(wxHORIZONTAL);
-		sz->Add(new wxStaticText(bsz->GetStaticBox(), wxID_ANY, "Default ends of line:"), 0, wxALIGN_CENTRE_VERTICAL);
-		static const wxString choices[]={/*"Autodetect",*/"CRLF", "CR", "LF"};
-		sz->Add(ch = new wxChoice(bsz->GetStaticBox(), ConfigView_DefaultEndOfLines, wxDefaultPosition, wxDefaultSize, 3, choices), 0, wxALIGN_CENTRE_VERTICAL);
-		ch->SetSelection(conf->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
-		bsz->Add(sz, 0, wxALL, 4);
+        sz = new wxBoxSizer(wxHORIZONTAL);
+        sz->Add(new wxStaticText(bsz->GetStaticBox(), wxID_ANY, "Default ends of line:"), 0, wxALIGN_CENTRE_VERTICAL);
+        static const wxString choices[]={/*"Autodetect",*/"CRLF", "CR", "LF"};
+        sz->Add(ch = new wxChoice(bsz->GetStaticBox(), ConfigView_DefaultEndOfLines, wxDefaultPosition, wxDefaultSize, 3, choices), 0, wxALIGN_CENTRE_VERTICAL);
+        ch->SetSelection(conf->ReadLong(CONFPATH_EDITOR_DEFAULTENDOFLINES, CONFDEFAULT_EDITOR_DEFAULTENDOFLINES));
+        bsz->Add(sz, 0, wxALL, 4);
 
         // Wrap long lines
         cb = new wxCheckBox(bsz->GetStaticBox(), ConfigView_WrapLongLines, "Wrap long lines");
