@@ -93,6 +93,8 @@ void MainFrame::CommonInit()
     Layout();
 
     SetSize(800, 600);
+
+	SetIcons(wxArtProvider::GetIconBundle("cody", wxART_FRAME_ICON));
 }
 
 void MainFrame::InitRibbon()
