@@ -2,4 +2,6 @@
 
 
 SUBDIRS = \
-	actions
+	actions \
+	apps
+

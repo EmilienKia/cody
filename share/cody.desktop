@@ -8,6 +8,7 @@ GenericName[fr]=Éditeur de fichiers
 Comment=Cody text file editor
 Comment[FR]=Éditeur de fichier texte Cody
 Exec=cody %F
+Icon=cody
 Terminal=false
 Categories=TextEditor;Development;IDE;Application;
 
