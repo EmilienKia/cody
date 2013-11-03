@@ -11,13 +11,16 @@
 # General autotools chain files
 aclocal.m4
 autom4te.cache/
+config.*
 configure
-Makefile.in
-Makefile
-mkinstalldirs
+depcomp
+install-sh
 intltool-*.in
 ltmain.sh
-config.*
+Makefile.in
+Makefile
+missing
+mkinstalldirs
 
 # Bakefile related files
 .bakefile_gen.state
