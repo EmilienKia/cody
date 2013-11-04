@@ -164,39 +164,42 @@ bool BookmarkProvider::load()
         return false;
     m_bookmarkFilePath = path +  wxFileName::GetPathSeparator() + "bookmarks.txt";
 
-    wxFFileInputStream file(m_bookmarkFilePath);
-    if(file.IsOk())
+    if(wxFile::Exists(m_bookmarkFilePath) && wxFile::Access(m_bookmarkFilePath, wxFile::read))
     {
-        wxTextInputStream txt(file);
-        wxString line;
-
-        while(!file.Eof())
+        wxFFileInputStream file(m_bookmarkFilePath);
+        if(file.IsOk())
         {
-            line = txt.ReadLine();
-            if(!line.IsEmpty())
+            wxTextInputStream txt(file);
+            wxString line;
+
+            while(!file.Eof())
             {
-              if(line[0]=='>')
-              {
-                  line.Remove(0,1);
-                  line.Trim();
-                  line.Trim(false);
-                  if(!line.IsEmpty())
-                  {
-                      list = &get(line);
-                  }
-              }
-              else if(list!=NULL)
-              {
-                  wxString num = line.BeforeFirst(':');
-                  Bookmark bm;
-                  bm.line = 0;
-                  num.ToLong(&bm.line);
-                  if(bm.line>0)
-                  {
-                      bm.name = line.AfterFirst(':');
-                      list->insert(bm);
-                  }
-              }
+                line = txt.ReadLine();
+                if(!line.IsEmpty())
+                {
+                    if(line[0]=='>')
+                    {
+                        line.Remove(0,1);
+                        line.Trim();
+                        line.Trim(false);
+                        if(!line.IsEmpty())
+                        {
+                            list = &get(line);
+                        }
+                    }
+                    else if(list!=NULL)
+                    {
+                        wxString num = line.BeforeFirst(':');
+                        Bookmark bm;
+                        bm.line = 0;
+                        num.ToLong(&bm.line);
+                        if(bm.line>0)
+                        {
+                            bm.name = line.AfterFirst(':');
+                            list->insert(bm);
+                        }
+                    }
+                }
             }
         }
     }
