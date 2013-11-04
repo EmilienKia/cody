@@ -117,9 +117,26 @@ Section
   ; Cody graphic resources (icons)
   SetOutPath $INSTDIR\icons\hicolor
   File "..\..\share\icons\hicolor\index.theme"
-  
+
+  SetOutPath $INSTDIR\icons\hicolor
+  File "..\..\share\icons\hicolor\*.ico"
+
   SetOutPath $INSTDIR\icons\hicolor\32x32\actions
   File "..\..\share\icons\hicolor\32x32\actions\*.png"
+
+  SetOutPath $INSTDIR\icons\hicolor\32x32\actions
+  File "..\..\share\icons\hicolor\32x32\actions\*.png"
+  
+  SetOutPath $INSTDIR\icons\hicolor\16x16\apps
+  File "..\..\share\icons\hicolor\16x16\apps\*.png"
+  SetOutPath $INSTDIR\icons\hicolor\24x24\apps
+  File "..\..\share\icons\hicolor\24x24\apps\*.png"
+  SetOutPath $INSTDIR\icons\hicolor\32x32\apps
+  File "..\..\share\icons\hicolor\32x32\apps\*.png"
+  SetOutPath $INSTDIR\icons\hicolor\48x48\apps
+  File "..\..\share\icons\hicolor\48x48\apps\*.png"
+  SetOutPath $INSTDIR\icons\hicolor\64x64\apps
+  File "..\..\share\icons\hicolor\64x64\apps\*.png"
   
 SectionEnd
 

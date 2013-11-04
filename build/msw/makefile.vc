@@ -83,6 +83,8 @@ CODY_OBJECTS =  \
 	$(OBJS)\cody_markbar.obj \
 	$(OBJS)\cody_text_document.obj \
 	$(OBJS)\cody_text_frame.obj
+CODY_RESOURCES =  \
+	$(OBJS)\cody_cody.res
 
 ### Conditionally set variables: ###
 
@@ -107,17 +109,35 @@ ____WX_SHARED_2_p =
 !if "$(WX_SHARED)" == "1"
 ____WX_SHARED_2_p = /DWXUSINGDLL
 !endif
+!if "$(WX_SHARED)" == "0"
+____WX_SHARED_2_p_1 = 
+!endif
+!if "$(WX_SHARED)" == "1"
+____WX_SHARED_2_p_1 = /d WXUSINGDLL
+!endif
 !if "$(WX_UNICODE)" == "1"
 __WXUNICODE_DEFINE_p = /D_UNICODE
 !endif
+!if "$(WX_UNICODE)" == "1"
+__WXUNICODE_DEFINE_p_1 = /d _UNICODE
+!endif
 !if "$(WX_DEBUG)" == "1"
 __WXDEBUG_DEFINE_p = /D__WXDEBUG__
+!endif
+!if "$(WX_DEBUG)" == "1"
+__WXDEBUG_DEFINE_p_1 = /d __WXDEBUG__
 !endif
 !if "$(WX_SHARED)" == "0"
 __WXLIBPATH_FILENAMES = \lib\$(COMPILER_PREFIX)$(WXCPU)_lib
 !endif
 !if "$(WX_SHARED)" == "1"
 __WXLIBPATH_FILENAMES = \lib\$(COMPILER_PREFIX)$(WXCPU)_dll
+!endif
+!if "$(WX_SHARED)" == "0"
+__WXLIBPATH_FILENAMES_1 = \lib\$(COMPILER_PREFIX)$(WXCPU)_lib
+!endif
+!if "$(WX_SHARED)" == "1"
+__WXLIBPATH_FILENAMES_1 = \lib\$(COMPILER_PREFIX)$(WXCPU)_dll
 !endif
 !if "$(WX_SHARED)" == "0"
 __WXLIBPATH_FILENAMES_2 = \lib\$(COMPILER_PREFIX)$(WXCPU)_lib
@@ -148,6 +168,12 @@ ______cody__DEBUGINFO_8_p =
 !endif
 !if "$(WX_DEBUG)" == "1"
 ______cody__DEBUGINFO_8_p = /D_DEBUG
+!endif
+!if "$(WX_DEBUG)" == "0"
+______cody__DEBUGINFO_8_p_1 = 
+!endif
+!if "$(WX_DEBUG)" == "1"
+______cody__DEBUGINFO_8_p_1 = /d _DEBUG
 !endif
 !if "$(WX_DEBUG)" == "0"
 ____cody__DEBUGINFO_9 = 
@@ -242,9 +268,9 @@ test_for_selected_wxbuild:
 	@if not exist $(WX_DIR)$(WXLIBPATH)\msw$(WXLIBPOSTFIX)\wx\setup.h \
 	exit 1
 
-$(OBJS)\cody.exe: $(CODY_OBJECTS)
+$(OBJS)\cody.exe: $(CODY_OBJECTS) $(OBJS)\cody_cody.res
 	link /NOLOGO /OUT:$@  /LIBPATH:$(WX_DIR)$(__WXLIBPATH_FILENAMES_2) $(WXMACHINE_FLAG) /SUBSYSTEM:WINDOWS $(____cody__DEBUGINFO_7) /pdb:"$(OBJS)\cody.pdb" $(____cody__DEBUGINFO_11) $(LDFLAGS) @<<
-	$(CODY_OBJECTS)   $(__WXLIB_AUI_NAME_p) $(__WXLIB_RIBBON_NAME_p) $(__WXLIB_STC_NAME_p) wxscintilla$(WX3RDPARTYLIBPOSTFIX).lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib oleacc.lib
+	$(CODY_OBJECTS) $(CODY_RESOURCES)  $(__WXLIB_AUI_NAME_p) $(__WXLIB_RIBBON_NAME_p) $(__WXLIB_STC_NAME_p) wxscintilla$(WX3RDPARTYLIBPOSTFIX).lib $(__WXLIB_XRC_NAME_p) $(__WXLIB_HTML_NAME_p) $(__WXLIB_ADV_NAME_p) $(__WXLIB_XML_NAME_p) $(__WXLIB_CORE_NAME_p) $(__WXLIB_BASE_NAME_p) wxtiff$(WX3RDPARTYLIBPOSTFIX).lib wxjpeg$(WX3RDPARTYLIBPOSTFIX).lib wxpng$(WX3RDPARTYLIBPOSTFIX).lib wxzlib$(WX3RDPARTYLIBPOSTFIX).lib wxregex$(WXLIBPOSTFIX).lib wxexpat$(WX3RDPARTYLIBPOSTFIX).lib kernel32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib winmm.lib shell32.lib comctl32.lib ole32.lib oleaut32.lib uuid.lib rpcrt4.lib advapi32.lib wsock32.lib oleacc.lib
 <<
 
 $(OBJS)\cody_bookmark.obj: ..\..\src\bookmark.cpp
@@ -282,4 +308,7 @@ $(OBJS)\cody_text_document.obj: ..\..\src\text-document.cpp
 
 $(OBJS)\cody_text_frame.obj: ..\..\src\text-frame.cpp
 	$(CXX) /c /nologo /TP /Fo$@ $(CODY_CXXFLAGS) ..\..\src\text-frame.cpp
+
+$(OBJS)\cody_cody.res: ..\..\build\msw\cody.rc
+	rc /fo$@  /d WIN32 $(____WX_SHARED_2_p_1) $(__WXUNICODE_DEFINE_p_1) $(__WXDEBUG_DEFINE_p_1) /d __WXMSW__ /i $(WX_DIR)$(__WXLIBPATH_FILENAMES_1)\msw$(WXLIBPOSTFIX) /i $(WX_DIR)\include /d _WINDOWS $(______cody__DEBUGINFO_8_p_1) ..\..\build\msw\cody.rc
 
