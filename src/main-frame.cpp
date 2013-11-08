@@ -38,6 +38,65 @@ cody is free software: you can redistribute it and/or modify it
 #define RibbonIcon(artid) wxArtIcon(artid, 32)
 
 
+
+//
+// MainFrameDropTarget
+//
+class MainFrameDropTarget : public wxDropTarget
+{
+public:
+	MainFrameDropTarget(MainFrame* frame):
+	_frame(frame)
+	{
+		wxDataObjectComposite* dataobj = new wxDataObjectComposite();
+		dataobj->Add(new wxFileDataObject(), true);
+		SetDataObject(dataobj);
+	}
+
+	wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult defaultDragResult);
+
+private:
+	MainFrame* _frame;
+};
+
+wxDragResult MainFrameDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult defaultDragResult)
+{
+    if( !GetData() )
+	{
+		wxMessageBox("Nothing to drop.");
+        return wxDragNone;
+	}
+
+	wxDataObjectComposite * dataObjs = dynamic_cast<wxDataObjectComposite *>(GetDataObject());
+	if(dataObjs)
+	{
+		wxDataFormat format = dataObjs->GetReceivedFormat();
+		wxDataObject *dataObj = dataObjs->GetObject(format);
+		switch( format.GetType() )
+		{
+			case wxDF_FILENAME:
+			{
+				wxFileDataObject *dataObjFile = static_cast<wxFileDataObject *>(dataObj);
+				wxArrayString files = dataObjFile->GetFilenames();
+				for(size_t n=0; n<files.GetCount(); ++n)
+				{
+					wxGetApp().loadDocument(files[n], _frame);
+				}
+				return wxDragCopy;
+			}
+			break;
+			default:
+				wxFAIL_MSG( "Unexpected data object format to drop." );
+				return wxDragNone;
+		}
+	}
+	return wxDragNone;
+}
+
+//
+// MainFrame
+//
+
 MainFrame::MainFrame():
     wxFrame(NULL, wxID_ANY, "Cody")
 {
@@ -95,6 +154,9 @@ void MainFrame::CommonInit()
     SetSize(800, 600);
 
 	SetIcons(wxArtProvider::GetIconBundle("cody", wxART_FRAME_ICON));
+
+	// Setup drop target
+	SetDropTarget(new MainFrameDropTarget(this));
 }
 
 void MainFrame::InitRibbon()
