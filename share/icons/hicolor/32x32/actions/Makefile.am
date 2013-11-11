@@ -29,6 +29,7 @@ icon_DATA = \
 	edit-paste.png \
 	edit-redo.png \
 	edit-select-all.png \
+	edit-select-line.png \
 	edit-undo.png \
 	format-justify-fill.png \
 	go-down.png \

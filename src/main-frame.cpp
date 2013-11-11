@@ -228,7 +228,7 @@ void MainFrame::InitRibbon()
             wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Selection");
             wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
             bar->AddButton(XRCID("Select all"), "Select all", RibbonIcon("edit-select-all"));
-            //bar->AddButton(XRCID("Select line"), "Select line", RibbonIcon("edit-select-line"));
+            bar->AddButton(XRCID("Select line"), "Select line", RibbonIcon("edit-select-line"));
         }
     }
     {
@@ -475,9 +475,10 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_UPDATE_UI(XRCID("Indent tab 8"), MainFrame::onUpdateIndent8)
     EVT_MENU(XRCID("Indent tab other"), MainFrame::onIndentOther)
     EVT_UPDATE_UI(XRCID("Indent tab other"), MainFrame::onUpdateIndentOther)
-
 	EVT_MENU(XRCID("Select all"), MainFrame::onSelectAll)
 	EVT_UPDATE_UI(XRCID("Select all"), MainFrame::onUpdateHasOpenDocument)
+	EVT_MENU(XRCID("Select line"), MainFrame::onSelectLine)
+	EVT_UPDATE_UI(XRCID("Select line"), MainFrame::onUpdateHasOpenDocument)
 
     EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
     EVT_MENU(wxID_FIND, MainFrame::onFind)
@@ -956,6 +957,21 @@ void MainFrame::onSelectAll(wxCommandEvent& event)
         txt->SelectAll();
     }
 }
+
+void MainFrame::onSelectLine(wxCommandEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+    if(txt)
+    {
+		int line = txt->GetCurrentLine();
+		if(line!=wxNOT_FOUND)
+		{
+			txt->SetSelectionStart(txt->PositionFromLine(line));
+			txt->SetSelectionEnd(txt->GetLineEndPosition(line));
+		}
+    }
+}
+
 
 void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& WXUNUSED(event))
 {

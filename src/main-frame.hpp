@@ -185,6 +185,7 @@ private:
     void onIndentOther(wxCommandEvent& event);
     void onUpdateIndentOther(wxUpdateUIEvent& event);
 	void onSelectAll(wxCommandEvent& event);
+	void onSelectLine(wxCommandEvent& event);
 
     void onFindRibbonBarExtActivated(wxRibbonPanelEvent& event);
     void onFind(wxCommandEvent& event);
