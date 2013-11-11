@@ -224,6 +224,12 @@ void MainFrame::InitRibbon()
             bar->AddHybridButton(XRCID("CONVERT_EOL"), "End of lines", RibbonIcon("edit-eol"));
             bar->AddHybridButton(XRCID("Indent convert"), "Indentations", RibbonIcon("edit-indent"));
         }
+        {
+            wxRibbonPanel* panel = new wxRibbonPanel(page, wxID_ANY, "Selection");
+            wxRibbonButtonBar* bar = new wxRibbonButtonBar(panel, wxID_ANY);
+            bar->AddButton(XRCID("Select all"), "Select all", RibbonIcon("edit-select-all"));
+            //bar->AddButton(XRCID("Select line"), "Select line", RibbonIcon("edit-select-line"));
+        }
     }
     {
         // Navigate page
@@ -470,7 +476,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(XRCID("Indent tab other"), MainFrame::onIndentOther)
     EVT_UPDATE_UI(XRCID("Indent tab other"), MainFrame::onUpdateIndentOther)
 
-
+	EVT_MENU(XRCID("Select all"), MainFrame::onSelectAll)
+	EVT_UPDATE_UI(XRCID("Select all"), MainFrame::onUpdateHasOpenDocument)
 
     EVT_RIBBONPANEL_EXTBUTTON_ACTIVATED(XRCID("Search panel"), MainFrame::onFindRibbonBarExtActivated)
     EVT_MENU(wxID_FIND, MainFrame::onFind)
@@ -939,6 +946,15 @@ void MainFrame::onUpdateEOLLF(wxUpdateUIEvent& event)
     event.Check(false);
     event.Enable(false);
   }
+}
+
+void MainFrame::onSelectAll(wxCommandEvent& event)
+{
+	wxStyledTextCtrl* txt = getCurrentTextCtrl();
+    if(txt)
+    {
+        txt->SelectAll();
+    }
 }
 
 void MainFrame::onFindRibbonBarExtActivated(wxRibbonPanelEvent& WXUNUSED(event))
